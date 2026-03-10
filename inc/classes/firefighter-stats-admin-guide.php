@@ -320,6 +320,67 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Guide' ) ) {
                     </ol>
                 </div>
 
+                <!-- 6. Page Builders -->
+                <div class="card" style="max-width:760px; margin-bottom:20px; padding:20px 24px;">
+                    <h2 style="margin-top:0;">🏗️ <?php echo esc_html( $this->t( 'Page Builder Support', 'Wsparcie dla Kreatorów Stron' ) ); ?></h2>
+                    <p><?php echo esc_html( $this->t(
+                        'If you use a page builder, the plugin integrates natively with the most popular ones. No extra configuration is needed — just activate your builder and the element will appear automatically.',
+                        'Jeśli używasz kreatora stron, wtyczka integruje się natywnie z najpopularniejszymi. Żadna dodatkowa konfiguracja nie jest potrzebna — wystarczy aktywować kreator, a element pojawi się automatycznie.'
+                    ) ); ?></p>
+                    <table class="widefat striped" style="max-width:680px;">
+                        <thead>
+                            <tr>
+                                <th><?php echo esc_html( $this->t( 'Builder', 'Kreator' ) ); ?></th>
+                                <th><?php echo esc_html( $this->t( 'How to use', 'Jak używać' ) ); ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Elementor</strong></td>
+                                <td><?php echo esc_html( $this->t(
+                                    'Search "Emergency Statistics" in the widget panel → drag & drop onto the page.',
+                                    'Wyszukaj „Emergency Statistics" w panelu widżetów → przeciągnij i upuść na stronę.'
+                                ) ); ?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>WPBakery</strong></td>
+                                <td><?php echo esc_html( $this->t(
+                                    'Available in the Classic Backend Editor element list under "Emergency Statistics".',
+                                    'Dostępne na liście elementów w Classic Backend Editor w grupie „Statystyki Wyjazdów".'
+                                ) ); ?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Beaver Builder</strong></td>
+                                <td><?php echo esc_html( $this->t(
+                                    'Available in the BB module panel under "Emergency Statistics" — drag to a row.',
+                                    'Dostępne w panelu modułów BB w grupie „Statystyki" — przeciągnij do wiersza.'
+                                ) ); ?></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Bricks</strong></td>
+                                <td><?php echo esc_html( $this->t(
+                                    'Available in the Bricks element panel under "Emergency Statistics" — click to add.',
+                                    'Dostępne w panelu elementów Bricks w grupie „Statystyki Wyjazdów" — kliknij, aby dodać.'
+                                ) ); ?></td>
+                            </tr>
+                            <tr>
+                                <td><?php echo esc_html( $this->t( 'Divi, Oxygen, others', 'Divi, Oxygen, inne' ) ); ?></td>
+                                <td><?php echo esc_html( $this->t(
+                                    'Insert a Text / Code / Shortcode module and paste the shortcode below.',
+                                    'Wstaw moduł Tekst / Kod / Shortcode i wklej shortcode poniżej.'
+                                ) ); ?></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top:14px; background:#f0f6fc; border-left:4px solid #2271b1; padding:10px 14px;">
+                        💡 <?php echo esc_html( $this->t(
+                            'All native integrations expose the same controls as the widget and shortcode. For multi-category filtering use the shortcode\'s selected_categories attribute directly.',
+                            'Wszystkie natywne integracje udostępniają te same ustawienia co widżet i shortcode. Do filtrowania wielu kategorii użyj atrybutu selected_categories shortcode bezpośrednio.'
+                        ) ); ?>
+                    </p>
+                    <p><code>[firefighter_stats_emergency_list_widget]</code></p>
+                </div>
+
             </div>
             <?php
         }

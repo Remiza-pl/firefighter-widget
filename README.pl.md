@@ -106,6 +106,22 @@ W edytorze bloków wyszukaj **Emergency Statistics** (kategoria: Widżety). Blok
 
 ---
 
+## Wsparcie dla kreatorów stron
+
+| Kreator | Typ integracji | Jak używać |
+|---------|---------------|------------|
+| **Elementor** | Natywny widżet | Wyszukaj „Emergency Statistics" w panelu widżetów Elementora → przeciągnij i upuść |
+| **WPBakery** | Natywny element | Dostępny na liście elementów w Classic Backend Editor |
+| **Beaver Builder** | Natywny moduł | Dostępny w panelu modułów Beaver Buildera w grupie „Statystyki" |
+| **Bricks** | Natywny element | Dostępny w panelu elementów Bricks w grupie „Statystyki Wyjazdów" |
+| **Divi** | Moduł shortcode | Wstaw moduł Tekst / Kod i wklej `[firefighter_stats_emergency_list_widget]` |
+| **Oxygen** | Widżet shortcode | Dodaj widżet Shortcode i wklej `[firefighter_stats_emergency_list_widget]` |
+| **Każdy inny kreator** | Shortcode | Użyj `[firefighter_stats_emergency_list_widget]` w dowolnym polu obsługującym shortcode |
+
+Wszystkie natywne integracje udostępniają te same 13 ustawień co shortcode (z wyjątkiem `selected_categories` — w celu wielokrotnego wyboru użyj shortcode bezpośrednio).
+
+---
+
 ## Dostosowywanie
 
 ### Własny szablon
@@ -200,6 +216,15 @@ firefighter-widget/
 ├── inc/
 │   ├── core-functions.php             # Wspólne funkcje pomocnicze
 │   ├── blocks-config.php              # Rejestracja bloku
+│   ├── integrations/
+│   │   ├── load.php                   # Rejestracje hooków integracji
+│   │   ├── elementor.php              # Widżet Elementora
+│   │   ├── wpbakery.php               # Element WPBakery (vc_map)
+│   │   ├── beaver-builder.php         # Moduł Beaver Buildera
+│   │   ├── beaver-builder/
+│   │   │   └── includes/
+│   │   │       └── frontend.php       # Szablon modułu BB
+│   │   └── bricks.php                 # Element Bricks
 │   └── classes/
 │       ├── firefighter-stats-cpt.php
 │       ├── firefighter-stats-cpt-notice.php

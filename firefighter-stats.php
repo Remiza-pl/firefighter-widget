@@ -66,6 +66,7 @@ require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-cate
 require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-admin-guide.php';
 require_once $firefighter_stats_plugin_dir . 'inc/core-functions.php';
 require_once $firefighter_stats_plugin_dir . 'inc/blocks-config.php';
+require_once $firefighter_stats_plugin_dir . 'inc/integrations/load.php';
 unset( $firefighter_stats_plugin_dir );
 
 // Register Notice CPT

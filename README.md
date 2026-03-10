@@ -106,6 +106,22 @@ In the block editor, search for **Emergency Statistics** (category: Widgets). Th
 
 ---
 
+## Page Builder Support
+
+| Builder | Integration type | How |
+|---------|-----------------|-----|
+| **Elementor** | Native widget | Search "Emergency Statistics" in the Elementor widget panel → drag & drop |
+| **WPBakery** | Native element | Available in the Classic Backend Editor element list |
+| **Beaver Builder** | Native module | Available in the Beaver Builder module panel under "Emergency Statistics" |
+| **Bricks** | Native element | Available in the Bricks element panel under "Emergency Statistics" |
+| **Divi** | Shortcode module | Insert a Text / Code module and paste `[firefighter_stats_emergency_list_widget]` |
+| **Oxygen** | Shortcode widget | Add a Shortcode widget and paste `[firefighter_stats_emergency_list_widget]` |
+| **Any other builder** | Shortcode | Use `[firefighter_stats_emergency_list_widget]` in any shortcode-capable field |
+
+All native integrations expose the same 13 controls as the shortcode (except `selected_categories` — use the shortcode directly for multiselect filtering).
+
+---
+
 ## Customisation
 
 ### Custom Template
@@ -200,6 +216,15 @@ firefighter-widget/
 ├── inc/
 │   ├── core-functions.php             # Shared helper functions
 │   ├── blocks-config.php              # Block registration
+│   ├── integrations/
+│   │   ├── load.php                   # Integration hook registrations
+│   │   ├── elementor.php              # Elementor widget
+│   │   ├── wpbakery.php               # WPBakery vc_map element
+│   │   ├── beaver-builder.php         # Beaver Builder module
+│   │   ├── beaver-builder/
+│   │   │   └── includes/
+│   │   │       └── frontend.php       # BB module template
+│   │   └── bricks.php                 # Bricks element
 │   └── classes/
 │       ├── firefighter-stats-cpt.php
 │       ├── firefighter-stats-cpt-notice.php
