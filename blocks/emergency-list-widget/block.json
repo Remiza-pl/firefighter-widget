@@ -1,0 +1,58 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 2,
+	"name": "firefighter-stats/emergency-list-widget",
+	"version": "1.0.0",
+	"title": "Emergency Statistics",
+	"category": "widgets",
+	"icon": "shield-alt",
+	"description": "Display emergency statistics with category counts and a list of recent emergency posts.",
+	"keywords": [ "emergency", "firefighter", "statistics", "rescue" ],
+	"textdomain": "firefighter-stats",
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ]
+	},
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": "🚨 Emergency Statistics"
+		},
+		"showCategorySummary": {
+			"type": "boolean",
+			"default": true
+		},
+		"categoryTimePeriod": {
+			"type": "string",
+			"default": "all"
+		},
+		"showPostsList": {
+			"type": "boolean",
+			"default": true
+		},
+		"limit": {
+			"type": "integer",
+			"default": 5
+		},
+		"categorySort": {
+			"type": "string",
+			"default": "alphabet"
+		},
+		"showZeroCategories": {
+			"type": "boolean",
+			"default": true
+		},
+		"showDate": {
+			"type": "boolean",
+			"default": true
+		},
+		"showCategory": {
+			"type": "boolean",
+			"default": true
+		},
+		"order": {
+			"type": "string",
+			"default": "default"
+		}
+	}
+}

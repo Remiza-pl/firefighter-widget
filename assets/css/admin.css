@@ -1,0 +1,229 @@
+/**
+ * Firefighter Stats Admin Styles
+ */
+
+.firefighter-stats-admin-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.firefighter-stats-add-count {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.firefighter-stats-add-count h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #23282d;
+}
+
+.firefighter-stats-overview {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.04);
+}
+
+.firefighter-stats-overview h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #23282d;
+}
+
+.firefighter-stats-overview table {
+    margin-top: 15px;
+}
+
+.firefighter-stats-overview th,
+.firefighter-stats-overview td {
+    text-align: left;
+    padding: 8px 12px;
+}
+
+.firefighter-stats-overview th {
+    font-weight: 600;
+    background: #f9f9f9;
+}
+
+.firefighter-stats-add-count .form-table th {
+    width: 150px;
+    padding: 15px 10px 15px 0;
+}
+
+.firefighter-stats-add-count .form-table td {
+    padding: 15px 0;
+}
+
+.firefighter-stats-add-count select,
+.firefighter-stats-add-count input[type="number"],
+.firefighter-stats-add-count input[type="date"] {
+    width: 100%;
+    max-width: 300px;
+}
+
+.firefighter-stats-add-count .button-primary {
+    margin-top: 10px;
+    padding: 8px 20px;
+    font-size: 14px;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .firefighter-stats-admin-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* Success/Error notices styling */
+.firefighter-stats-admin-layout .notice {
+    margin: 15px 0;
+}
+
+/* Table styling improvements */
+.firefighter-stats-overview .wp-list-table {
+    border: 1px solid #c3c4c7;
+}
+
+.firefighter-stats-overview .wp-list-table th {
+    background: #f6f7f7;
+    border-bottom: 1px solid #c3c4c7;
+    font-weight: 600;
+}
+
+.firefighter-stats-overview .wp-list-table td {
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.firefighter-stats-overview .wp-list-table tbody tr:hover {
+    background: #f6f7f7;
+}
+
+/* Form styling improvements */
+.firefighter-stats-add-count .form-table {
+    margin-bottom: 0;
+}
+
+.firefighter-stats-add-count .description {
+    color: #646970;
+    font-size: 13px;
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+.firefighter-stats-add-count label {
+    font-weight: 600;
+    color: #1d2327;
+}
+
+/* Quick action buttons */
+.firefighter-stats-quick-actions {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+}
+
+.firefighter-stats-quick-btn {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    background: #f0f0f1;
+    border: 1px solid #c3c4c7;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #2271b1;
+    font-size: 12px;
+}
+
+.firefighter-stats-quick-btn:hover {
+    background: #e5e5e5;
+    color: #135e96;
+    text-decoration: none;
+}
+
+/* Loading states */
+.firefighter-stats-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.firefighter-stats-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #2271b1;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Admin Bar Quick Emergency Styles */
+#wp-admin-bar-firefighter-stats-quick .ab-item {
+    font-weight: 600;
+}
+
+#wp-admin-bar-firefighter-stats-quick .ab-submenu {
+    min-width: 200px;
+}
+
+#wp-admin-bar-firefighter-stats-quick .ab-submenu .ab-item {
+    padding: 8px 15px;
+    font-weight: normal;
+    transition: all 0.2s ease;
+}
+
+#wp-admin-bar-firefighter-stats-quick .ab-submenu .ab-item:hover {
+    background: #0073aa;
+    color: #fff;
+}
+
+.firefighter-stats-quick-add .ab-item {
+    cursor: pointer;
+}
+
+.firefighter-stats-separator .ab-item {
+    padding: 0 !important;
+    pointer-events: none;
+}
+
+.firefighter-stats-separator hr {
+    margin: 5px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+/* Loading state for admin bar items */
+.firefighter-stats-quick-add.loading .ab-item {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Success/Error states */
+.firefighter-stats-quick-add.success .ab-item {
+    background: #46b450 !important;
+    color: #fff !important;
+}
+
+.firefighter-stats-quick-add.error .ab-item {
+    background: #dc3232 !important;
+    color: #fff !important;
+}

@@ -1,0 +1,771 @@
+# Polish translation for Firefighter Stats
+# Copyright (C) 2025 Firefighter Stats
+# This file is distributed under the same license as the Firefighter Stats package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Firefighter Stats 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-01-13 12:00+0000\n"
+"PO-Revision-Date: 2025-07-13 03:26+0200\n"
+"Last-Translator: \n"
+"Language-Team: Polish\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 3.6\n"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:22
+msgid "Title:"
+msgstr "Tytuł:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:25
+msgid "🚨 Emergency Statistics"
+msgstr "🚨 Statystyki Wyjazdów"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:29
+msgid "Show Category Summary"
+msgstr "Pokaż Podsumowanie Kategorii"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:30
+msgid "Display category counts at the top of the widget."
+msgstr "Wyświetl liczniki kategorii na górze widżetu."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:34
+msgid "Category Count Period:"
+msgstr "Okres Liczenia Kategorii:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:35
+msgid "Time period for category emergency counts."
+msgstr "Okres czasu dla liczników wyjazdów w kategoriach."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:38
+msgid "All Time"
+msgstr "Cały Czas"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:39
+msgid "This Year"
+msgstr "Ten Rok"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:40
+msgid "This Month"
+msgstr "Ten Miesiąc"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:45
+msgid "Selected Categories:"
+msgstr "Wybrane Kategorie:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:46
+msgid "Choose specific categories to display. Leave empty to show all."
+msgstr ""
+"Wybierz konkretne kategorie do wyświetlenia. Zostaw puste, aby pokazać "
+"wszystkie."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:51
+msgid "Sort Categories By:"
+msgstr "Sortuj Kategorie Według:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:52
+msgid "How to sort the category statistics."
+msgstr "Jak sortować statystyki kategorii."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:55
+msgid "Alphabetical"
+msgstr "Alfabetycznie"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:56
+msgid "Count (High to Low)"
+msgstr "Liczba (Od Największej)"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:57
+msgid "Count (Low to High)"
+msgstr "Liczba (Od Najmniejszej)"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:62
+msgid "Show Categories with Zero Count"
+msgstr "Pokaż Kategorie z Zerem Wyjazdów"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:63
+msgid "Display categories even when they have no emergencies."
+msgstr "Wyświetl kategorie nawet gdy nie mają żadnych wyjazdów."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:69
+msgid "Show Emergency Posts List"
+msgstr "Pokaż Listę Postów Wyjazdów"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:70
+msgid "Display list of emergency posts below category summary."
+msgstr "Wyświetl listę postów wyjazdów pod podsumowaniem kategorii."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:74
+msgid "Posts Category Filter:"
+msgstr "Filtr Kategorii Postów:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:75
+msgid "Display emergency posts only from a certain category."
+msgstr "Wyświetl posty wyjazdów tylko z określonej kategorii."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:79
+msgid "All Categories"
+msgstr "Wszystkie Kategorie"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:82
+msgid "Posts Limit:"
+msgstr "Limit Postów:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:83
+msgid "Number of emergency posts to display."
+msgstr "Liczba postów wyjazdów do wyświetlenia."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:85
+msgid "All"
+msgstr "Wszystkie"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:89
+msgid "Order:"
+msgstr "Kolejność:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:90
+msgid "Order of emergency posts."
+msgstr "Kolejność postów wyjazdów."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:93
+msgid "Default"
+msgstr "Domyślna"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:94
+msgid "By date, newest first"
+msgstr "Według daty, najnowsze pierwsze"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:95
+msgid "By date, oldest first"
+msgstr "Według daty, najstarsze pierwsze"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:96
+msgid "By title, ascending"
+msgstr "Według tytułu, rosnąco"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:97
+msgid "By title, descending"
+msgstr "Według tytułu, malejąco"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:98
+msgid "Random"
+msgstr "Losowo"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:103
+msgid "Display Date"
+msgstr "Wyświetl Datę"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:108
+msgid "Display Category"
+msgstr "Wyświetl Kategorię"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:112
+msgid "Recent Emergencies Title:"
+msgstr "Tytuł Ostatnich Wyjazdów:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:113
+msgid "Title for the recent emergencies section."
+msgstr "Tytuł dla sekcji ostatnich wyjazdów."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:115
+msgid "📝 Recent Emergencies"
+msgstr "📝 Ostatnie Wyjazdy"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:118
+msgid "More Button Label:"
+msgstr "Etykieta Przycisku Więcej:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:119
+msgid "Link to emergency post archive. Leave blank to hide."
+msgstr "Link do archiwum postów wyjazdów. Zostaw puste, aby ukryć."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:121
+msgid "More Emergencies"
+msgstr "Więcej Wyjazdów"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:440
+msgid "Total in %s:"
+msgstr "Razem w %s:"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:441
+msgid "%d emergency"
+msgid_plural "%d emergencies"
+msgstr[0] "%d wyjazd"
+msgstr[1] "%d wyjazdy"
+msgstr[2] "%d wyjazdów"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:465
+msgid "No emergency data available."
+msgstr "Brak danych o wyjazdach."
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:485
+msgid "all time"
+msgstr "cały czas"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:490
+msgid "January"
+msgstr "Styczeń"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:491
+msgid "February"
+msgstr "Luty"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:492
+msgid "March"
+msgstr "Marzec"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:493
+msgid "April"
+msgstr "Kwiecień"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:494
+msgid "May"
+msgstr "Maj"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:495
+msgid "June"
+msgstr "Czerwiec"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:496
+msgid "July"
+msgstr "Lipiec"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:497
+msgid "August"
+msgstr "Sierpień"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:498
+msgid "September"
+msgstr "Wrzesień"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:499
+msgid "October"
+msgstr "Październik"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:500
+msgid "November"
+msgstr "Listopad"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php:501
+msgid "December"
+msgstr "Grudzień"
+
+#: inc/classes/firefighter-stats-category-meta.php:22
+msgid "Category Icon"
+msgstr "Ikona Kategorii"
+
+#: inc/classes/firefighter-stats-category-meta.php:24
+msgid "Select Icon"
+msgstr "Wybierz Ikonę"
+
+#: inc/classes/firefighter-stats-category-meta.php:25
+msgid "Choose an icon to represent this emergency category."
+msgstr "Wybierz ikonę reprezentującą tę kategorię wyjazdów."
+
+#: inc/classes/firefighter-stats-category-meta.php:33
+msgid "Category Color"
+msgstr "Kolor Kategorii"
+
+#: inc/classes/firefighter-stats-category-meta.php:35
+msgid "Choose a color for this emergency category in widgets and lists."
+msgstr "Wybierz kolor dla tej kategorii wyjazdów w widżetach i listach."
+
+#: inc/classes/firefighter-stats-category-meta.php:67
+msgid "Fire (Pożar) 🔥"
+msgstr "Pożar 🔥"
+
+#: inc/classes/firefighter-stats-category-meta.php:68
+msgid "Medical (Medyczny) 🚑"
+msgstr "Medyczny 🚑"
+
+#: inc/classes/firefighter-stats-category-meta.php:69
+msgid "Rescue (Ratownictwo) 🆘"
+msgstr "Ratownictwo 🆘"
+
+#: inc/classes/firefighter-stats-category-meta.php:70
+msgid "Accident (Wypadek) ⚠️"
+msgstr "Wypadek ⚠️"
+
+#: inc/classes/firefighter-stats-category-meta.php:71
+msgid "Local Threat (Miejscowe Zagrożenie) ⚠️"
+msgstr "Miejscowe Zagrożenie ⚠️"
+
+#: inc/classes/firefighter-stats-category-meta.php:72
+msgid "Hazmat (Chemiczny) ☢️"
+msgstr "Chemiczny ☢️"
+
+#: inc/classes/firefighter-stats-category-meta.php:73
+msgid "Water (Woda) 🌊"
+msgstr "Woda 🌊"
+
+#: inc/classes/firefighter-stats-category-meta.php:74
+msgid "Technical (Techniczny) 🔧"
+msgstr "Techniczny 🔧"
+
+#: inc/classes/firefighter-stats-category-meta.php:75
+msgid "Vehicle (Pojazd) 🚗"
+msgstr "Pojazd 🚗"
+
+#: inc/classes/firefighter-stats-category-meta.php:76
+msgid "Structure (Budynek) 🏢"
+msgstr "Budynek 🏢"
+
+#: inc/classes/firefighter-stats-category-meta.php:77
+msgid "False Alarm (Alarm Fałszywy) 🚫"
+msgstr "Alarm Fałszywy 🚫"
+
+#: inc/classes/firefighter-stats-category-meta.php:78
+msgid "Exercise (Ćwiczenia) 🏋️"
+msgstr "Ćwiczenia 🏋️"
+
+#: inc/classes/firefighter-stats-category-meta.php:79
+msgid "Other (Inne) 📋"
+msgstr "Inne 📋"
+
+#: inc/classes/firefighter-stats-admin-counts.php:18
+msgid "Emergency Counts"
+msgstr "Liczniki Wyjazdów"
+
+#: inc/classes/firefighter-stats-admin-counts.php:19
+msgid "Quick Counts"
+msgstr "Szybkie Liczniki"
+
+#: inc/classes/firefighter-stats-admin-counts.php:44
+msgid "Please select a category and enter a valid count."
+msgstr "Proszę wybrać kategorię i wprowadzić prawidłową liczbę."
+
+#: inc/classes/firefighter-stats-admin-counts.php:51
+msgid "Successfully added %d emergency count(s) for %s."
+msgstr "Pomyślnie dodano %d licznik(i) wyjazdów dla %s."
+
+#: inc/classes/firefighter-stats-admin-counts.php:58
+msgid "Quick Emergency"
+msgstr "Szybki Wyjazd"
+
+#: inc/classes/firefighter-stats-admin-counts.php:85
+msgid "Manage Counts"
+msgstr "Zarządzaj Licznikami"
+
+#: inc/classes/firefighter-stats-admin-counts.php:108
+msgid "Add +1 emergency to"
+msgstr "Dodaj +1 wyjazd do"
+
+#: inc/classes/firefighter-stats-admin-counts.php:135
+msgid "Emergency count added successfully!"
+msgstr "Licznik wyjazdów dodany pomyślnie!"
+
+#: inc/classes/firefighter-stats-admin-counts.php:142
+msgid "Error adding emergency count."
+msgstr "Błąd podczas dodawania licznika wyjazdów."
+
+#: inc/classes/firefighter-stats-admin-counts.php:147
+msgid "Network error. Please try again."
+msgstr "Błąd sieci. Spróbuj ponownie."
+
+#: inc/classes/firefighter-stats-admin-counts.php:170
+msgid "Emergency Counts Management"
+msgstr "Zarządzanie Licznikami Wyjazdów"
+
+#: inc/classes/firefighter-stats-admin-counts.php:171
+msgid ""
+"Quickly add emergency counts without creating individual posts. Perfect for "
+"routine emergencies that don't need detailed documentation."
+msgstr ""
+"Szybko dodawaj liczniki wyjazdów bez tworzenia pojedynczych postów. Idealne "
+"dla rutynowych wyjazdów, które nie wymagają szczegółowej dokumentacji."
+
+#: inc/classes/firefighter-stats-admin-counts.php:175
+msgid "Add Manual Emergency Count"
+msgstr "Dodaj Ręczny Licznik Wyjazdów"
+
+#: inc/classes/firefighter-stats-admin-counts.php:182
+#: inc/classes/firefighter-stats-cpt-notice.php:44
+msgid "Emergency Category"
+msgstr "Kategoria Wyjazdu"
+
+#: inc/classes/firefighter-stats-admin-counts.php:185
+msgid "Select Category"
+msgstr "Wybierz Kategorię"
+
+#: inc/classes/firefighter-stats-admin-counts.php:195
+msgid "Count to Add"
+msgstr "Liczba do Dodania"
+
+#: inc/classes/firefighter-stats-admin-counts.php:198
+msgid "Number of emergencies to add for this date."
+msgstr "Liczba wyjazdów do dodania dla tej daty."
+
+#: inc/classes/firefighter-stats-admin-counts.php:202
+msgid "Add Emergency Count"
+msgstr "Dodaj Licznik Wyjazdów"
+
+#: inc/classes/firefighter-stats-admin-counts.php:207
+msgid "Current Counts Overview"
+msgstr "Przegląd Aktualnych Liczników"
+
+#: inc/classes/firefighter-stats-admin-counts.php:213
+msgid "Category"
+msgstr "Kategoria"
+
+#: inc/classes/firefighter-stats-admin-counts.php:214
+msgid "Posts"
+msgstr "Posty"
+
+#: inc/classes/firefighter-stats-admin-counts.php:215
+msgid "Manual Counts"
+msgstr "Ręczne Liczniki"
+
+#: inc/classes/firefighter-stats-admin-counts.php:216
+msgid "Total"
+msgstr "Razem"
+
+#: inc/classes/firefighter-stats-admin-counts.php:232
+msgid "No emergency categories found. Please create some categories first."
+msgstr "Nie znaleziono kategorii wyjazdów. Proszę najpierw utworzyć kategorie."
+
+#: inc/classes/firefighter-stats-admin-counts.php:240
+msgid "Current manual count:"
+msgstr "Aktualny ręczny licznik:"
+
+#: inc/classes/firefighter-stats-admin-counts.php:405
+msgid "Date"
+msgstr "Data"
+
+#: inc/classes/firefighter-stats-admin-counts.php:408
+msgid "Date for the manual count (defaults to today)."
+msgstr "Data dla ręcznego licznika (domyślnie dzisiaj)."
+
+#: inc/classes/firefighter-stats-admin-counts.php:502
+msgid "Total count for this date:"
+msgstr "Całkowity licznik dla tej daty:"
+
+#: inc/classes/firefighter-stats-admin-counts.php:540
+msgid "Manual Count Entries"
+msgstr "Wpisy Ręcznych Liczników"
+
+#: inc/classes/firefighter-stats-admin-counts.php:555
+msgid "Count"
+msgstr "Liczba"
+
+#: inc/classes/firefighter-stats-admin-counts.php:556
+msgid "Added By"
+msgstr "Dodane Przez"
+
+#: inc/classes/firefighter-stats-admin-counts.php:557
+msgid "Time"
+msgstr "Czas"
+
+#: inc/classes/firefighter-stats-admin-counts.php:558
+msgid "Actions"
+msgstr "Akcje"
+
+#: inc/classes/firefighter-stats-admin-counts.php:562
+msgid "Unknown"
+msgstr "Nieznany"
+
+#: inc/classes/firefighter-stats-admin-counts.php:572
+msgid "Are you sure you want to delete this entry?"
+msgstr "Czy na pewno chcesz usunąć ten wpis?"
+
+#: inc/classes/firefighter-stats-admin-counts.php:574
+msgid "Delete"
+msgstr "Usuń"
+
+#: inc/classes/firefighter-stats-admin-counts.php:582
+msgid "No manual count entries found."
+msgstr "Nie znaleziono wpisów ręcznych liczników."
+
+#: inc/classes/firefighter-stats-admin-counts.php:264
+msgid "Emergency count entry deleted successfully."
+msgstr "Wpis licznika wyjazdów usunięty pomyślnie."
+
+#: inc/classes/firefighter-stats-admin-counts.php:269
+msgid "Permalinks flushed successfully. URLs should now work correctly."
+msgstr "Permalinki odświeżone pomyślnie. URL-e powinny teraz działać poprawnie."
+
+#: inc/classes/firefighter-stats-admin-counts.php:462
+msgid "URL Fix"
+msgstr "Naprawa URL"
+
+#: inc/classes/firefighter-stats-admin-counts.php:463
+msgid "If emergency URLs are showing 404 errors, click this button to fix them:"
+msgstr "Jeśli URL-e wyjazdów pokazują błędy 404, kliknij ten przycisk, aby je naprawić:"
+
+#: inc/classes/firefighter-stats-admin-counts.php:469
+msgid "Fix Emergency URLs"
+msgstr "Napraw URL-e Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:29
+msgctxt "URL slug"
+msgid "emergency"
+msgstr "wyjazd"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:65
+msgctxt "URL slug"
+msgid "emergency-category"
+msgstr "kategoria-wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:101
+msgctxt "URL slug"
+msgid "emergency-tag"
+msgstr "tag-wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:14
+msgid "Emergencies"
+msgstr "Wyjazdy"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:15
+msgid "Emergency"
+msgstr "Wyjazd"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:16
+#: inc/classes/firefighter-stats-cpt-notice.php:17
+#: inc/classes/firefighter-stats-cpt-notice.php:19
+msgid "Add New Emergency"
+msgstr "Dodaj Nowy Wyjazd"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:18
+msgid "Edit Emergency"
+msgstr "Edytuj Wyjazd"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:20
+msgid "View Emergency"
+msgstr "Zobacz Wyjazd"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:21
+msgid "Search emergencies"
+msgstr "Szukaj wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:22
+msgid "No emergencies found"
+msgstr "Nie znaleziono wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:23
+msgid "No emergencies found in trash"
+msgstr "Nie znaleziono wyjazdów w koszu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:43
+#: inc/classes/firefighter-stats-cpt-notice.php:57
+msgid "Emergency Categories"
+msgstr "Kategorie Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:45
+msgid "Search Emergency Categories"
+msgstr "Szukaj Kategorii Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:46
+msgid "Popular Emergency Categories"
+msgstr "Popularne Kategorie Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:47
+msgid "All Emergency Categories"
+msgstr "Wszystkie Kategorie Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:48
+msgid "Parent Emergency Category"
+msgstr "Nadrzędna Kategoria Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:49
+msgid "Parent Emergency Category:"
+msgstr "Nadrzędna Kategoria Wyjazdu:"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:50
+msgid "Edit Emergency Category"
+msgstr "Edytuj Kategorię Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:51
+msgid "Update Emergency Category"
+msgstr "Aktualizuj Kategorię Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:52
+msgid "Add New Emergency Category"
+msgstr "Dodaj Nową Kategorię Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:53
+msgid "New Emergency Category Name"
+msgstr "Nazwa Nowej Kategorii Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:54
+msgid "Separate emergency categories by comma"
+msgstr "Oddziel kategorie wyjazdów przecinkami"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:55
+msgid "Add or remove emergency categories"
+msgstr "Dodaj lub usuń kategorie wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:56
+msgid "Choose from the most used emergency categories"
+msgstr "Wybierz z najczęściej używanych kategorii wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:79
+#: inc/classes/firefighter-stats-cpt-notice.php:93
+msgid "Emergency Tags"
+msgstr "Tagi Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:80
+msgid "Emergency Tag"
+msgstr "Tag Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:81
+msgid "Search Emergency Tags"
+msgstr "Szukaj Tagów Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:82
+msgid "Popular Emergency Tags"
+msgstr "Popularne Tagi Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:83
+msgid "All Emergency Tags"
+msgstr "Wszystkie Tagi Wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:84
+msgid "Parent Emergency Tag"
+msgstr "Nadrzędny Tag Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:85
+msgid "Parent Emergency Tag:"
+msgstr "Nadrzędny Tag Wyjazdu:"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:86
+msgid "Edit Emergency Tag"
+msgstr "Edytuj Tag Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:87
+msgid "Update Emergency Tag"
+msgstr "Aktualizuj Tag Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:88
+msgid "Add New Emergency Tag"
+msgstr "Dodaj Nowy Tag Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:89
+msgid "New Emergency Tag Name"
+msgstr "Nazwa Nowego Tagu Wyjazdu"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:90
+msgid "Separate emergency tags by comma"
+msgstr "Oddziel tagi wyjazdów przecinkami"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:91
+msgid "Add or remove emergency tags"
+msgstr "Dodaj lub usuń tagi wyjazdów"
+
+#: inc/classes/firefighter-stats-cpt-notice.php:92
+msgid "Choose from the most used emergency tags"
+msgstr "Wybierz z najczęściej używanych tagów wyjazdów"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Custom Icon (Emoji)"
+msgstr "Własna Ikona (Emoji)"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Enter any emoji to override the icon above. Leave empty to use the dropdown selection."
+msgstr "Wpisz dowolne emoji, aby nadpisać ikonę powyżej. Zostaw puste, aby użyć wyboru z listy."
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Fire 🔥"
+msgstr "Pożar 🔥"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Medical 🚑"
+msgstr "Medyczny 🚑"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Rescue 🆘"
+msgstr "Ratownictwo 🆘"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Accident ⚠️"
+msgstr "Wypadek ⚠️"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Local Threat ⚠️"
+msgstr "Miejscowe Zagrożenie ⚠️"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Hazmat ☢️"
+msgstr "Chemiczny ☢️"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Water 🌊"
+msgstr "Woda 🌊"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Technical 🔧"
+msgstr "Techniczny 🔧"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Vehicle 🚗"
+msgstr "Pojazd 🚗"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Structure 🏢"
+msgstr "Budynek 🏢"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "False Alarm 🚫"
+msgstr "Alarm Fałszywy 🚫"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Exercise 🏋️"
+msgstr "Ćwiczenia 🏋️"
+
+#: inc/classes/firefighter-stats-category-meta.php
+msgid "Other 📋"
+msgstr "Inne 📋"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Fire"
+msgstr "Pożar"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Medical"
+msgstr "Medyczny"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Rescue"
+msgstr "Ratownictwo"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Accident"
+msgstr "Wypadek"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Local Threat"
+msgstr "Miejscowe Zagrożenie"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Hazmat"
+msgstr "Chemiczny"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Water Rescue"
+msgstr "Ratownictwo Wodne"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Technical"
+msgstr "Techniczny"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Vehicle"
+msgstr "Pojazd"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Structure"
+msgstr "Budynek"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "False Alarm"
+msgstr "Alarm Fałszywy"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Exercise"
+msgstr "Ćwiczenia"
+
+#: inc/classes/firefighter-stats-category-seeder.php
+msgid "Other"
+msgstr "Inne"

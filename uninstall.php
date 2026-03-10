@@ -1,0 +1,35 @@
+<?php
+/**
+ * Fired when the plugin is uninstalled.
+ *
+ * Removes all options and term meta created by the plugin.
+ * Post data (CPT posts, terms) is intentionally left in place
+ * so users do not lose their emergency records on uninstall.
+ */
+
+// Only run when WordPress itself requests an uninstall.
+if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
+	exit;
+}
+
+// Remove plugin options.
+delete_option( 'firefighter_stats_locale' );
+delete_option( 'firefighter_stats_permalinks' );
+
+// Remove term meta for all firefighter_stats_cat terms.
+$terms = get_terms( array(
+	'taxonomy'   => 'firefighter_stats_cat',
+	'hide_empty' => false,
+	'fields'     => 'ids',
+) );
+
+if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
+	foreach ( $terms as $term_id ) {
+		delete_term_meta( $term_id, 'firefighter_stats_category_icon' );
+		delete_term_meta( $term_id, 'firefighter_stats_category_custom_icon' );
+		delete_term_meta( $term_id, 'firefighter_stats_category_color' );
+		delete_term_meta( $term_id, 'firefighter_stats_manual_counts' );
+		delete_term_meta( $term_id, 'firefighter_stats_total_count' );
+		delete_term_meta( $term_id, 'firefighter_stats_manual_total' );
+	}
+}

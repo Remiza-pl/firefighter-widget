@@ -1,0 +1,159 @@
+/**
+ * Firefighter Stats Widget Styles
+ *
+ * Modern emergency widget design with clean layout and responsive grid
+ */
+
+/* New Emergency Widget Design */
+.emergency-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6em;
+    margin-bottom: 1em;
+}
+
+.stat-item {
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 0.8em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.95em;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    flex: 1 1 calc(50% - 0.3em);
+    min-width: 200px;
+}
+
+.stat-item:hover {
+    background: #e9ecef;
+}
+
+.stat-item .icon {
+    font-size: 1.3em;
+    margin-right: 0.4em;
+}
+
+.stat-item .count {
+    background: #dc3545;
+    color: white;
+    font-size: 0.85em;
+    padding: 0.2em 0.6em;
+    border-radius: 999px;
+    min-width: 24px;
+    text-align: center;
+}
+
+.summary-footer {
+    margin-top: 1em;
+    font-weight: bold;
+    text-align: center;
+    font-size: 0.95em;
+    color: #333;
+    background: #eee;
+    padding: 0.5em;
+    border-radius: 6px;
+}
+
+.emergency-recent h4 {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+    font-size: 1.1em;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.4em;
+    color: #333;
+}
+
+.emergency-recent ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5em 0 0 0;
+}
+
+.emergency-recent li {
+    padding: 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.emergency-recent li:last-child {
+    border-bottom: none;
+}
+
+.emergency-link {
+    display: block;
+    padding: 0.5em 0;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.emergency-link:hover {
+    background-color: #f8f9fa;
+    color: #333;
+    text-decoration: none;
+}
+
+.emergency-recent .tag {
+    padding: 0.1em 0.5em;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+}
+
+/* Category Tag Colors — must match defaults in Firefighter_Stats_Category_Meta::get_category_color() */
+.tag.fire { background: #e74c3c; }
+.tag.medical { background: #3498db; }
+.tag.rescue { background: #f39c12; }
+.tag.accident { background: #e67e22; }
+.tag.hazmat { background: #8e44ad; }
+.tag.water { background: #2980b9; }
+.tag.technical { background: #27ae60; }
+.tag.threat { background: #9b59b6; }
+.tag.false-alarm { background: #7f8c8d; }
+.tag.exercise { background: #16a085; }
+.tag.other { background: #2c3e50; }
+
+/* Emergency post links */
+.emergency-recent a {
+    color: #333;
+    text-decoration: none;
+}
+
+.emergency-recent a:hover {
+    color: #e74c3c;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .stat-item {
+        flex: 1 1 100%;
+        min-width: auto;
+        padding: 0.6em;
+        font-size: 0.9em;
+    }
+
+    .emergency-widget {
+        padding: 1em;
+    }
+}
+
+/* For very narrow containers */
+@media (max-width: 450px) {
+    .stat-item {
+        flex: 1 1 100%;
+    }
+}
+
+/* Legacy widget support */
+.widget__no-results {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 20px;
+}
