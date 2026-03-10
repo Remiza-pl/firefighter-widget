@@ -78,7 +78,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		 *
 		 * @return string
 		 */
-		private function ensure_token() {
+		private function get_token() {
 			return get_option( self::OPTION_TOKEN, '' );
 		}
 
@@ -149,13 +149,20 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		// ---------------------------------------------------------------
 
 		/**
-		 * Return true if already registered; attempt registration otherwise.
+		 * Return true if already registered and a token is stored; attempt registration otherwise.
+		 *
+		 * Clears the registered flag when the token is missing so the system self-heals
+		 * after manual option deletion or a partial site migration.
 		 *
 		 * @return bool
 		 */
 		private function ensure_registered() {
 			if ( get_option( self::OPTION_REGISTERED ) ) {
-				return true;
+				if ( '' !== $this->get_token() ) {
+					return true;
+				}
+				// Token was deleted independently — reset so register_site() runs again.
+				delete_option( self::OPTION_REGISTERED );
 			}
 			return $this->register_site();
 		}
@@ -243,7 +250,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			$term  = ( ! is_wp_error( $terms ) && ! empty( $terms ) ) ? $terms[0] : null;
 
 			return array(
-				'token'          => $this->ensure_token(),
+				'token'          => $this->get_token(),
 				'site_url'       => home_url(),
 				'site_name'      => get_bloginfo( 'name' ),
 				'event'          => 'new_emergency',
