@@ -44,12 +44,13 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		}
 
 		/**
-		 * Generate (or retrieve) the site token on plugin activation.
+		 * Called on plugin activation. Token is now issued server-side during /register.
 		 *
 		 * @return void
 		 */
 		public static function generate_token_on_activation() {
-			( new self() )->ensure_token();
+			// No-op: the site token is issued by the Remiza.pl server when the first
+			// report is dispatched (via ensure_registered → register_site).
 		}
 
 		// ---------------------------------------------------------------
@@ -72,42 +73,13 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		// ---------------------------------------------------------------
 
 		/**
-		 * Return the stored token, creating one if it does not yet exist.
+		 * Return the stored token (issued by the Remiza.pl server on registration).
+		 * Returns an empty string when the site has not yet been registered.
 		 *
 		 * @return string
 		 */
-		private function ensure_token() {
-			$token = get_option( self::OPTION_TOKEN, '' );
-			if ( '' === $token ) {
-				$token = $this->generate_uuid4();
-				update_option( self::OPTION_TOKEN, $token, false );
-			}
-			return $token;
-		}
-
-		/**
-		 * Generate a cryptographically random UUID4.
-		 *
-		 * @return string
-		 */
-		private function generate_uuid4() {
-			$bytes = random_bytes( 16 );
-
-			// Set version bits (version 4).
-			$bytes[6] = chr( ( ord( $bytes[6] ) & 0x0f ) | 0x40 );
-			// Set variant bits (RFC 4122).
-			$bytes[8] = chr( ( ord( $bytes[8] ) & 0x3f ) | 0x80 );
-
-			return strtolower(
-				sprintf(
-					'%s-%s-%s-%s-%s',
-					bin2hex( substr( $bytes, 0, 4 ) ),
-					bin2hex( substr( $bytes, 4, 2 ) ),
-					bin2hex( substr( $bytes, 6, 2 ) ),
-					bin2hex( substr( $bytes, 8, 2 ) ),
-					bin2hex( substr( $bytes, 10, 6 ) )
-				)
-			);
+		private function get_token() {
+			return get_option( self::OPTION_TOKEN, '' );
 		}
 
 		/**
@@ -177,26 +149,32 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		// ---------------------------------------------------------------
 
 		/**
-		 * Return true if already registered; attempt registration otherwise.
+		 * Return true if already registered and a token is stored; attempt registration otherwise.
+		 *
+		 * Clears the registered flag when the token is missing so the system self-heals
+		 * after manual option deletion or a partial site migration.
 		 *
 		 * @return bool
 		 */
 		private function ensure_registered() {
 			if ( get_option( self::OPTION_REGISTERED ) ) {
-				return true;
+				if ( '' !== $this->get_token() ) {
+					return true;
+				}
+				// Token was deleted independently — reset so register_site() runs again.
+				delete_option( self::OPTION_REGISTERED );
 			}
 			return $this->register_site();
 		}
 
 		/**
-		 * POST /register to create or update this site's registration.
+		 * POST /register to create this site's registration and receive a server-issued token.
 		 *
 		 * @return bool
 		 */
 		private function register_site() {
 			$body = wp_json_encode(
 				array(
-					'token'     => $this->ensure_token(),
 					'site_url'  => home_url(),
 					'site_name' => get_bloginfo( 'name' ),
 				)
@@ -217,8 +195,13 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 			$code = wp_remote_retrieve_response_code( $response );
 			if ( 200 === $code || 201 === $code ) {
-				update_option( self::OPTION_REGISTERED, '1', false );
-				return true;
+				$data = json_decode( wp_remote_retrieve_body( $response ), true );
+				if ( ! empty( $data['token'] ) ) {
+					update_option( self::OPTION_TOKEN, sanitize_text_field( $data['token'] ), false );
+					update_option( self::OPTION_REGISTERED, '1', false );
+					return true;
+				}
+				return false;
 			}
 
 			$this->handle_http_error( $response );
@@ -267,7 +250,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			$term  = ( ! is_wp_error( $terms ) && ! empty( $terms ) ) ? $terms[0] : null;
 
 			return array(
-				'token'          => $this->ensure_token(),
+				'token'          => $this->get_token(),
 				'site_url'       => home_url(),
 				'site_name'      => get_bloginfo( 'name' ),
 				'event'          => 'new_emergency',
@@ -485,14 +468,13 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		// ---------------------------------------------------------------
 
 		/**
-		 * Generate a new token and attempt re-registration immediately.
+		 * Clear the stored token and attempt re-registration to obtain a fresh server-issued token.
 		 *
 		 * @return void
 		 */
 		public function regenerate_token() {
 			delete_option( self::OPTION_TOKEN );
 			delete_option( self::OPTION_REGISTERED );
-			$this->ensure_token();
 			$this->register_site();
 		}
 
