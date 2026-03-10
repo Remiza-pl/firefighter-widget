@@ -4,18 +4,27 @@
  *
  * Provides a submenu page under Emergencies where admins can toggle
  * Remiza.pl reporting and manage the site token.
+ *
+ * @package Firefighter_Stats
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 
+	/**
+	 * Renders and handles the plugin Settings admin page.
+	 */
 	class Firefighter_Stats_Settings {
 
 		/** @var bool|null Cached Polish-locale flag. */
 		private $is_pl = null;
 
+		/**
+		 * Register hooks.
+		 */
 		public function __construct() {
 			add_action( 'admin_menu', array( $this, 'add_menu' ) );
 			add_action( 'admin_init', array( $this, 'handle_form' ) );
@@ -25,7 +34,12 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 		// Menu
 		// ---------------------------------------------------------------
 
-		public function add_menu(): void {
+		/**
+		 * Register the Settings submenu page.
+		 *
+		 * @return void
+		 */
+		public function add_menu() {
 			add_submenu_page(
 				'edit.php?post_type=firefighter_stats',
 				$this->t( 'Firefighter Stats Settings', 'Ustawienia Statystyk Wyjazdów' ),
@@ -40,25 +54,32 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 		// Form handler
 		// ---------------------------------------------------------------
 
-		public function handle_form(): void {
-			if ( empty( $_POST['fs_settings_action'] ) ) {
+		/**
+		 * Process the settings form submission.
+		 *
+		 * @return void
+		 */
+		public function handle_form() {
+			if ( empty( $_POST['fs_settings_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 				return;
 			}
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
-			if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_wpnonce'] ), 'firefighter_stats_settings_action' ) ) {
+			if (
+				empty( $_POST['_wpnonce'] ) ||
+				! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['_wpnonce'] ) ), 'firefighter_stats_settings_action' )
+			) {
 				return;
 			}
 
-			$fs_action = sanitize_key( $_POST['fs_settings_action'] );
+			$fs_action = sanitize_key( wp_unslash( $_POST['fs_settings_action'] ) );
 
 			switch ( $fs_action ) {
 				case 'save':
 					$enabled = ! empty( $_POST['fs_reporting_enabled'] ) ? '1' : '0';
 					update_option( Firefighter_Stats_Reporter::OPTION_ENABLED, $enabled, false );
 					if ( '1' === $enabled ) {
-						// Enabling clears the consent notice so it doesn't reappear.
 						update_option( 'firefighter_stats_reporting_notice_dismissed', '1', false );
 					}
 					break;
@@ -79,15 +100,24 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 		// Render
 		// ---------------------------------------------------------------
 
-		public function render(): void {
+		/**
+		 * Output the Settings page HTML.
+		 *
+		 * @return void
+		 */
+		public function render() {
 			$token         = get_option( Firefighter_Stats_Reporter::OPTION_TOKEN, '' );
 			$is_enabled    = class_exists( 'Firefighter_Stats_Reporter' ) && ( new Firefighter_Stats_Reporter() )->is_enabled();
 			$token_invalid = (bool) get_transient( 'firefighter_stats_token_invalid' );
 
+			$updated = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+
 			// Masked token: show first 8 chars only.
-			$token_masked = '' !== $token
-				? esc_html( substr( $token, 0, 8 ) ) . '&hellip;'
-				: '<em>' . esc_html( $this->t( 'not generated yet', 'jeszcze nie wygenerowany' ) ) . '</em>';
+			if ( '' !== $token ) {
+				$token_masked = esc_html( substr( $token, 0, 8 ) ) . '&hellip;';
+			} else {
+				$token_masked = '<em>' . esc_html( $this->t( 'not generated yet', 'jeszcze nie wygenerowany' ) ) . '</em>';
+			}
 			?>
 			<div class="wrap">
 				<h1><?php echo esc_html( $this->t( 'Firefighter Stats — Settings', 'Statystyki Wyjazdów — Ustawienia' ) ); ?></h1>
@@ -98,7 +128,7 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 					) ); ?>
 				</p>
 
-				<?php if ( isset( $_GET['updated'] ) && '1' === $_GET['updated'] ) : ?>
+				<?php if ( '1' === $updated ) : ?>
 					<div class="notice notice-success is-dismissible">
 						<p><?php echo esc_html( $this->t( 'Settings saved.', 'Ustawienia zapisane.' ) ); ?></p>
 					</div>
@@ -107,11 +137,7 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 				<!-- Remiza.pl feature card -->
 				<div class="card" style="max-width:760px; margin-bottom:20px; padding:20px 24px; display:flex; gap:20px; align-items:flex-start;">
 					<div style="flex-shrink:0;">
-						<a href="https://remiza.pl" target="_blank" rel="noopener noreferrer">
-							<img src="https://remiza.pl/wp-content/uploads/2026/01/logoR-bez-tla.png"
-							     alt="Remiza.pl"
-							     style="height:48px; width:auto; display:block;">
-						</a>
+						<img src="<?php echo esc_url( FIREFIGHTER_STATS_PLUGIN_URL . 'assets/images/remiza-logo.webp' ); ?>" alt="Remiza.pl" height="48" style="display:block;">
 					</div>
 					<div>
 						<h2 style="margin-top:0;">
@@ -119,7 +145,7 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 						</h2>
 						<p>
 							<?php echo esc_html( $this->t(
-								'When you publish an emergency post this plugin sends a small anonymised payload to Remiza.pl — Poland\'s largest firefighter portal — so the site can display aggregated national emergency activity. Reporting is enabled by default and can be turned off at any time.',
+								"When you publish an emergency post this plugin sends a small anonymised payload to Remiza.pl — Poland's largest firefighter portal — so the site can display aggregated national emergency activity. Reporting is enabled by default and can be turned off at any time.",
 								'Gdy publikujesz post wyjazdu, wtyczka wysyła niewielki zanonimizowany pakiet do Remiza.pl — największego polskiego portalu strażackiego — aby portal mógł wyświetlać zagregowaną krajową aktywność ratowniczą. Raportowanie jest domyślnie włączone i można je wyłączyć w dowolnym momencie.'
 							) ); ?>
 						</p>
@@ -178,7 +204,7 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 								<?php echo esc_html( $this->t( 'Site token', 'Token strony' ) ); ?>
 							</th>
 							<td>
-								<code><?php echo $token_masked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- sanitized above ?></code>
+								<code><?php echo $token_masked; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped above ?></code>
 								<p class="description">
 									<?php echo esc_html( $this->t(
 										'Your unique identifier used to authenticate with Remiza.pl. Never share the full token.',
@@ -223,9 +249,16 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 		// Locale helper
 		// ---------------------------------------------------------------
 
-		private function t( string $en, string $pl ): string {
+		/**
+		 * Return the localised string for the admin's current language.
+		 *
+		 * @param string $en English text.
+		 * @param string $pl Polish text.
+		 * @return string
+		 */
+		private function t( $en, $pl ) {
 			if ( null === $this->is_pl ) {
-				$this->is_pl = ( strpos( get_user_locale(), 'pl' ) === 0 );
+				$this->is_pl = ( 0 === strpos( get_user_locale(), 'pl' ) );
 			}
 			return $this->is_pl ? $pl : $en;
 		}

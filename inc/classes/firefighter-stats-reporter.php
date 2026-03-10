@@ -8,18 +8,27 @@
  *
  * Enabled by default. Users can opt out via the Settings page or the
  * consent notice that appears on first use.
+ *
+ * @package Firefighter_Stats
  */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
+	/**
+	 * Handles sending emergency statistics to Remiza.pl.
+	 */
 	class Firefighter_Stats_Reporter {
 
 		const OPTION_ENABLED    = 'firefighter_stats_reporting_enabled';
 		const OPTION_TOKEN      = 'firefighter_stats_reporting_token';
 		const OPTION_REGISTERED = 'firefighter_stats_reporting_registered';
+
+		/** @var bool|null Cached Polish-locale flag. */
+		private $is_pl = null;
 
 		// ---------------------------------------------------------------
 		// Static entry points
@@ -27,15 +36,19 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Instantiate and register all hooks. Called on the `init` action.
+		 *
+		 * @return void
 		 */
-		public static function init(): void {
+		public static function init() {
 			new self();
 		}
 
 		/**
 		 * Generate (or retrieve) the site token on plugin activation.
+		 *
+		 * @return void
 		 */
-		public static function generate_token_on_activation(): void {
+		public static function generate_token_on_activation() {
 			( new self() )->ensure_token();
 		}
 
@@ -43,6 +56,9 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		// Constructor — hooks only, no side effects
 		// ---------------------------------------------------------------
 
+		/**
+		 * Register all hooks.
+		 */
 		public function __construct() {
 			add_action( 'transition_post_status', array( $this, 'handle_post_status_transition' ), 10, 3 );
 			add_action( 'firefighter_stats_send_report', array( $this, 'send_report_async' ) );
@@ -57,8 +73,10 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Return the stored token, creating one if it does not yet exist.
+		 *
+		 * @return string
 		 */
-		private function ensure_token(): string {
+		private function ensure_token() {
 			$token = get_option( self::OPTION_TOKEN, '' );
 			if ( '' === $token ) {
 				$token = $this->generate_uuid4();
@@ -69,8 +87,10 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Generate a cryptographically random UUID4.
+		 *
+		 * @return string
 		 */
-		private function generate_uuid4(): string {
+		private function generate_uuid4() {
 			$bytes = random_bytes( 16 );
 
 			// Set version bits (version 4).
@@ -78,20 +98,24 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			// Set variant bits (RFC 4122).
 			$bytes[8] = chr( ( ord( $bytes[8] ) & 0x3f ) | 0x80 );
 
-			return strtolower( sprintf(
-				'%s-%s-%s-%s-%s',
-				bin2hex( substr( $bytes, 0, 4 ) ),
-				bin2hex( substr( $bytes, 4, 2 ) ),
-				bin2hex( substr( $bytes, 6, 2 ) ),
-				bin2hex( substr( $bytes, 8, 2 ) ),
-				bin2hex( substr( $bytes, 10, 6 ) )
-			) );
+			return strtolower(
+				sprintf(
+					'%s-%s-%s-%s-%s',
+					bin2hex( substr( $bytes, 0, 4 ) ),
+					bin2hex( substr( $bytes, 4, 2 ) ),
+					bin2hex( substr( $bytes, 6, 2 ) ),
+					bin2hex( substr( $bytes, 8, 2 ) ),
+					bin2hex( substr( $bytes, 10, 6 ) )
+				)
+			);
 		}
 
 		/**
 		 * Whether reporting is currently enabled.
+		 *
+		 * @return bool
 		 */
-		public function is_enabled(): bool {
+		public function is_enabled() {
 			return '0' !== get_option( self::OPTION_ENABLED, '1' );
 		}
 
@@ -105,8 +129,9 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		 * @param string  $new  New post status.
 		 * @param string  $old  Previous post status.
 		 * @param WP_Post $post Post object.
+		 * @return void
 		 */
-		public function handle_post_status_transition( string $new, string $old, WP_Post $post ): void {
+		public function handle_post_status_transition( $new, $old, $post ) {
 			if ( 'publish' !== $new ) {
 				return;
 			}
@@ -131,8 +156,9 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		 * WP-Cron callback: register the site (if needed) then send the report.
 		 *
 		 * @param int $post_id Post ID.
+		 * @return void
 		 */
-		public function send_report_async( int $post_id ): void {
+		public function send_report_async( $post_id ) {
 			if ( ! $this->is_enabled() ) {
 				return;
 			}
@@ -152,8 +178,10 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Return true if already registered; attempt registration otherwise.
+		 *
+		 * @return bool
 		 */
-		private function ensure_registered(): bool {
+		private function ensure_registered() {
 			if ( get_option( self::OPTION_REGISTERED ) ) {
 				return true;
 			}
@@ -162,13 +190,17 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * POST /register to create or update this site's registration.
+		 *
+		 * @return bool
 		 */
-		private function register_site(): bool {
-			$body = wp_json_encode( array(
-				'token'     => $this->ensure_token(),
-				'site_url'  => home_url(),
-				'site_name' => get_bloginfo( 'name' ),
-			) );
+		private function register_site() {
+			$body = wp_json_encode(
+				array(
+					'token'     => $this->ensure_token(),
+					'site_url'  => home_url(),
+					'site_name' => get_bloginfo( 'name' ),
+				)
+			);
 
 			$response = wp_remote_post(
 				$this->get_endpoint( '/register' ),
@@ -201,8 +233,9 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		 * POST /report with the given payload.
 		 *
 		 * @param array $payload Report payload.
+		 * @return void
 		 */
-		private function dispatch( array $payload ): void {
+		private function dispatch( array $payload ) {
 			$response = wp_remote_post(
 				$this->get_endpoint( '/report' ),
 				array(
@@ -228,7 +261,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		 * @param int $post_id Post ID.
 		 * @return array
 		 */
-		private function build_payload( int $post_id ): array {
+		private function build_payload( $post_id ) {
 			$post  = get_post( $post_id );
 			$terms = wp_get_post_terms( $post_id, 'firefighter_stats_cat' );
 			$term  = ( ! is_wp_error( $terms ) && ! empty( $terms ) ) ? $terms[0] : null;
@@ -256,10 +289,11 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		 * the next publish attempt triggers a fresh /register call.
 		 *
 		 * @param array|WP_Error $response wp_remote_post response.
+		 * @return void
 		 */
-		private function handle_http_error( $response ): void {
+		private function handle_http_error( $response ) {
 			if ( is_wp_error( $response ) ) {
-				return; // Silent; network errors are transient.
+				return;
 			}
 			$code = wp_remote_retrieve_response_code( $response );
 			if ( 401 === $code || 403 === $code ) {
@@ -274,7 +308,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		 * @param string $path e.g. '/register' or '/report'.
 		 * @return string
 		 */
-		private function get_endpoint( string $path ): string {
+		private function get_endpoint( $path ) {
 			$base = apply_filters(
 				'firefighter_stats_reporting_endpoint',
 				'https://remiza.pl/wp-json/remiza-stats/v1'
@@ -288,8 +322,10 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Show the first-run consent notice to admins.
+		 *
+		 * @return void
 		 */
-		public function show_consent_notice(): void {
+		public function show_consent_notice() {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -303,32 +339,28 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			$nonce        = wp_create_nonce( 'firefighter_stats_reporter_action' );
 			$settings_url = admin_url( 'edit.php?post_type=firefighter_stats&page=firefighter-stats-settings' );
 
-			$keep_url = add_query_arg( array(
-				'firefighter_stats_action' => 'keep_reporting',
-				'_wpnonce'                 => $nonce,
-			) );
-			$disable_url = add_query_arg( array(
-				'firefighter_stats_action' => 'disable_reporting',
-				'_wpnonce'                 => $nonce,
-			) );
-
+			$keep_url = add_query_arg(
+				array(
+					'firefighter_stats_action' => 'keep_reporting',
+					'_wpnonce'                 => $nonce,
+				)
+			);
+			$disable_url = add_query_arg(
+				array(
+					'firefighter_stats_action' => 'disable_reporting',
+					'_wpnonce'                 => $nonce,
+				)
+			);
 			?>
 			<div class="notice notice-info" style="display:flex; align-items:flex-start; gap:16px; padding:14px 16px;">
 				<div style="flex-shrink:0; padding-top:2px;">
-					<a href="https://remiza.pl" target="_blank" rel="noopener noreferrer">
-						<img src="https://remiza.pl/wp-content/uploads/2026/01/logoR-bez-tla.png"
-						     alt="Remiza.pl"
-						     style="height:36px; width:auto; display:block;">
-					</a>
+					<img src="<?php echo esc_url( FIREFIGHTER_STATS_PLUGIN_URL . 'assets/images/remiza-logo.webp' ); ?>" alt="Remiza.pl" height="36" style="display:block;">
 				</div>
 				<div>
 					<p style="margin:0 0 6px;">
-						<strong><?php
-							echo esc_html( $this->t(
-								'Firefighter Statistics — Data Sharing with Remiza.pl',
-								'Statystyki Wyjazdów — Udostępnianie Danych Remiza.pl'
-							) );
-						?></strong>
+						<strong>
+							<?php echo esc_html( $this->t( 'Firefighter Statistics — Data Sharing with Remiza.pl', 'Statystyki Wyjazdów — Udostępnianie Danych Remiza.pl' ) ); ?>
+						</strong>
 					</p>
 					<p style="margin:0 0 8px; color:#3c434a;">
 						<?php echo esc_html( $this->t(
@@ -339,7 +371,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 					<p style="margin:0 0 8px; color:#3c434a; font-size:12px;">
 						<strong><?php echo esc_html( $this->t( "What's shared:", 'Co jest udostępniane:' ) ); ?></strong>
 						<?php echo esc_html( $this->t(
-							'site name &amp; URL · post title · 30-word excerpt · category · emergency date · plugin version',
+							'site name & URL · post title · 30-word excerpt · category · emergency date · plugin version',
 							'nazwa i URL strony · tytuł postu · 30-słowny skrót · kategoria · data wyjazdu · wersja wtyczki'
 						) ); ?>
 					</p>
@@ -361,8 +393,10 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Show an error notice when the site token has been rejected.
+		 *
+		 * @return void
 		 */
-		public function show_token_invalid_notice(): void {
+		public function show_token_invalid_notice() {
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
@@ -373,18 +407,18 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			$nonce        = wp_create_nonce( 'firefighter_stats_reporter_action' );
 			$settings_url = admin_url( 'edit.php?post_type=firefighter_stats&page=firefighter-stats-settings' );
 
-			$reregister_url = add_query_arg( array(
-				'firefighter_stats_action' => 'reregister',
-				'_wpnonce'                 => $nonce,
-			) );
-
+			$reregister_url = add_query_arg(
+				array(
+					'firefighter_stats_action' => 'reregister',
+					'_wpnonce'                 => $nonce,
+				)
+			);
 			?>
 			<div class="notice notice-error">
 				<p>
-					<strong><?php echo esc_html( $this->t(
-						'Firefighter Statistics — Remiza.pl token rejected.',
-						'Statystyki Wyjazdów — token Remiza.pl odrzucony.'
-					) ); ?></strong>
+					<strong>
+						<?php echo esc_html( $this->t( 'Firefighter Statistics — Remiza.pl token rejected.', 'Statystyki Wyjazdów — token Remiza.pl odrzucony.' ) ); ?>
+					</strong>
 					<?php echo esc_html( $this->t(
 						'Reporting was paused because the site token was not recognised. Click Re-register to obtain a new token.',
 						'Raportowanie zostało wstrzymane, ponieważ token strony nie został rozpoznany. Kliknij Zarejestruj ponownie, aby uzyskać nowy token.'
@@ -407,19 +441,24 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		/**
 		 * Handle GET-parameter actions triggered by notice buttons.
 		 * Runs on `admin_init`.
+		 *
+		 * @return void
 		 */
-		public function handle_notice_actions(): void {
-			if ( empty( $_GET['firefighter_stats_action'] ) ) {
+		public function handle_notice_actions() {
+			if ( empty( $_GET['firefighter_stats_action'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 				return;
 			}
 			if ( ! current_user_can( 'manage_options' ) ) {
 				return;
 			}
-			if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_key( $_GET['_wpnonce'] ), 'firefighter_stats_reporter_action' ) ) {
+			if (
+				empty( $_GET['_wpnonce'] ) ||
+				! wp_verify_nonce( sanitize_key( wp_unslash( $_GET['_wpnonce'] ) ), 'firefighter_stats_reporter_action' )
+			) {
 				return;
 			}
 
-			$action = sanitize_key( $_GET['firefighter_stats_action'] );
+			$action = sanitize_key( wp_unslash( $_GET['firefighter_stats_action'] ) );
 
 			switch ( $action ) {
 				case 'keep_reporting':
@@ -447,8 +486,10 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Generate a new token and attempt re-registration immediately.
+		 *
+		 * @return void
 		 */
-		public function regenerate_token(): void {
+		public function regenerate_token() {
 			delete_option( self::OPTION_TOKEN );
 			delete_option( self::OPTION_REGISTERED );
 			$this->ensure_token();
@@ -457,15 +498,19 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Enable reporting.
+		 *
+		 * @return void
 		 */
-		public function enable_reporting(): void {
+		public function enable_reporting() {
 			update_option( self::OPTION_ENABLED, '1', false );
 		}
 
 		/**
 		 * Disable reporting.
+		 *
+		 * @return void
 		 */
-		public function disable_reporting(): void {
+		public function disable_reporting() {
 			update_option( self::OPTION_ENABLED, '0', false );
 		}
 
@@ -473,12 +518,16 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		// Locale helper (same pattern as Admin Guide)
 		// ---------------------------------------------------------------
 
-		/** @var bool|null */
-		private $is_pl = null;
-
-		private function t( string $en, string $pl ): string {
+		/**
+		 * Return the localised string for the admin's current language.
+		 *
+		 * @param string $en English text.
+		 * @param string $pl Polish text.
+		 * @return string
+		 */
+		private function t( $en, $pl ) {
 			if ( null === $this->is_pl ) {
-				$this->is_pl = ( strpos( get_user_locale(), 'pl' ) === 0 );
+				$this->is_pl = ( 0 === strpos( get_user_locale(), 'pl' ) );
 			}
 			return $this->is_pl ? $pl : $en;
 		}

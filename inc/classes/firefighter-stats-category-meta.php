@@ -23,25 +23,26 @@ if ( ! class_exists( 'Firefighter_Stats_Category_Meta' ) ) {
          */
         public function add_category_fields() {
             ?>
+            <?php wp_nonce_field( 'firefighter_stats_save_cat_meta', 'firefighter_stats_cat_nonce' ); ?>
             <div class="form-field">
-                <label for="firefighter_stats_category_icon"><?php esc_html_e( 'Category Icon', 'firefighter-stats' ); ?></label>
+                <label for="firefighter_stats_category_icon"><?php esc_html_e( 'Category Icon', 'firefighter-widget' ); ?></label>
                 <select name="firefighter_stats_category_icon" id="firefighter_stats_category_icon">
-                    <option value=""><?php esc_html_e( 'Select Icon', 'firefighter-stats' ); ?></option>
-                    <?php echo $this->get_icon_options(); ?>
+                    <option value=""><?php esc_html_e( 'Select Icon', 'firefighter-widget' ); ?></option>
+                    <?php echo wp_kses( $this->get_icon_options(), array( 'option' => array( 'value' => array(), 'selected' => array() ) ) ); ?>
                 </select>
-                <p class="description"><?php esc_html_e( 'Choose an icon to represent this emergency category.', 'firefighter-stats' ); ?></p>
+                <p class="description"><?php esc_html_e( 'Choose an icon to represent this emergency category.', 'firefighter-widget' ); ?></p>
             </div>
 
             <div class="form-field">
-                <label for="firefighter_stats_category_custom_icon"><?php esc_html_e( 'Custom Icon (Emoji)', 'firefighter-stats' ); ?></label>
+                <label for="firefighter_stats_category_custom_icon"><?php esc_html_e( 'Custom Icon (Emoji)', 'firefighter-widget' ); ?></label>
                 <input type="text" name="firefighter_stats_category_custom_icon" id="firefighter_stats_category_custom_icon" value="" maxlength="10" style="width: 60px;" />
-                <p class="description"><?php esc_html_e( 'Enter any emoji to override the icon above. Leave empty to use the dropdown selection.', 'firefighter-stats' ); ?></p>
+                <p class="description"><?php esc_html_e( 'Enter any emoji to override the icon above. Leave empty to use the dropdown selection.', 'firefighter-widget' ); ?></p>
             </div>
 
             <div class="form-field">
-                <label for="firefighter_stats_category_color"><?php esc_html_e( 'Category Color', 'firefighter-stats' ); ?></label>
+                <label for="firefighter_stats_category_color"><?php esc_html_e( 'Category Color', 'firefighter-widget' ); ?></label>
                 <input type="color" name="firefighter_stats_category_color" id="firefighter_stats_category_color" value="#e74c3c" />
-                <p class="description"><?php esc_html_e( 'Choose a color for this emergency category in widgets and lists.', 'firefighter-stats' ); ?></p>
+                <p class="description"><?php esc_html_e( 'Choose a color for this emergency category in widgets and lists.', 'firefighter-widget' ); ?></p>
             </div>
             <?php
         }
@@ -57,36 +58,39 @@ if ( ! class_exists( 'Firefighter_Stats_Category_Meta' ) ) {
                 $color = '#e74c3c'; // Default red color
             }
             ?>
+            <tr>
+                <td colspan="2"><?php wp_nonce_field( 'firefighter_stats_save_cat_meta', 'firefighter_stats_cat_nonce' ); ?></td>
+            </tr>
             <tr class="form-field">
                 <th scope="row" valign="top">
-                    <label for="firefighter_stats_category_icon"><?php esc_html_e( 'Category Icon', 'firefighter-stats' ); ?></label>
+                    <label for="firefighter_stats_category_icon"><?php esc_html_e( 'Category Icon', 'firefighter-widget' ); ?></label>
                 </th>
                 <td>
                     <select name="firefighter_stats_category_icon" id="firefighter_stats_category_icon">
-                        <option value=""><?php esc_html_e( 'Select Icon', 'firefighter-stats' ); ?></option>
-                        <?php echo $this->get_icon_options( $icon ); ?>
+                        <option value=""><?php esc_html_e( 'Select Icon', 'firefighter-widget' ); ?></option>
+                        <?php echo wp_kses( $this->get_icon_options( $icon ), array( 'option' => array( 'value' => array(), 'selected' => array() ) ) ); ?>
                     </select>
-                    <p class="description"><?php esc_html_e( 'Choose an icon to represent this emergency category.', 'firefighter-stats' ); ?></p>
+                    <p class="description"><?php esc_html_e( 'Choose an icon to represent this emergency category.', 'firefighter-widget' ); ?></p>
                 </td>
             </tr>
 
             <tr class="form-field">
                 <th scope="row" valign="top">
-                    <label for="firefighter_stats_category_custom_icon"><?php esc_html_e( 'Custom Icon (Emoji)', 'firefighter-stats' ); ?></label>
+                    <label for="firefighter_stats_category_custom_icon"><?php esc_html_e( 'Custom Icon (Emoji)', 'firefighter-widget' ); ?></label>
                 </th>
                 <td>
                     <input type="text" name="firefighter_stats_category_custom_icon" id="firefighter_stats_category_custom_icon" value="<?php echo esc_attr( $custom_icon ); ?>" maxlength="10" style="width: 60px;" />
-                    <p class="description"><?php esc_html_e( 'Enter any emoji to override the icon above. Leave empty to use the dropdown selection.', 'firefighter-stats' ); ?></p>
+                    <p class="description"><?php esc_html_e( 'Enter any emoji to override the icon above. Leave empty to use the dropdown selection.', 'firefighter-widget' ); ?></p>
                 </td>
             </tr>
 
             <tr class="form-field">
                 <th scope="row" valign="top">
-                    <label for="firefighter_stats_category_color"><?php esc_html_e( 'Category Color', 'firefighter-stats' ); ?></label>
+                    <label for="firefighter_stats_category_color"><?php esc_html_e( 'Category Color', 'firefighter-widget' ); ?></label>
                 </th>
                 <td>
                     <input type="color" name="firefighter_stats_category_color" id="firefighter_stats_category_color" value="<?php echo esc_attr( $color ); ?>" />
-                    <p class="description"><?php esc_html_e( 'Choose a color for this emergency category in widgets and lists.', 'firefighter-stats' ); ?></p>
+                    <p class="description"><?php esc_html_e( 'Choose a color for this emergency category in widgets and lists.', 'firefighter-widget' ); ?></p>
                 </td>
             </tr>
             <?php
@@ -96,8 +100,13 @@ if ( ! class_exists( 'Firefighter_Stats_Category_Meta' ) ) {
          * Save category fields
          */
         public function save_category_fields( $term_id ) {
+            if ( ! isset( $_POST['firefighter_stats_cat_nonce'] ) ||
+                ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['firefighter_stats_cat_nonce'] ) ), 'firefighter_stats_save_cat_meta' ) ) {
+                return;
+            }
+
             if ( isset( $_POST['firefighter_stats_category_icon'] ) ) {
-                update_term_meta( $term_id, 'firefighter_stats_category_icon', sanitize_text_field( $_POST['firefighter_stats_category_icon'] ) );
+                update_term_meta( $term_id, 'firefighter_stats_category_icon', sanitize_text_field( wp_unslash( $_POST['firefighter_stats_category_icon'] ) ) );
             }
 
             if ( isset( $_POST['firefighter_stats_category_custom_icon'] ) ) {
@@ -105,7 +114,7 @@ if ( ! class_exists( 'Firefighter_Stats_Category_Meta' ) ) {
             }
 
             if ( isset( $_POST['firefighter_stats_category_color'] ) ) {
-                $color = sanitize_hex_color( $_POST['firefighter_stats_category_color'] );
+                $color = sanitize_hex_color( wp_unslash( $_POST['firefighter_stats_category_color'] ) );
                 if ( $color ) {
                     update_term_meta( $term_id, 'firefighter_stats_category_color', $color );
                 }
@@ -152,19 +161,19 @@ if ( ! class_exists( 'Firefighter_Stats_Category_Meta' ) ) {
          */
         private function get_icon_options( $selected = '' ) {
             $icons = array(
-                'fire' => esc_html__( 'Fire 🔥', 'firefighter-stats' ),
-                'medical' => esc_html__( 'Medical 🚑', 'firefighter-stats' ),
-                'rescue' => esc_html__( 'Rescue 🆘', 'firefighter-stats' ),
-                'accident' => esc_html__( 'Accident ⚠️', 'firefighter-stats' ),
-                'threat' => esc_html__( 'Local Threat ⚠️', 'firefighter-stats' ),
-                'hazmat' => esc_html__( 'Hazmat ☢️', 'firefighter-stats' ),
-                'water' => esc_html__( 'Water 🌊', 'firefighter-stats' ),
-                'technical' => esc_html__( 'Technical 🔧', 'firefighter-stats' ),
-                'vehicle' => esc_html__( 'Vehicle 🚗', 'firefighter-stats' ),
-                'structure' => esc_html__( 'Structure 🏢', 'firefighter-stats' ),
-                'false-alarm' => esc_html__( 'False Alarm 🚫', 'firefighter-stats' ),
-                'exercise' => esc_html__( 'Exercise 🏋️', 'firefighter-stats' ),
-                'other' => esc_html__( 'Other 📋', 'firefighter-stats' ),
+                'fire' => esc_html__( 'Fire 🔥', 'firefighter-widget' ),
+                'medical' => esc_html__( 'Medical 🚑', 'firefighter-widget' ),
+                'rescue' => esc_html__( 'Rescue 🆘', 'firefighter-widget' ),
+                'accident' => esc_html__( 'Accident ⚠️', 'firefighter-widget' ),
+                'threat' => esc_html__( 'Local Threat ⚠️', 'firefighter-widget' ),
+                'hazmat' => esc_html__( 'Hazmat ☢️', 'firefighter-widget' ),
+                'water' => esc_html__( 'Water 🌊', 'firefighter-widget' ),
+                'technical' => esc_html__( 'Technical 🔧', 'firefighter-widget' ),
+                'vehicle' => esc_html__( 'Vehicle 🚗', 'firefighter-widget' ),
+                'structure' => esc_html__( 'Structure 🏢', 'firefighter-widget' ),
+                'false-alarm' => esc_html__( 'False Alarm 🚫', 'firefighter-widget' ),
+                'exercise' => esc_html__( 'Exercise 🏋️', 'firefighter-widget' ),
+                'other' => esc_html__( 'Other 📋', 'firefighter-widget' ),
             );
 
             $options = '';

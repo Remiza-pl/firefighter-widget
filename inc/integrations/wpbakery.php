@@ -15,14 +15,14 @@ if ( ! function_exists( 'vc_map' ) ) {
 }
 
 // Build category dropdown options.
-$vc_category_options = array( firefighter_stats_t( 'All Categories', 'Wszystkie kategorie' ) => '' );
-$vc_terms = get_terms( array(
+$firefighter_stats_vc_options = array( firefighter_stats_t( 'All Categories', 'Wszystkie kategorie' ) => '' );
+$firefighter_stats_vc_terms = get_terms( array(
 	'taxonomy'   => 'firefighter_stats_cat',
 	'hide_empty' => false,
 ) );
-if ( ! is_wp_error( $vc_terms ) && ! empty( $vc_terms ) ) {
-	foreach ( $vc_terms as $vc_term ) {
-		$vc_category_options[ esc_html( $vc_term->name ) ] = (string) $vc_term->term_id;
+if ( ! is_wp_error( $firefighter_stats_vc_terms ) && ! empty( $firefighter_stats_vc_terms ) ) {
+	foreach ( $firefighter_stats_vc_terms as $firefighter_stats_vc_term ) {
+		$firefighter_stats_vc_options[ esc_html( $firefighter_stats_vc_term->name ) ] = (string) $firefighter_stats_vc_term->term_id;
 	}
 }
 
@@ -98,7 +98,7 @@ vc_map( array(
 			'type'        => 'dropdown',
 			'heading'     => firefighter_stats_t( 'Posts Category Filter', 'Filtr kategorii wpisów' ),
 			'param_name'  => 'category',
-			'value'       => $vc_category_options,
+			'value'       => $firefighter_stats_vc_options,
 			'std'         => '',
 			'description' => firefighter_stats_t( 'Display emergency posts from a specific category.', 'Wyświetl wpisy z wybranej kategorii.' ),
 			'dependency'  => array( 'element' => 'show_posts_list', 'value' => array( 'true' ) ),

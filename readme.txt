@@ -2,17 +2,19 @@
 Contributors: sync667
 Tags: firefighter, emergency, statistics, widget, fire department
 Requires at least: 5.9
-Tested up to: 6.7
+Tested up to: 6.9.1
 Requires PHP: 7.4
 Stable tag: 1.0.0
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Track and display emergency statistics for fire departments. Includes widgets, a Gutenberg block, and a shortcode.
-
-*Polska wersja tego pliku dostępna jest w `readme-pl_PL.txt` / Polish version available in `readme-pl_PL.txt`.*
+Track and display emergency statistics for fire departments. Widgets, Gutenberg block, shortcode included.
 
 == Description ==
+
+*Polska wersja: `readme-pl_PL.txt`.*
+
+
 
 **Firefighter Statistics** adds a custom post type and widgets to help fire departments publish their emergency response statistics on their website.
 

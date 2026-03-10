@@ -1,22 +1,27 @@
-<?php global $firefighter_stats_template_vars;
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+global $firefighter_stats_template_vars;
 if (!empty($firefighter_stats_template_vars) && is_array($firefighter_stats_template_vars)) : extract($firefighter_stats_template_vars);
 
 // Get total count for summary
-$total_count = 0;
+$total_count = 0; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 if (!empty($category_stats)) {
-    foreach ($category_stats as $stat) {
+    foreach ($category_stats as $stat) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
         $total_count += $stat['count'];
     }
 }
 
 // Get time period text
-$time_period_text = '';
+$time_period_text = ''; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
 if ( ! empty( $instance['category_time_period'] ) && 'year' === $instance['category_time_period'] ) {
 	$time_period_text = wp_date( 'Y' );
 } elseif ( ! empty( $instance['category_time_period'] ) && 'month' === $instance['category_time_period'] ) {
 	$time_period_text = date_i18n( 'F Y' );
 } else {
-	$time_period_text = __( 'all time', 'firefighter-stats' );
+	$time_period_text = __( 'all time', 'firefighter-widget' );
 }
 
 // Helper function for category emoji.
@@ -85,9 +90,9 @@ if ( ! function_exists( 'firefighter_stats_get_category_css_class' ) ) {
 
     <?php if (!empty($show_category_summary) && !empty($category_stats)) : ?>
         <div class="emergency-summary">
-            <?php foreach ($category_stats as $stat) : ?>
+            <?php foreach ($category_stats as $stat) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
                 <div class="stat-item">
-                    <span class="icon"><?php echo firefighter_stats_get_category_emoji( $stat['term']->term_id ); ?></span>
+                    <span class="icon"><?php echo esc_html( firefighter_stats_get_category_emoji( $stat['term']->term_id ) ); ?></span>
                     <span><?php echo esc_html($stat['term']->name); ?></span>
                     <span class="count"><?php echo esc_html($stat['count']); ?></span>
                 </div>
@@ -95,8 +100,14 @@ if ( ! function_exists( 'firefighter_stats_get_category_css_class' ) ) {
         </div>
 
         <div class="summary-footer">
-            <strong><?php echo sprintf(esc_html__('Total in %s:', 'firefighter-stats'), $time_period_text); ?></strong>
-            <?php echo sprintf(_n('%d emergency', '%d emergencies', $total_count, 'firefighter-stats'), $total_count); ?>
+            <strong><?php
+                /* translators: %s: time period (year, month name, or "all time") */
+                echo esc_html( sprintf( esc_html__( 'Total in %s:', 'firefighter-widget' ), $time_period_text ) );
+                ?></strong>
+            <?php
+            /* translators: %d: number of emergencies */
+            echo esc_html( sprintf( _n( '%d emergency', '%d emergencies', $total_count, 'firefighter-widget' ), $total_count ) );
+            ?>
         </div>
     <?php endif; ?>
 
@@ -105,20 +116,19 @@ if ( ! function_exists( 'firefighter_stats_get_category_css_class' ) ) {
 
         <?php if (!empty($emergency_posts)) : ?>
             <div class="emergency-recent">
-                <h4><?php echo esc_html(!empty($instance['recent_emergencies_title']) ? $instance['recent_emergencies_title'] : __('📝 Recent Emergencies', 'firefighter-stats')); ?></h4>
+                <h4><?php echo esc_html(!empty($instance['recent_emergencies_title']) ? $instance['recent_emergencies_title'] : __('📝 Recent Emergencies', 'firefighter-widget')); ?></h4>
                 <ul>
-                    <?php foreach ($emergency_posts as $emergency_post) : ?>
+                    <?php foreach ($emergency_posts as $emergency_post) : // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound ?>
                         <li>
                             <a href="<?php echo esc_url(get_permalink($emergency_post->ID)); ?>" class="emergency-link">
                                 <strong><?php echo esc_html(date_i18n('d.m.Y', strtotime($emergency_post->post_date))); ?></strong> –
                                 <?php
-                                $post_categories = wp_get_post_terms($emergency_post->ID, 'firefighter_stats_cat');
+                                $post_categories = wp_get_post_terms($emergency_post->ID, 'firefighter_stats_cat'); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
                                 if (!empty($post_categories) && !is_wp_error($post_categories)) {
-                                    $category = $post_categories[0];
-                                    $category_class = firefighter_stats_get_category_css_class( $category->slug );
-                                    $category_color = Firefighter_Stats_Category_Meta::get_category_color($category->term_id);
-                                    $color_style = 'style="background-color: ' . esc_attr($category_color) . ';"';
-                                    echo '<span class="tag ' . esc_attr($category_class) . '" ' . $color_style . '>' . esc_html($category->name) . '</span> – ';
+                                    $category = $post_categories[0]; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+                                    $category_class = firefighter_stats_get_category_css_class( $category->slug ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+                                    $category_color = Firefighter_Stats_Category_Meta::get_category_color($category->term_id); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+                                    echo '<span class="tag ' . esc_attr( $category_class ) . '" style="background-color: ' . esc_attr( $category_color ) . ';">' . esc_html( $category->name ) . '</span> – ';
                                 }
                                 ?>
                                 <?php echo esc_html(get_the_title($emergency_post->ID)); ?>
@@ -129,7 +139,7 @@ if ( ! function_exists( 'firefighter_stats_get_category_css_class' ) ) {
             </div>
         <?php else : ?>
             <p style="text-align: center; color: #666; font-style: italic; padding: 20px;">
-                <?php esc_html_e('No emergency data available.', 'firefighter-stats'); ?>
+                <?php esc_html_e('No emergency data available.', 'firefighter-widget'); ?>
             </p>
         <?php endif; ?>
 
@@ -137,7 +147,7 @@ if ( ! function_exists( 'firefighter_stats_get_category_css_class' ) ) {
 
     <?php if (empty($category_stats) && empty($emergency_posts)) : ?>
         <p style="text-align: center; color: #666; font-style: italic; padding: 20px;">
-            <?php esc_html_e('No emergency data available.', 'firefighter-stats'); ?>
+            <?php esc_html_e('No emergency data available.', 'firefighter-widget'); ?>
         </p>
     <?php endif; ?>
 </section>

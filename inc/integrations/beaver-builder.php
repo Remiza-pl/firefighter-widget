@@ -32,14 +32,14 @@ if ( ! class_exists( 'Firefighter_Stats_Beaver_Module' ) ) {
 }
 
 // Build category select options.
-$bb_category_options = array( '' => firefighter_stats_t( 'All Categories', 'Wszystkie kategorie' ) );
-$bb_terms = get_terms( array(
+$firefighter_stats_bb_options = array( '' => firefighter_stats_t( 'All Categories', 'Wszystkie kategorie' ) );
+$firefighter_stats_bb_terms = get_terms( array(
 	'taxonomy'   => 'firefighter_stats_cat',
 	'hide_empty' => false,
 ) );
-if ( ! is_wp_error( $bb_terms ) && ! empty( $bb_terms ) ) {
-	foreach ( $bb_terms as $bb_term ) {
-		$bb_category_options[ (string) $bb_term->term_id ] = esc_html( $bb_term->name );
+if ( ! is_wp_error( $firefighter_stats_bb_terms ) && ! empty( $firefighter_stats_bb_terms ) ) {
+	foreach ( $firefighter_stats_bb_terms as $firefighter_stats_bb_term ) {
+		$firefighter_stats_bb_options[ (string) $firefighter_stats_bb_term->term_id ] = esc_html( $firefighter_stats_bb_term->name );
 	}
 }
 
@@ -143,7 +143,7 @@ FLBuilder::register_module(
 							'type'    => 'select',
 							'label'   => firefighter_stats_t( 'Posts Category Filter', 'Filtr kategorii wpisów' ),
 							'default' => '',
-							'options' => $bb_category_options,
+							'options' => $firefighter_stats_bb_options,
 						),
 
 						'limit' => array(

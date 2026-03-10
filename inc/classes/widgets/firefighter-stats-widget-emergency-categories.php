@@ -4,6 +4,9 @@
  *
  * Display list of firefighter_stats_cat tax terms
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 if ( ! class_exists( 'Firefighter_Stats_Widget_Emergency_Categories' ) && class_exists( 'Firefighter_Stats_Widget' ) ) {
 class Firefighter_Stats_Widget_Emergency_Categories extends Firefighter_Stats_Widget {
 
@@ -13,13 +16,13 @@ class Firefighter_Stats_Widget_Emergency_Categories extends Firefighter_Stats_Wi
 		parent::__construct(array(
 			'id' => 'firefighter_stats_emergency_categories',
 			'classname' => 'firefighter-stats-emergency-categories-widget',
-			'title' => esc_html__( 'Firefighter Stats Emergency Categories', 'firefighter-stats' ),
-			'description' => esc_html__( 'List of Emergency categories', 'firefighter-stats' ),
+			'title' => esc_html__( 'Firefighter Stats Emergency Categories', 'firefighter-widget' ),
+			'description' => esc_html__( 'List of Emergency categories', 'firefighter-widget' ),
 			'fields' => array(
 				'title' => array(
-					'label' => esc_html__( 'Title:', 'firefighter-stats' ),
+					'label' => esc_html__( 'Title:', 'firefighter-widget' ),
 					'type' => 'text',
-					'default' => esc_html__( 'Emergency Categories', 'firefighter-stats' ),
+					'default' => esc_html__( 'Emergency Categories', 'firefighter-widget' ),
 				),
 			),
 		));

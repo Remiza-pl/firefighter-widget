@@ -8,7 +8,7 @@
  * Author URI:        https://github.com/sync667
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       firefighter-stats
+ * Text Domain:       firefighter-widget
  * Domain Path:       /languages
  * Requires at least: 5.9
  * Tested up to:      6.7
@@ -23,17 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'FIREFIGHTER_STATS_VERSION', '1.0.0' );
 define( 'FIREFIGHTER_STATS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FIREFIGHTER_STATS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
-
-// Load text domain for translations
-add_action( 'plugins_loaded', 'firefighter_stats_load_textdomain' );
-if ( ! function_exists( 'firefighter_stats_load_textdomain' ) ) {
-	function firefighter_stats_load_textdomain(): void {
-		load_plugin_textdomain( 'firefighter-stats', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
-
-		// Check if we need to flush rewrite rules due to language change
-		firefighter_stats_maybe_flush_rewrites();
-	}
-}
 
 // Flush rewrite rules if language changed
 if ( ! function_exists( 'firefighter_stats_maybe_flush_rewrites' ) ) {
@@ -52,6 +41,7 @@ if ( ! function_exists( 'firefighter_stats_maybe_flush_rewrites' ) ) {
 		}
 	}
 }
+add_action( 'plugins_loaded', 'firefighter_stats_maybe_flush_rewrites' );
 
 // Include additional functions and classes
 $firefighter_stats_plugin_dir = plugin_dir_path( __FILE__ );
@@ -172,7 +162,7 @@ if ( ! function_exists( 'firefighter_stats_category_notice' ) ) {
 		if ( get_transient( $key ) ) {
 			delete_transient( $key );
 			echo '<div class="notice notice-error"><p>' .
-				esc_html__( 'The emergency post was reverted to draft because no category was assigned. Please select a category before publishing.', 'firefighter-stats' ) .
+				esc_html__( 'The emergency post was reverted to draft because no category was assigned. Please select a category before publishing.', 'firefighter-widget' ) .
 				'</p></div>';
 		}
 	}

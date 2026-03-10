@@ -70,7 +70,7 @@ if ( ! class_exists( 'Firefighter_Stats_Widget' ) ) {
                         $checked = checked( $field_value, 'true', false );
                         echo '<div class="fs-wf-field fs-wf-field--check">';
                         echo '<label class="fs-wf-check-label" for="' . esc_attr( $field_id_attr ) . '">';
-                        echo '<input type="checkbox" id="' . esc_attr( $field_id_attr ) . '" name="' . esc_attr( $field_name_attr ) . '" value="true" ' . $checked . '>';
+                        echo '<input type="checkbox" id="' . esc_attr( $field_id_attr ) . '" name="' . esc_attr( $field_name_attr ) . '" value="true" ' . $checked . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                         echo '<span>' . esc_html( $field['label'] ?? '' ) . '</span>';
                         echo '</label>';
                     } else {
@@ -88,7 +88,7 @@ if ( ! class_exists( 'Firefighter_Stats_Widget' ) ) {
                         } elseif ( 'select' === $field['type'] && ! empty( $field['choices'] ) ) {
                             echo '<select id="' . esc_attr( $field_id_attr ) . '" name="' . esc_attr( $field_name_attr ) . '" class="widefat fs-wf-input">';
                             foreach ( $field['choices'] as $choice_value => $choice_label ) {
-                                echo '<option value="' . esc_attr( $choice_value ) . '" ' . selected( $field_value, $choice_value, false ) . '>' . esc_html( $choice_label ) . '</option>';
+                                echo '<option value="' . esc_attr( $choice_value ) . '" ' . selected( $field_value, $choice_value, false ) . '>' . esc_html( $choice_label ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                             }
                             echo '</select>';
 
@@ -100,7 +100,7 @@ if ( ! class_exists( 'Firefighter_Stats_Widget' ) ) {
                             }
                             if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
                                 foreach ( $terms as $term ) {
-                                    echo '<option value="' . esc_attr( $term->term_id ) . '" ' . selected( $field_value, $term->term_id, false ) . '>' . esc_html( $term->name ) . '</option>';
+                                    echo '<option value="' . esc_attr( $term->term_id ) . '" ' . selected( $field_value, $term->term_id, false ) . '>' . esc_html( $term->name ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                 }
                             }
                             echo '</select>';
@@ -111,8 +111,7 @@ if ( ! class_exists( 'Firefighter_Stats_Widget' ) ) {
                             echo '<select id="' . esc_attr( $field_id_attr ) . '" name="' . esc_attr( $field_name_attr ) . '[]" class="widefat fs-wf-input" multiple="multiple" size="5">';
                             if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
                                 foreach ( $terms as $term ) {
-                                    $sel = in_array( $term->term_id, $selected_values, false ) ? 'selected="selected"' : '';
-                                    echo '<option value="' . esc_attr( $term->term_id ) . '" ' . $sel . '>' . esc_html( $term->name ) . '</option>';
+                                    echo '<option value="' . esc_attr( $term->term_id ) . '" ' . selected( $field_value, $term->term_id, false ) . '>' . esc_html( $term->name ) . '</option>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                 }
                             }
                             echo '</select>';
@@ -160,10 +159,11 @@ if ( ! class_exists( 'Firefighter_Stats_Widget' ) ) {
          */
         public function before_widget_content( $args, $instance ) {
 
-            echo $args['before_widget'];
+            echo $args['before_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
             // Widget title
             if ( ! empty( $instance['title'] ) ) {
+                // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 echo $args['before_title'] . apply_filters( 'widget_title', $instance['title'] ) . $args['after_title'];
             }
 
@@ -174,7 +174,7 @@ if ( ! class_exists( 'Firefighter_Stats_Widget' ) ) {
          */
         public function after_widget_content( $args, $instance ) {
 
-            echo $args['after_widget'];
+            echo $args['after_widget']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
         }
 

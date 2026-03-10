@@ -45,7 +45,7 @@ if ( ! class_exists( 'Firefighter_Stats_CPT' ) ) {
 		public function register_post_type(): void {
 
 			// Override wp_args
-			$cpt_wp_args_override = apply_filters( $this->cpt_id . '_cpt_wp_args', [] );
+			$cpt_wp_args_override = apply_filters( $this->cpt_id . '_cpt_wp_args', [] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 			if ( is_array( $cpt_wp_args_override ) && ! empty( $cpt_wp_args_override ) ) {
 				$this->wp_args = array_merge( $this->wp_args, $cpt_wp_args_override );
 			}
@@ -84,13 +84,13 @@ if ( ! class_exists( 'Firefighter_Stats_CPT' ) ) {
 			foreach( $this->taxonomies as $taxonomy_id => $taxonomy_arr ) {
 
 				// Override wp_args
-				$tax_wp_args_override = apply_filters( $taxonomy_id . '_tax_wp_args', [] );
+				$tax_wp_args_override = apply_filters( $taxonomy_id . '_tax_wp_args', [] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 				if ( is_array( $tax_wp_args_override ) && ! empty( $tax_wp_args_override ) ) {
 					$taxonomy_arr['wp_args'] = array_merge( $taxonomy_arr['wp_args'], $tax_wp_args_override );
 				}
 
 				// Override args
-				$tax_args_override = apply_filters( $taxonomy_id . '_tax_args', [] );
+				$tax_args_override = apply_filters( $taxonomy_id . '_tax_args', [] ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.DynamicHooknameFound
 				if ( is_array( $tax_args_override ) && ! empty( $tax_args_override ) ) {
 					$taxonomy_arr['args'] = array_merge( $taxonomy_arr['args'], $tax_args_override );
 				}
@@ -139,7 +139,7 @@ if ( ! class_exists( 'Firefighter_Stats_CPT' ) ) {
 
 				if ( $typenow == $this->cpt_id && ! empty( $taxonomies ) ) {
 					foreach ( $taxonomies as $tax_slug => $tax_arr ) {
-						$current_tax_slug = isset( $_GET[ $tax_slug ] ) ? sanitize_text_field( wp_unslash( $_GET[ $tax_slug ] ) ) : '';
+						$current_tax_slug = isset( $_GET[ $tax_slug ] ) ? sanitize_text_field( wp_unslash( $_GET[ $tax_slug ] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 						$tax_obj = get_taxonomy( $tax_slug );
 						$tax_name = $tax_obj->labels->name;
 						$terms = get_terms( $tax_slug );

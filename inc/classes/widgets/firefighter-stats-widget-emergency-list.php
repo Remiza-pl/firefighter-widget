@@ -169,7 +169,7 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
 	    		'suppress_filters' => false,
 			);
 			if ( ! empty( $instance['category'] ) && 'none' !== $instance['category'] && is_numeric( $instance['category'] ) ) {
-				$query_args['tax_query'] = array(
+				$query_args['tax_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 					array(
 						'taxonomy' => 'firefighter_stats_cat',
 						'field'    => 'term_id',
@@ -372,7 +372,7 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
             'post_status'    => 'publish',
             'posts_per_page' => -1,
             'fields'         => 'ids',
-            'tax_query'      => array(
+            'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                 array(
                     'taxonomy' => 'firefighter_stats_cat',
                     'field'    => 'term_id',
@@ -504,7 +504,7 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
                 <div class="emergency-summary">
                     <?php foreach ( $category_stats as $stat ) : ?>
                         <div class="stat-item">
-                            <span class="icon"><?php echo $this->get_category_emoji( $stat['term']->term_id ); ?></span>
+                            <span class="icon"><?php echo esc_html( $this->get_category_emoji( $stat['term']->term_id ) ); ?></span>
                             <span><?php echo esc_html( $stat['term']->name ); ?></span>
                             <span class="count"><?php echo esc_html( $stat['count'] ); ?></span>
                         </div>
@@ -532,7 +532,7 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
                                         $category_class = $this->get_category_css_class( $cat_item->slug );
                                         $category_color = Firefighter_Stats_Category_Meta::get_category_color( $cat_item->term_id );
                                         $color_style    = 'style="background-color: ' . esc_attr( $category_color ) . ';"';
-                                        echo '<span class="tag ' . esc_attr( $category_class ) . '" ' . $color_style . '>' . esc_html( $cat_item->name ) . '</span> – ';
+                                        echo '<span class="tag ' . esc_attr( $category_class ) . '" style="background-color: ' . esc_attr( $category_color ) . ';">' . esc_html( $cat_item->name ) . '</span> – ';
                                     }
                                     ?>
                                     <?php echo esc_html( get_the_title( $emergency_post->ID ) ); ?>

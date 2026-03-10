@@ -105,11 +105,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Guide' ) ) {
 
                 <!-- Remiza.pl official support banner -->
                 <div style="max-width:760px; margin-bottom:28px; background:#fff; border:2px solid #cc1e1e; border-radius:8px; padding:18px 22px; display:flex; align-items:center; gap:20px; box-shadow:0 2px 8px rgba(204,30,30,.08);">
-                    <a href="https://remiza.pl" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;">
-                        <img src="https://remiza.pl/wp-content/uploads/2026/01/logoR-bez-tla.png"
-                             alt="Remiza.pl"
-                             style="height:56px; width:auto; display:block;">
-                    </a>
+                    <img src="<?php echo esc_url( FIREFIGHTER_STATS_PLUGIN_URL . 'assets/images/remiza-logo.webp' ); ?>" alt="Remiza.pl" height="48" style="display:block; flex-shrink:0;">
                     <div>
                         <strong style="font-size:14px; display:block; margin-bottom:4px; color:#cc1e1e;">
                             ✅ <?php echo esc_html( $this->t(

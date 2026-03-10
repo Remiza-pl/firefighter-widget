@@ -3,7 +3,7 @@
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![WordPress](https://img.shields.io/badge/WordPress-5.9%2B-21759b)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4)](https://www.php.net/)
-[![Tested up to](https://img.shields.io/badge/Tested%20up%20to-WP%206.7-0073aa)](https://wordpress.org/)
+[![Tested up to](https://img.shields.io/badge/Tested%20up%20to-WP%206.9.1-0073aa)](https://wordpress.org/)
 
 > 🇵🇱 [Czytaj po polsku → README.pl.md](README.pl.md)
 
@@ -45,7 +45,7 @@ A WordPress plugin for fire departments to track and display emergency response 
 |-------------|---------|
 | WordPress | 5.9 |
 | PHP | 7.4 |
-| Tested up to WP | 6.7 |
+| Tested up to WP | 6.9.1 |
 
 ---
 

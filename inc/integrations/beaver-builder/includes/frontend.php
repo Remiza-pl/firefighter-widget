@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $s = $module->settings;
 
-$atts = array(
+$firefighter_stats_atts = array(
 	'title'                    => isset( $s->title ) ? $s->title : '',
 	'category_time_period'     => isset( $s->category_time_period ) ? $s->category_time_period : 'year',
 	'show_category_summary'    => ! empty( $s->show_category_summary ) ? 'true' : 'false',
@@ -29,4 +29,4 @@ $atts = array(
 );
 
 // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-echo Firefighter_Stats_Shortcode_Emergency_List_Widget::shortcode( $atts );
+echo Firefighter_Stats_Shortcode_Emergency_List_Widget::shortcode( $firefighter_stats_atts );

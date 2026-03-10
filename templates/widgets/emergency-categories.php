@@ -1,4 +1,8 @@
-<?php global $firefighter_stats_template_vars;
+<?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+global $firefighter_stats_template_vars;
 if ( ! empty( $firefighter_stats_template_vars ) && is_array( $firefighter_stats_template_vars ) ) : extract( $firefighter_stats_template_vars );
 
 // TEMPLATE : BEGIN ?>

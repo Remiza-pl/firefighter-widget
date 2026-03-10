@@ -27,7 +27,8 @@ if ( ! class_exists( 'Firefighter_Stats_Permalink_Settings' ) ) {
 		        'permalink'
 		    );
 
-		    // Save form
+		    // Save form — nonce is verified by WordPress core for the Permalinks settings page.
+		    // phpcs:disable WordPress.Security.NonceVerification.Missing
 		    if ( isset( $_POST[ 'permalink_structure' ] ) ) {
 
 		    	$permalinks = get_option( $this->args['option_id'] );
@@ -41,7 +42,8 @@ if ( ! class_exists( 'Firefighter_Stats_Permalink_Settings' ) ) {
 					$field_name = $field_id . '-slug';
 
 					if ( ! empty( $_POST[ $field_name ] ) ) {
-						$permalinks[ $field_id ] = strtolower( preg_replace( '/[^-a-zA-Z0-9_]/', '', $_POST[ $field_name ] ) );
+						$raw_slug = sanitize_text_field( wp_unslash( $_POST[ $field_name ] ) );
+						$permalinks[ $field_id ] = strtolower( preg_replace( '/[^-a-zA-Z0-9_]/', '', $raw_slug ) );
 						$permalinks[ $field_id ] = ! empty( $permalinks[ $field_id ] ) ? $permalinks[ $field_id ] : $field['default'];
 					} else {
 						$permalinks[ $field_id ] = $field['default'];
@@ -53,6 +55,7 @@ if ( ! class_exists( 'Firefighter_Stats_Permalink_Settings' ) ) {
 				update_option( $this->args['option_id'], $permalinks );
 
 		    }
+			// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		}
 

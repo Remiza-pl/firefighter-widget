@@ -505,7 +505,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                 'posts_per_page' => 1,
                 'fields'         => 'ids',
                 'no_found_rows'  => false,
-                'tax_query'      => array(
+                'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                     array(
                         'taxonomy' => 'firefighter_stats_cat',
                         'field'    => 'term_id',
@@ -602,8 +602,8 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
 
             // Year filter — validate GET param.
             $selected_year = 0;
-            if ( isset( $_GET['year'] ) ) {
-                $raw = sanitize_text_field( wp_unslash( $_GET['year'] ) );
+            if ( isset( $_GET['year'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $raw = sanitize_text_field( wp_unslash( $_GET['year'] ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 if ( preg_match( '/^\d{4}$/', $raw ) ) {
                     $selected_year = (int) $raw;
                 }
@@ -837,7 +837,7 @@ if ( ! function_exists( 'firefighter_stats_count_posts_by_term' ) ) {
             'posts_per_page' => 1,
             'fields'         => 'ids',
             'no_found_rows'  => false,
-            'tax_query'      => array(
+            'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                 array(
                     'taxonomy' => $taxonomy,
                     'field'    => 'term_id',

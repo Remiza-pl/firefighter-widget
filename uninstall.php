@@ -25,19 +25,19 @@ delete_option( 'firefighter_stats_reporting_endpoint' );
 delete_transient( 'firefighter_stats_token_invalid' );
 
 // Remove term meta for all firefighter_stats_cat terms.
-$terms = get_terms( array(
+$firefighter_stats_terms = get_terms( array(
 	'taxonomy'   => 'firefighter_stats_cat',
 	'hide_empty' => false,
 	'fields'     => 'ids',
 ) );
 
-if ( ! is_wp_error( $terms ) && ! empty( $terms ) ) {
-	foreach ( $terms as $term_id ) {
-		delete_term_meta( $term_id, 'firefighter_stats_category_icon' );
-		delete_term_meta( $term_id, 'firefighter_stats_category_custom_icon' );
-		delete_term_meta( $term_id, 'firefighter_stats_category_color' );
-		delete_term_meta( $term_id, 'firefighter_stats_manual_counts' );
-		delete_term_meta( $term_id, 'firefighter_stats_total_count' );
-		delete_term_meta( $term_id, 'firefighter_stats_manual_total' );
+if ( ! is_wp_error( $firefighter_stats_terms ) && ! empty( $firefighter_stats_terms ) ) {
+	foreach ( $firefighter_stats_terms as $firefighter_stats_term_id ) {
+		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_category_icon' );
+		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_category_custom_icon' );
+		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_category_color' );
+		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_manual_counts' );
+		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_total_count' );
+		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_manual_total' );
 	}
 }
