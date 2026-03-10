@@ -362,7 +362,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                     'Permalinki odświeżone pomyślnie. URL-e powinny teraz działać poprawnie.'
                 );
                 add_action( 'admin_notices', static function () use ( $msg ) {
-                    echo '<div class="notice notice-success"><p>' . esc_html( $msg ) . '</p></div>';
+                    echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( $msg ) . '</p></div>';
                 } );
                 return;
             }
@@ -373,7 +373,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                     'Proszę wybrać kategorię i wprowadzić prawidłową liczbę.'
                 );
                 add_action( 'admin_notices', static function () use ( $msg ) {
-                    echo '<div class="notice notice-error"><p>' . esc_html( $msg ) . '</p></div>';
+                    echo '<div class="notice notice-error is-dismissible"><p>' . esc_html( $msg ) . '</p></div>';
                 } );
                 return;
             }
@@ -386,7 +386,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                     'Pomyślnie dodano %d licznik(i) wyjazdów dla %s.'
                 );
                 add_action( 'admin_notices', static function () use ( $count, $display_date, $tpl ) {
-                    echo '<div class="notice notice-success"><p>' . esc_html( sprintf( $tpl, $count, $display_date ) ) . '</p></div>';
+                    echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( sprintf( $tpl, $count, $display_date ) ) . '</p></div>';
                 } );
             } elseif ( 'delete_entry' === $action ) {
                 $entry_id = isset( $_POST['entry_id'] ) ? sanitize_text_field( wp_unslash( $_POST['entry_id'] ) ) : '';
@@ -396,7 +396,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                     'Wpis licznika wyjazdów usunięty pomyślnie.'
                 );
                 add_action( 'admin_notices', static function () use ( $msg ) {
-                    echo '<div class="notice notice-success"><p>' . esc_html( $msg ) . '</p></div>';
+                    echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( $msg ) . '</p></div>';
                 } );
             }
         }

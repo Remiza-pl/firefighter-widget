@@ -352,7 +352,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				)
 			);
 			?>
-			<div class="notice notice-info" style="display:flex; align-items:flex-start; gap:16px; padding:14px 16px;">
+			<div class="notice notice-info is-dismissible" style="display:flex; align-items:flex-start; gap:16px; padding:14px 16px;">
 				<div style="flex-shrink:0; padding-top:2px;">
 					<img src="<?php echo esc_url( FIREFIGHTER_STATS_PLUGIN_URL . 'assets/images/remiza-logo.webp' ); ?>" alt="Remiza.pl" height="36" style="display:block;">
 				</div>
@@ -414,7 +414,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				)
 			);
 			?>
-			<div class="notice notice-error">
+			<div class="notice notice-error is-dismissible">
 				<p>
 					<strong>
 						<?php echo esc_html( $this->t( 'Firefighter Statistics — Remiza.pl token rejected.', 'Statystyki Wyjazdów — token Remiza.pl odrzucony.' ) ); ?>

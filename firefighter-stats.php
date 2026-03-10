@@ -161,7 +161,7 @@ if ( ! function_exists( 'firefighter_stats_category_notice' ) ) {
 		$key = 'firefighter_stats_category_notice_' . get_current_user_id();
 		if ( get_transient( $key ) ) {
 			delete_transient( $key );
-			echo '<div class="notice notice-error"><p>' .
+			echo '<div class="notice notice-error is-dismissible"><p>' .
 				esc_html__( 'The emergency post was reverted to draft because no category was assigned. Please select a category before publishing.', 'firefighter-widget' ) .
 				'</p></div>';
 		}

@@ -78,7 +78,7 @@ Yes. Go to **Settings > Permalinks** and find the **Firefighter Stats** section 
 
 = Is the plugin translatable? =
 
-Yes. A Polish (`pl_PL`) translation is included. All strings use the `firefighter-stats` text domain.
+Yes. A Polish (`pl_PL`) translation is included. All strings use the `firefighter-widget` text domain.
 
 = The emergency URLs show 404 errors. How do I fix this? =
 
@@ -96,6 +96,19 @@ Go to **Emergencies > Quick Counts** and click **Fix Emergency URLs**. This flus
 
 = 1.0.0 =
 * Initial release.
+
+== External Services ==
+
+This plugin can optionally send anonymised emergency statistics to **Remiza.pl** (https://remiza.pl), Poland's largest firefighter portal, so the portal can display aggregated national emergency activity.
+
+**What is sent:** site name, site URL, post title, a 30-word excerpt of the post content, emergency category (slug, name, icon), emergency date, and plugin version. No personal data, user IDs, or IP addresses are ever transmitted.
+
+**When it is sent:** only when a `firefighter_stats` post is first published, and only if reporting has not been disabled by the site administrator.
+
+**How to disable:** A consent notice is shown to administrators on first use. Reporting can be disabled at any time via **Emergencies → Settings**.
+
+Remiza.pl service: https://remiza.pl
+Remiza.pl privacy policy: https://remiza.pl/polityka-prywatnosci/
 
 == Upgrade Notice ==
 
