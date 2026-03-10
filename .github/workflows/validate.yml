@@ -26,7 +26,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
-          tools: php-parallel-lint
+
+      - name: Install PHP Parallel Lint
+        run: composer global require php-parallel-lint/php-parallel-lint --no-interaction
 
       - name: PHP Lint
         run: parallel-lint --exclude vendor --exclude node_modules .
