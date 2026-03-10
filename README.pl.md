@@ -3,7 +3,7 @@
 [![Licencja: GPL v2+](https://img.shields.io/badge/Licencja-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![WordPress](https://img.shields.io/badge/WordPress-5.9%2B-21759b)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4)](https://www.php.net/)
-[![Testowano do](https://img.shields.io/badge/Testowano%20do-WP%206.7-0073aa)](https://wordpress.org/)
+[![Testowano do](https://img.shields.io/badge/Testowano%20do-WP%206.9-0073aa)](https://wordpress.org/)
 
 > 🇬🇧 [Read in English → README.md](README.md)
 
@@ -45,7 +45,7 @@ Wtyczka WordPress dla jednostek straży pożarnej do rejestrowania i wyświetlan
 |-----------|---------|
 | WordPress | 5.9 |
 | PHP | 7.4 |
-| Testowano do WP | 6.7 |
+| Testowano do WP | 6.9 |
 
 ---
 

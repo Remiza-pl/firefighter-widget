@@ -483,8 +483,21 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
 
             $last = null;
             foreach ( $manual_counts as $data ) {
-                if ( null === $last || $data['timestamp'] > $last['timestamp'] ) {
+                if ( null === $last ) {
                     $last = $data;
+                    continue;
+                }
+                $cmp = strcmp( $data['date'], $last['date'] );
+                if ( $cmp > 0 ) {
+                    $last = $data;
+                } elseif ( 0 === $cmp ) {
+                    $data_time = ! empty( $data['time'] ) ? $data['time'] : '';
+                    $last_time = ! empty( $last['time'] ) ? $last['time'] : '';
+                    if ( $data_time > $last_time ) {
+                        $last = $data;
+                    } elseif ( $data_time === $last_time && $data['timestamp'] > $last['timestamp'] ) {
+                        $last = $data;
+                    }
                 }
             }
 

@@ -7,21 +7,21 @@ global $firefighter_stats_template_vars;
 if (!empty($firefighter_stats_template_vars) && is_array($firefighter_stats_template_vars)) : extract($firefighter_stats_template_vars);
 
 // Get total count for summary
-$total_count = 0; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$firefighter_stats_total_count = 0;
 if (!empty($category_stats)) {
     foreach ($category_stats as $stat) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
-        $total_count += $stat['count'];
+        $firefighter_stats_total_count += $stat['count'];
     }
 }
 
 // Get time period text
-$time_period_text = ''; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound
+$firefighter_stats_time_period_text = '';
 if ( ! empty( $instance['category_time_period'] ) && 'year' === $instance['category_time_period'] ) {
-	$time_period_text = wp_date( 'Y' );
+	$firefighter_stats_time_period_text = wp_date( 'Y' );
 } elseif ( ! empty( $instance['category_time_period'] ) && 'month' === $instance['category_time_period'] ) {
-	$time_period_text = date_i18n( 'F Y' );
+	$firefighter_stats_time_period_text = date_i18n( 'F Y' );
 } else {
-	$time_period_text = __( 'all time', 'firefighter-widget' );
+	$firefighter_stats_time_period_text = __( 'all time', 'firefighter-widget' );
 }
 
 // Helper function for category emoji.
@@ -102,11 +102,11 @@ if ( ! function_exists( 'firefighter_stats_get_category_css_class' ) ) {
         <div class="summary-footer">
             <strong><?php
                 /* translators: %s: time period (year, month name, or "all time") */
-                echo esc_html( sprintf( esc_html__( 'Total in %s:', 'firefighter-widget' ), $time_period_text ) );
+                echo esc_html( sprintf( esc_html__( 'Total in %s:', 'firefighter-widget' ), $firefighter_stats_time_period_text ) );
                 ?></strong>
             <?php
             /* translators: %d: number of emergencies */
-            echo esc_html( sprintf( _n( '%d emergency', '%d emergencies', $total_count, 'firefighter-widget' ), $total_count ) );
+            echo esc_html( sprintf( _n( '%d emergency', '%d emergencies', $firefighter_stats_total_count, 'firefighter-widget' ), $firefighter_stats_total_count ) );
             ?>
         </div>
     <?php endif; ?>
