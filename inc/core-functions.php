@@ -77,7 +77,7 @@ if ( ! function_exists( 'firefighter_stats_get_post_taxonomy_html' ) ) {
 
             foreach ( $terms as $term ) {
 
-				$html_output .= sprintf( $link_template, esc_url( get_term_link( $term->term_id, $taxonomy ) ), $term->name );
+				$html_output .= sprintf( $link_template, esc_url( get_term_link( $term->term_id, $taxonomy ) ), esc_html( $term->name ) );
                 $html_output .= $term !== end( $terms ) ? ', ' : '';
 
             }
