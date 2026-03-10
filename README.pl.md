@@ -7,6 +7,20 @@
 
 > 🇬🇧 [Read in English → README.md](README.md)
 
+---
+
+<p align="center">
+  <a href="https://remiza.pl" target="_blank">
+    <img src="https://remiza.pl/wp-content/uploads/2026/01/logoR-bez-tla.png" alt="Remiza.pl" height="52">
+  </a>
+  <br>
+  <strong>✅ Oficjalnie wspierane przez <a href="https://remiza.pl">Remiza.pl</a></strong>
+  <br>
+  <sub>Największy polski portal strażacki — aktualności, zasoby i wsparcie społeczności</sub>
+</p>
+
+---
+
 Wtyczka WordPress dla jednostek straży pożarnej do rejestrowania i wyświetlania statystyk wyjazdów interwencyjnych. Loguj zdarzenia według kategorii, pokazuj liczniki w widżetach lub blokach Gutenberga, a nowe wpisy dodawaj bezpośrednio z paska administracyjnego lub z widżetu na stronie.
 
 ---

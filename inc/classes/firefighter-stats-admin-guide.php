@@ -103,6 +103,32 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Guide' ) ) {
                     ) ); ?>
                 </p>
 
+                <!-- Remiza.pl official support banner -->
+                <div style="max-width:760px; margin-bottom:28px; background:#fff; border:2px solid #cc1e1e; border-radius:8px; padding:18px 22px; display:flex; align-items:center; gap:20px; box-shadow:0 2px 8px rgba(204,30,30,.08);">
+                    <a href="https://remiza.pl" target="_blank" rel="noopener noreferrer" style="flex-shrink:0;">
+                        <img src="https://remiza.pl/wp-content/uploads/2026/01/logoR-bez-tla.png"
+                             alt="Remiza.pl"
+                             style="height:56px; width:auto; display:block;">
+                    </a>
+                    <div>
+                        <strong style="font-size:14px; display:block; margin-bottom:4px; color:#cc1e1e;">
+                            ✅ <?php echo esc_html( $this->t(
+                                'Officially supported by Remiza.pl',
+                                'Oficjalnie wspierane przez Remiza.pl'
+                            ) ); ?>
+                        </strong>
+                        <span style="color:#646970; font-size:13px; line-height:1.5;">
+                            <?php echo sprintf(
+                                esc_html( $this->t(
+                                    'This plugin is officially supported by %s — Poland\'s largest firefighter portal. Visit the portal for news, resources, and community help.',
+                                    'Ta wtyczka jest oficjalnie wspierana przez %s — największy polski portal strażacki. Odwiedź portal po aktualności, zasoby i pomoc społeczności.'
+                                ) ),
+                                '<a href="https://remiza.pl" target="_blank" rel="noopener noreferrer" style="color:#cc1e1e; font-weight:600;">Remiza.pl</a>'
+                            ); ?>
+                        </span>
+                    </div>
+                </div>
+
                 <!-- 1. Quick Setup -->
                 <div class="card" style="max-width:760px; margin-bottom:20px; padding:20px 24px;">
                     <h2 style="margin-top:0;">⚡ <?php echo esc_html( $this->t( 'Quick Setup', 'Szybka Konfiguracja' ) ); ?></h2>

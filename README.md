@@ -7,6 +7,20 @@
 
 > 🇵🇱 [Czytaj po polsku → README.pl.md](README.pl.md)
 
+---
+
+<p align="center">
+  <a href="https://remiza.pl" target="_blank">
+    <img src="https://remiza.pl/wp-content/uploads/2026/01/logoR-bez-tla.png" alt="Remiza.pl" height="52">
+  </a>
+  <br>
+  <strong>✅ Officially supported by <a href="https://remiza.pl">Remiza.pl</a></strong>
+  <br>
+  <sub>Poland's largest firefighter portal — news, resources, and community support</sub>
+</p>
+
+---
+
 A WordPress plugin for fire departments to track and display emergency response statistics. Log incidents by category, show live counters in widgets or Gutenberg blocks, and let admins record new entries directly from the admin bar or from the widget on the frontend.
 
 ---
