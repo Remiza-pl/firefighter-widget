@@ -48,7 +48,7 @@ jobs:
             readme.txt \
             readme-pl_PL.txt \
             blocks/emergency-list-widget/block.json \
-            languages/firefighter-stats.pot; do
+            languages/firefighter-widget.pot; do
             if [ ! -f "$FILE" ]; then
               echo "::error::Required file missing: $FILE"
               ERRORS=1
