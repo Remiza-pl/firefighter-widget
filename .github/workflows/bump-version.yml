@@ -42,19 +42,19 @@ jobs:
           NEW_VERSION="${{ inputs.version }}"
 
           # 1. firefighter-stats.php — plugin header
-          sed -i 's/^\(\s*\*\s*Version:\s*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' firefighter-stats.php
+          sed -i 's/^\([[:space:]]*\*[[:space:]]*Version:[[:space:]]*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' firefighter-stats.php
 
           # 2. firefighter-stats.php — PHP constant
-          sed -i "s/^\(define(\s*'FIREFIGHTER_STATS_VERSION'\s*,\s*'\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1${NEW_VERSION}/" firefighter-stats.php
+          sed -i "s/^\(define([[:space:]]*'FIREFIGHTER_STATS_VERSION'[[:space:]]*,[[:space:]]*'\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1${NEW_VERSION}/" firefighter-stats.php
 
           # 3. readme.txt — Stable tag
-          sed -i 's/^\(Stable tag:\s*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' readme.txt
+          sed -i 's/^\(Stable tag:[[:space:]]*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' readme.txt
 
           # 4. readme-pl_PL.txt — Stable tag
-          sed -i 's/^\(Stable tag:\s*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' readme-pl_PL.txt
+          sed -i 's/^\(Stable tag:[[:space:]]*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' readme-pl_PL.txt
 
           # 5. blocks/emergency-list-widget/block.json — version field
-          sed -i 's/^\(\s*"version":\s*"\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' blocks/emergency-list-widget/block.json
+          sed -i 's/^\([[:space:]]*"version":[[:space:]]*"\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' blocks/emergency-list-widget/block.json
 
       - name: Verify updated versions
         run: |
