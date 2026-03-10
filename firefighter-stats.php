@@ -154,6 +154,28 @@ if ( ! function_exists( 'firefighter_stats_require_category' ) ) {
 	}
 }
 
+// Invalidate widget category count caches when a firefighter_stats post status changes.
+add_action( 'transition_post_status', 'firefighter_stats_invalidate_count_cache', 10, 3 );
+if ( ! function_exists( 'firefighter_stats_invalidate_count_cache' ) ) {
+	function firefighter_stats_invalidate_count_cache( $new_status, $old_status, $post ) {
+		if ( 'firefighter_stats' !== $post->post_type ) {
+			return;
+		}
+		if ( $new_status === $old_status ) {
+			return;
+		}
+		$terms = wp_get_post_terms( $post->ID, 'firefighter_stats_cat', array( 'fields' => 'ids' ) );
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			return;
+		}
+		foreach ( $terms as $term_id ) {
+			foreach ( array( 'all', 'year', 'month' ) as $period ) {
+				delete_transient( 'fs_cat_count_' . $term_id . '_' . $period );
+			}
+		}
+	}
+}
+
 // Display admin notice when a post was reverted due to missing category.
 add_action( 'admin_notices', 'firefighter_stats_category_notice' );
 if ( ! function_exists( 'firefighter_stats_category_notice' ) ) {

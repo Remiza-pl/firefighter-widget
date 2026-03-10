@@ -39,5 +39,10 @@ if ( ! is_wp_error( $firefighter_stats_terms ) && ! empty( $firefighter_stats_te
 		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_manual_counts' );
 		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_total_count' );
 		delete_term_meta( $firefighter_stats_term_id, 'firefighter_stats_manual_total' );
+
+		// Remove widget count cache transients.
+		foreach ( array( 'all', 'year', 'month' ) as $firefighter_stats_period ) {
+			delete_transient( 'fs_cat_count_' . $firefighter_stats_term_id . '_' . $firefighter_stats_period );
+		}
 	}
 }

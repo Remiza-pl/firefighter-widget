@@ -364,14 +364,25 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
     }
 
     /**
-     * Get emergency count for a specific category and time period
+     * Get emergency count for a specific category and time period.
+     *
+     * Uses a short-lived transient cache to avoid repeated queries
+     * during a single page render when multiple widget instances exist.
      */
     private function get_category_emergency_count( $category_id, $time_period = 'all' ) {
+        $cache_key = 'fs_cat_count_' . $category_id . '_' . $time_period;
+        $cached    = get_transient( $cache_key );
+
+        if ( false !== $cached ) {
+            return (int) $cached;
+        }
+
         $query_args = array(
             'post_type'      => 'firefighter_stats',
             'post_status'    => 'publish',
-            'posts_per_page' => -1,
+            'posts_per_page' => 1,
             'fields'         => 'ids',
+            'no_found_rows'  => false,
             'tax_query'      => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
                 array(
                     'taxonomy' => 'firefighter_stats_cat',
@@ -398,8 +409,11 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
         $post_count = $query->found_posts;
 
         $manual_count = $this->get_manual_emergency_count( $category_id, $time_period );
+        $total        = $post_count + $manual_count;
 
-        return $post_count + $manual_count;
+        set_transient( $cache_key, $total, 5 * MINUTE_IN_SECONDS );
+
+        return $total;
     }
 
     /**

@@ -48,6 +48,25 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
         }
 
         /**
+         * Validate a Y-m-d date string.
+         *
+         * Returns the original date when valid, or today's date as fallback.
+         *
+         * @param string $date Raw date value.
+         * @return string Validated Y-m-d date.
+         */
+        private function validate_date_input( $date ) {
+            if ( empty( $date ) ) {
+                return $date;
+            }
+            if ( preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $m )
+                 && checkdate( (int) $m[2], (int) $m[3], (int) $m[1] ) ) {
+                return $date;
+            }
+            return wp_date( 'Y-m-d' );
+        }
+
+        /**
          * Add admin menu page
          */
         public function add_admin_menu() {
@@ -307,13 +326,15 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
             }
 
             $category_id = isset( $_POST['category_id'] ) ? absint( $_POST['category_id'] ) : 0;
-            $count       = isset( $_POST['count'] ) ? (int) $_POST['count'] : 0;
+            $count       = isset( $_POST['count'] ) ? min( (int) $_POST['count'], 999 ) : 0;
             $date        = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
             $time        = isset( $_POST['time'] ) ? sanitize_text_field( wp_unslash( $_POST['time'] ) ) : '';
 
             if ( empty( $category_id ) || $count <= 0 ) {
                 wp_send_json_error( array( 'message' => 'Invalid parameters' ) );
             }
+
+            $date = $this->validate_date_input( $date );
 
             if ( ! empty( $time ) && ! preg_match( '/^\d{2}:\d{2}$/', $time ) ) {
                 $time = '';
@@ -346,10 +367,12 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
             }
 
             $action      = isset( $_POST['action'] ) ? sanitize_text_field( wp_unslash( $_POST['action'] ) ) : '';
-            $category_id = isset( $_POST['category_id'] ) ? (int) $_POST['category_id'] : 0;
-            $count       = isset( $_POST['count'] ) ? (int) $_POST['count'] : 0;
+            $category_id = isset( $_POST['category_id'] ) ? absint( $_POST['category_id'] ) : 0;
+            $count       = isset( $_POST['count'] ) ? min( (int) $_POST['count'], 999 ) : 0;
             $date        = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
             $time        = isset( $_POST['time'] ) ? sanitize_text_field( wp_unslash( $_POST['time'] ) ) : '';
+
+            $date = $this->validate_date_input( $date );
 
             if ( ! empty( $time ) && ! preg_match( '/^\d{2}:\d{2}$/', $time ) ) {
                 $time = '';
@@ -453,6 +476,11 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
          * Update category total count cache
          */
         private function update_category_total_count( $category_id ) {
+            // Invalidate widget transient caches for this category.
+            foreach ( array( 'all', 'year', 'month' ) as $period ) {
+                delete_transient( 'fs_cat_count_' . $category_id . '_' . $period );
+            }
+
             $manual_counts = get_term_meta( $category_id, 'firefighter_stats_manual_counts', true );
             $manual_total  = 0;
 

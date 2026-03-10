@@ -29,8 +29,8 @@
 			return;
 		}
 
-		var originalHTML     = menuItem.innerHTML;
-		menuItem.innerHTML   = '⏳ ' + categoryName;
+		var originalText     = menuItem.textContent;
+		menuItem.textContent = '⏳ ' + categoryName;
 		menuItem.style.opacity = '0.6';
 
 		var xhr = new XMLHttpRequest();
@@ -48,27 +48,27 @@
 				try {
 					var response = JSON.parse( xhr.responseText );
 					if ( response.success ) {
-						menuItem.innerHTML = '✅ ' + categoryName;
+						menuItem.textContent = '✅ ' + categoryName;
 						setTimeout( function () {
-							menuItem.innerHTML = originalHTML;
+							menuItem.textContent = originalText;
 						}, 2000 );
 						// Only alert on the frontend; admin pages have wp.notices.
 						if ( typeof wp === 'undefined' || ! wp.data ) {
 							alert( data.i18n.success );
 						}
 					} else {
-						menuItem.innerHTML = '❌ ' + categoryName;
+						menuItem.textContent = '❌ ' + categoryName;
 						setTimeout( function () {
-							menuItem.innerHTML = originalHTML;
+							menuItem.textContent = originalText;
 						}, 2000 );
 						alert( data.i18n.error );
 					}
 				} catch ( e ) {
-					menuItem.innerHTML = originalHTML;
+					menuItem.textContent = originalText;
 					alert( data.i18n.networkError );
 				}
 			} else {
-				menuItem.innerHTML = originalHTML;
+				menuItem.textContent = originalText;
 				alert( data.i18n.networkError );
 			}
 		};
