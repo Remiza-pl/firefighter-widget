@@ -1,0 +1,125 @@
+name: Release WordPress Plugin
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Verify version consistency
+        run: |
+          TAG_VERSION="${{ steps.version.outputs.VERSION }}"
+
+          HEADER_VERSION=$(grep -Po '^\s*\*\s*Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+' firefighter-stats.php)
+          CONST_VERSION=$(grep -Po "define\(\s*'FIREFIGHTER_STATS_VERSION'\s*,\s*'\K[0-9]+\.[0-9]+\.[0-9]+" firefighter-stats.php)
+          STABLE_TAG=$(grep -Po '^Stable tag:\s*\K[0-9]+\.[0-9]+\.[0-9]+' readme.txt)
+          BLOCK_VERSION=$(grep -Po '"version"\s*:\s*"\K[0-9]+\.[0-9]+\.[0-9]+' blocks/emergency-list-widget/block.json)
+          STABLE_TAG_PL=$(grep -Po '^Stable tag:\s*\K[0-9]+\.[0-9]+\.[0-9]+' readme-pl_PL.txt)
+
+          ERRORS=0
+          for FILE_VERSION in \
+            "firefighter-stats.php header:$HEADER_VERSION" \
+            "firefighter-stats.php constant:$CONST_VERSION" \
+            "readme.txt Stable tag:$STABLE_TAG" \
+            "readme-pl_PL.txt Stable tag:$STABLE_TAG_PL" \
+            "block.json version:$BLOCK_VERSION"; do
+            LABEL="${FILE_VERSION%%:*}"
+            VALUE="${FILE_VERSION##*:}"
+            if [ "$VALUE" != "$TAG_VERSION" ]; then
+              echo "::error::Version mismatch — $LABEL is '$VALUE', expected '$TAG_VERSION'"
+              ERRORS=1
+            fi
+          done
+
+          if [ "$ERRORS" -eq 1 ]; then
+            exit 1
+          fi
+
+          echo "All versions match: $TAG_VERSION"
+
+      - name: Build plugin zip
+        run: |
+          PLUGIN_SLUG="firefighter-stats"
+          STAGE_DIR="/tmp/${PLUGIN_SLUG}"
+
+          mkdir -p "$STAGE_DIR"
+
+          rsync -a \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='.DS_Store' \
+            --exclude='.idea' \
+            --exclude='.vscode' \
+            --exclude='*.iml' \
+            --exclude='*.iws' \
+            --exclude='*.ipr' \
+            --exclude='nbproject' \
+            --exclude='*.log' \
+            --exclude='composer.lock' \
+            --exclude='vendor' \
+            --exclude='node_modules' \
+            --exclude='README.md' \
+            --exclude='README.pl.md' \
+            ./ "$STAGE_DIR/"
+
+          cd /tmp
+          zip -r "${GITHUB_WORKSPACE}/${PLUGIN_SLUG}.zip" "$PLUGIN_SLUG"
+
+          echo "Zip contents:"
+          unzip -l "${GITHUB_WORKSPACE}/${PLUGIN_SLUG}.zip"
+
+      - name: Extract changelog for current version
+        id: changelog
+        run: |
+          TAG_VERSION="${{ steps.version.outputs.VERSION }}"
+
+          CHANGELOG=$(awk -v ver="$TAG_VERSION" '
+            /^== Changelog ==/ { in_changelog=1; next }
+            in_changelog && /^== / && !/^== Changelog/ { exit }
+            in_changelog && /^= / {
+              if (match($0, ver)) { capture=1; next }
+              else if (capture) { exit }
+            }
+            capture { print }
+          ' readme.txt)
+
+          if [ -z "$CHANGELOG" ]; then
+            CHANGELOG="Release version ${TAG_VERSION}."
+          fi
+
+          {
+            echo "BODY<<CHANGELOG_EOF"
+            echo "## What's Changed"
+            echo ""
+            echo "$CHANGELOG"
+            echo ""
+            echo "---"
+            echo ""
+            echo "Install by uploading \`firefighter-stats.zip\` via **Plugins → Add New → Upload Plugin** in WordPress."
+            echo "CHANGELOG_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            firefighter-stats.zip \
+            --title "Firefighter Statistics ${{ steps.version.outputs.VERSION }}" \
+            --notes "${{ steps.changelog.outputs.BODY }}"
