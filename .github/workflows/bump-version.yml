@@ -1,0 +1,104 @@
+name: Bump Plugin Version
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'New version number (e.g. 1.2.0)'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    name: Update Version and Tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate version format
+        run: |
+          VERSION="${{ inputs.version }}"
+          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "::error::Invalid version format '$VERSION'. Expected semver (e.g. 1.2.0)."
+            exit 1
+          fi
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check tag does not already exist
+        run: |
+          if git ls-remote --tags origin | grep -q "refs/tags/v${{ inputs.version }}$"; then
+            echo "::error::Tag v${{ inputs.version }} already exists."
+            exit 1
+          fi
+
+      - name: Update version in all files
+        run: |
+          NEW_VERSION="${{ inputs.version }}"
+
+          # 1. firefighter-stats.php — plugin header
+          sed -i 's/^\([[:space:]]*\*[[:space:]]*Version:[[:space:]]*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' firefighter-stats.php
+
+          # 2. firefighter-stats.php — PHP constant
+          sed -i "s/^\(define([[:space:]]*'FIREFIGHTER_STATS_VERSION'[[:space:]]*,[[:space:]]*'\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1${NEW_VERSION}/" firefighter-stats.php
+
+          # 3. readme.txt — Stable tag
+          sed -i 's/^\(Stable tag:[[:space:]]*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' readme.txt
+
+          # 4. readme-pl_PL.txt — Stable tag
+          sed -i 's/^\(Stable tag:[[:space:]]*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' readme-pl_PL.txt
+
+          # 5. blocks/emergency-list-widget/block.json — version field
+          sed -i 's/^\([[:space:]]*"version":[[:space:]]*"\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' blocks/emergency-list-widget/block.json
+
+      - name: Verify updated versions
+        run: |
+          NEW_VERSION="${{ inputs.version }}"
+
+          HEADER_VERSION=$(grep -Po '^\s*\*\s*Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+' firefighter-stats.php)
+          CONST_VERSION=$(grep -Po "define\(\s*'FIREFIGHTER_STATS_VERSION'\s*,\s*'\K[0-9]+\.[0-9]+\.[0-9]+" firefighter-stats.php)
+          STABLE_TAG=$(grep -Po '^Stable tag:\s*\K[0-9]+\.[0-9]+\.[0-9]+' readme.txt)
+          STABLE_TAG_PL=$(grep -Po '^Stable tag:\s*\K[0-9]+\.[0-9]+\.[0-9]+' readme-pl_PL.txt)
+          BLOCK_VERSION=$(grep -Po '"version"\s*:\s*"\K[0-9]+\.[0-9]+\.[0-9]+' blocks/emergency-list-widget/block.json)
+
+          ERRORS=0
+          for FILE_VERSION in \
+            "firefighter-stats.php header:$HEADER_VERSION" \
+            "firefighter-stats.php constant:$CONST_VERSION" \
+            "readme.txt Stable tag:$STABLE_TAG" \
+            "readme-pl_PL.txt Stable tag:$STABLE_TAG_PL" \
+            "block.json version:$BLOCK_VERSION"; do
+            LABEL="${FILE_VERSION%%:*}"
+            VALUE="${FILE_VERSION##*:}"
+            if [ "$VALUE" != "$NEW_VERSION" ]; then
+              echo "::error::Version update failed — $LABEL is '$VALUE', expected '$NEW_VERSION'"
+              ERRORS=1
+            else
+              echo "✓ $LABEL = $VALUE"
+            fi
+          done
+
+          if [ "$ERRORS" -eq 1 ]; then
+            exit 1
+          fi
+
+          echo "All versions updated to $NEW_VERSION"
+
+      - name: Commit and tag
+        run: |
+          NEW_VERSION="${{ inputs.version }}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add firefighter-stats.php readme.txt readme-pl_PL.txt blocks/emergency-list-widget/block.json
+          git commit -m "chore: bump version to ${NEW_VERSION}"
+          git tag "v${NEW_VERSION}"
+
+          git push origin HEAD
+          git push origin "v${NEW_VERSION}"
