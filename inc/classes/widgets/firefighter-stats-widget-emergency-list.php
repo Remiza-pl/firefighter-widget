@@ -4,6 +4,9 @@
  *
  * Display list of firefighter_stats posts
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 if ( ! class_exists( 'Firefighter_Stats_Widget_Emergency_List' ) && class_exists( 'Firefighter_Stats_Widget' ) ) {
 class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
 
@@ -11,115 +14,126 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
 
     	// Init widget
 		parent::__construct(array(
-			'id' => 'firefighter_stats_emergency_list',
-			'classname' => 'firefighter-stats-emergency-list-widget',
-			'title' => esc_html__( 'Firefighter Stats Emergencies', 'firefighter-stats' ),
-			'description' => esc_html__( 'List of Emergency posts', 'firefighter-stats' ),
-			'fields' => array(
+			'id'          => 'firefighter_stats_emergency_list',
+			'classname'   => 'firefighter-stats-emergency-list-widget',
+			'title'       => firefighter_stats_t( 'Firefighter Stats Emergencies', 'Statystyki Wyjazdów' ),
+			'description' => firefighter_stats_t( 'List of Emergency posts', 'Lista wyjazdów interwencyjnych' ),
+			'fields'      => array(
 				'title' => array(
-					'label' => esc_html__( 'Title:', 'firefighter-stats' ),
-					'type' => 'text',
-					'default' => esc_html__( '🚨 Emergency Statistics', 'firefighter-stats' ),
+					'label'   => firefighter_stats_t( 'Title:', 'Tytuł:' ),
+					'type'    => 'text',
+					'default' => firefighter_stats_t( '🚨 Emergency Statistics', '🚨 Statystyki wyjazdów' ),
 				),
 
 				// Category Summary Settings
+				'section_category_summary' => array(
+					'type'  => 'section',
+					'label' => firefighter_stats_t( 'Category Summary Settings', 'Ustawienia podsumowania kategorii' ),
+				),
 				'show_category_summary' => array(
-					'label' => esc_html__( 'Show Category Summary', 'firefighter-stats' ),
-					'description' => esc_html__( 'Display category counts at the top of the widget.', 'firefighter-stats' ),
-					'type' => 'checkbox',
-					'default' => 'true',
+					'label'       => firefighter_stats_t( 'Show Category Summary', 'Pokaż podsumowanie kategorii' ),
+					'description' => firefighter_stats_t( 'Display category counts at the top of the widget.', 'Wyświetla liczniki kategorii na górze widżetu.' ),
+					'type'        => 'checkbox',
+					'default'     => 'true',
 				),
 				'category_time_period' => array(
-					'label' => esc_html__( 'Category Count Period:', 'firefighter-stats' ),
-					'description' => esc_html__( 'Time period for category emergency counts.', 'firefighter-stats' ),
-					'type' => 'select',
-					'choices' => array(
-						'all' => esc_html__( 'All Time', 'firefighter-stats' ),
-						'year' => esc_html__( 'This Year', 'firefighter-stats' ),
-						'month' => esc_html__( 'This Month', 'firefighter-stats' ),
+					'label'       => firefighter_stats_t( 'Category Count Period:', 'Okres licznika kategorii:' ),
+					'description' => firefighter_stats_t( 'Time period for category emergency counts.', 'Zakres czasowy dla liczników kategorii.' ),
+					'type'        => 'select',
+					'choices'     => array(
+						'all'   => firefighter_stats_t( 'All Time', 'Cały czas' ),
+						'year'  => firefighter_stats_t( 'This Year', 'Ten rok' ),
+						'month' => firefighter_stats_t( 'This Month', 'Ten miesiąc' ),
 					),
-					'default' => 'all',
+					'default'     => 'year',
 				),
 				'selected_categories' => array(
-					'label' => esc_html__( 'Selected Categories:', 'firefighter-stats' ),
-					'description' => esc_html__( 'Choose specific categories to display. Leave empty to show all.', 'firefighter-stats' ),
-					'type' => 'multiselect',
-					'taxonomy' => 'firefighter_stats_cat',
+					'label'       => firefighter_stats_t( 'Selected Categories:', 'Wybrane kategorie:' ),
+					'description' => firefighter_stats_t( 'Choose specific categories to display. Leave empty to show all.', 'Wybierz konkretne kategorie do wyświetlenia. Pozostaw puste, aby pokazać wszystkie.' ),
+					'type'        => 'multiselect',
+					'taxonomy'    => 'firefighter_stats_cat',
 				),
 				'category_sort' => array(
-					'label' => esc_html__( 'Sort Categories By:', 'firefighter-stats' ),
-					'description' => esc_html__( 'How to sort the category statistics.', 'firefighter-stats' ),
-					'type' => 'select',
-					'choices' => array(
-						'alphabet' => esc_html__( 'Alphabetical', 'firefighter-stats' ),
-						'count_desc' => esc_html__( 'Count (High to Low)', 'firefighter-stats' ),
-						'count_asc' => esc_html__( 'Count (Low to High)', 'firefighter-stats' ),
+					'label'       => firefighter_stats_t( 'Sort Categories By:', 'Sortuj kategorie według:' ),
+					'description' => firefighter_stats_t( 'How to sort the category statistics.', 'Sposób sortowania statystyk kategorii.' ),
+					'type'        => 'select',
+					'choices'     => array(
+						'alphabet'   => firefighter_stats_t( 'Alphabetical', 'Alfabetycznie' ),
+						'count_desc' => firefighter_stats_t( 'Count (High to Low)', 'Liczba (od najwyższej)' ),
+						'count_asc'  => firefighter_stats_t( 'Count (Low to High)', 'Liczba (od najniższej)' ),
 					),
-					'default' => 'alphabet',
+					'default'     => 'alphabet',
 				),
 				'show_zero_categories' => array(
-					'label' => esc_html__( 'Show Categories with Zero Count', 'firefighter-stats' ),
-					'description' => esc_html__( 'Display categories even when they have no emergencies.', 'firefighter-stats' ),
-					'type' => 'checkbox',
-					'default' => 'true',
+					'label'       => firefighter_stats_t( 'Show Categories with Zero Count', 'Pokazuj kategorie z zerem' ),
+					'description' => firefighter_stats_t( 'Display categories even when they have no emergencies.', 'Wyświetla kategorie, nawet gdy nie mają wyjazdów.' ),
+					'type'        => 'checkbox',
+					'default'     => 'true',
 				),
 
 				// Emergency Posts List Settings
+				'section_posts_list' => array(
+					'type'  => 'section',
+					'label' => firefighter_stats_t( 'Emergency Posts List Settings', 'Ustawienia listy wpisów wyjazdów' ),
+				),
 				'show_posts_list' => array(
-					'label' => esc_html__( 'Show Emergency Posts List', 'firefighter-stats' ),
-					'description' => esc_html__( 'Display list of emergency posts below category summary.', 'firefighter-stats' ),
-					'type' => 'checkbox',
-					'default' => 'true',
+					'label'       => firefighter_stats_t( 'Show Emergency Posts List', 'Pokaż listę wpisów wyjazdów' ),
+					'description' => firefighter_stats_t( 'Display list of emergency posts below category summary.', 'Wyświetla listę wpisów wyjazdów poniżej podsumowania kategorii.' ),
+					'type'        => 'checkbox',
+					'default'     => 'true',
 				),
 				'category' => array(
-					'label' => esc_html__( 'Posts Category Filter:', 'firefighter-stats' ),
-					'description' => esc_html__( 'Display emergency posts only from a certain category.', 'firefighter-stats' ),
-					'type' => 'taxonomy',
-					'taxonomy' => 'firefighter_stats_cat',
-					'default_label' => esc_html__( 'All Categories', 'firefighter-stats' ),
+					'label'         => firefighter_stats_t( 'Posts Category Filter:', 'Filtr kategorii wpisów:' ),
+					'description'   => firefighter_stats_t( 'Display emergency posts only from a certain category.', 'Wyświetla wyjazdy tylko z wybranej kategorii.' ),
+					'type'          => 'taxonomy',
+					'taxonomy'      => 'firefighter_stats_cat',
+					'default_label' => firefighter_stats_t( 'All Categories', 'Wszystkie kategorie' ),
 				),
 				'limit' => array(
-					'label' => esc_html__( 'Posts Limit:', 'firefighter-stats' ),
-					'description' => esc_html__( 'Number of emergency posts to display.', 'firefighter-stats' ),
-					'type' => 'select',
-					'choices' => array( 0 => esc_html__( 'All', 'firefighter-stats' ), 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20 ),
-					'default' => 5,
+					'label'       => firefighter_stats_t( 'Posts Limit:', 'Liczba wpisów:' ),
+					'description' => firefighter_stats_t( 'Number of emergency posts to display.', 'Liczba wyjazdów do wyświetlenia.' ),
+					'type'        => 'select',
+					'choices'     => array(
+						0  => firefighter_stats_t( 'All', 'Wszystkie' ),
+						1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20,
+					),
+					'default'     => 5,
 				),
 				'order' => array(
-					'label' => esc_html__( 'Order:', 'firefighter-stats' ),
-					'description' => esc_html__( 'Order of emergency posts.', 'firefighter-stats' ),
-					'type' => 'select',
-					'choices' => array(
-						'default' => esc_html__( 'Default', 'firefighter-stats' ),
-                        'date_desc' => esc_html__( 'By date, newest first', 'firefighter-stats' ),
-                        'date_asc' => esc_html__( 'By date, oldest first', 'firefighter-stats' ),
-                        'title_asc' => esc_html__( 'By title, ascending', 'firefighter-stats' ),
-                        'title_desc' => esc_html__( 'By title, descending', 'firefighter-stats' ),
-                        'random' => esc_html__( 'Random', 'firefighter-stats' ),
+					'label'       => firefighter_stats_t( 'Order:', 'Kolejność:' ),
+					'description' => firefighter_stats_t( 'Order of emergency posts.', 'Kolejność wyświetlania wyjazdów.' ),
+					'type'        => 'select',
+					'choices'     => array(
+						'default'    => firefighter_stats_t( 'Default', 'Domyślna' ),
+						'date_desc'  => firefighter_stats_t( 'By date, newest first', 'Według daty, najnowsze pierwsze' ),
+						'date_asc'   => firefighter_stats_t( 'By date, oldest first', 'Według daty, najstarsze pierwsze' ),
+						'title_asc'  => firefighter_stats_t( 'By title, ascending', 'Według tytułu, rosnąco' ),
+						'title_desc' => firefighter_stats_t( 'By title, descending', 'Według tytułu, malejąco' ),
+						'random'     => firefighter_stats_t( 'Random', 'Losowo' ),
 					),
-					'default' => 'default',
+					'default'     => 'default',
 				),
 				'show_date' => array(
-					'label' => esc_html__( 'Display Date', 'firefighter-stats' ),
-					'type' => 'checkbox',
+					'label'   => firefighter_stats_t( 'Display Date', 'Wyświetl datę' ),
+					'type'    => 'checkbox',
 					'default' => 'true',
 				),
 				'show_category' => array(
-					'label' => esc_html__( 'Display Category', 'firefighter-stats' ),
-					'type' => 'checkbox',
+					'label'   => firefighter_stats_t( 'Display Category', 'Wyświetl kategorię' ),
+					'type'    => 'checkbox',
 					'default' => 'true',
 				),
 				'recent_emergencies_title' => array(
-					'label' => esc_html__( 'Recent Emergencies Title:', 'firefighter-stats' ),
-					'description' => esc_html__( 'Title for the recent emergencies section.', 'firefighter-stats' ),
-					'type' => 'text',
-					'default' => esc_html__( '📝 Recent Emergencies', 'firefighter-stats' ),
+					'label'       => firefighter_stats_t( 'Recent Emergencies Title:', 'Tytuł sekcji ostatnich wyjazdów:' ),
+					'description' => firefighter_stats_t( 'Title for the recent emergencies section.', 'Tytuł sekcji ostatnich wyjazdów.' ),
+					'type'        => 'text',
+					'default'     => firefighter_stats_t( '📝 Recent Emergencies', '📝 Ostatnie interwencje' ),
 				),
 				'more_label' => array(
-					'label' => esc_html__( 'More Button Label:', 'firefighter-stats' ),
-					'description' => esc_html__( 'Link to emergency post archive. Leave blank to hide.', 'firefighter-stats' ),
-					'type' => 'text',
-					'default' => esc_html__( 'More Emergencies', 'firefighter-stats' ),
+					'label'       => firefighter_stats_t( 'More Button Label:', 'Etykieta przycisku „Więcej":' ),
+					'description' => firefighter_stats_t( 'Link to emergency post archive. Leave blank to hide.', 'Link do archiwum wyjazdów. Pozostaw puste, aby ukryć.' ),
+					'type'        => 'text',
+					'default'     => firefighter_stats_t( 'More Emergencies', 'Pozostałe interwencje' ),
 				),
 			),
 		));
@@ -128,16 +142,14 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
 
     function widget( $args, $instance ) {
 
-
-
     	// Widget display settings with defaults
-    	$show_category_summary = ! isset( $instance['show_category_summary'] ) || true === $instance['show_category_summary'] || 'true' === $instance['show_category_summary'] || '1' === $instance['show_category_summary']; // Default to true
+    	$show_category_summary = ! isset( $instance['show_category_summary'] ) || true === $instance['show_category_summary'] || 'true' === $instance['show_category_summary'] || '1' === $instance['show_category_summary'];
 
-    	$show_posts_list = ! isset( $instance['show_posts_list'] ) || true === $instance['show_posts_list'] || 'true' === $instance['show_posts_list'] || '1' === $instance['show_posts_list']; // Default to true
+    	$show_posts_list = ! isset( $instance['show_posts_list'] ) || true === $instance['show_posts_list'] || 'true' === $instance['show_posts_list'] || '1' === $instance['show_posts_list'];
 
-    	$show_date = ! isset( $instance['show_date'] ) || true === $instance['show_date'] || 'true' === $instance['show_date'] || '1' === $instance['show_date']; // Default to true
+    	$show_date = ! isset( $instance['show_date'] ) || true === $instance['show_date'] || 'true' === $instance['show_date'] || '1' === $instance['show_date'];
 
-    	$show_category = ! isset( $instance['show_category'] ) || true === $instance['show_category'] || 'true' === $instance['show_category'] || '1' === $instance['show_category']; // Default to true
+    	$show_category = ! isset( $instance['show_category'] ) || true === $instance['show_category'] || 'true' === $instance['show_category'] || '1' === $instance['show_category'];
 
 		// Set posts limit
 		$limit = isset( $instance['limit'] ) && (int) $instance['limit'] > 0 ? (int) $instance['limit'] : 5;
@@ -152,37 +164,33 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
     	$posts = array();
     	if ( $show_posts_list ) {
 	    	$query_args = array(
-	    		'post_type' => 'firefighter_stats',
-	    		'posts_per_page' => $limit,
+	    		'post_type'        => 'firefighter_stats',
+	    		'posts_per_page'   => $limit,
 	    		'suppress_filters' => false,
 			);
 			if ( ! empty( $instance['category'] ) && 'none' !== $instance['category'] && is_numeric( $instance['category'] ) ) {
 				$query_args['tax_query'] = array(
 					array(
 						'taxonomy' => 'firefighter_stats_cat',
-						'field' => 'term_id',
-						'terms' => (int) $instance['category'],
+						'field'    => 'term_id',
+						'terms'    => (int) $instance['category'],
 					),
 				);
 			}
 			if ( ! empty( $instance['order'] ) && 'default' !== $instance['order'] ) {
 				if ( 'date_desc' === $instance['order'] ) {
 					$query_args['orderby'] = 'date';
-					$query_args['order'] = 'DESC';
-				}
-				elseif ( 'date_asc' === $instance['order'] ) {
+					$query_args['order']   = 'DESC';
+				} elseif ( 'date_asc' === $instance['order'] ) {
 					$query_args['orderby'] = 'date';
-					$query_args['order'] = 'ASC';
-				}
-				elseif ( 'title_asc' === $instance['order'] ) {
+					$query_args['order']   = 'ASC';
+				} elseif ( 'title_asc' === $instance['order'] ) {
 					$query_args['orderby'] = 'title';
-					$query_args['order'] = 'ASC';
-				}
-				elseif ( 'title_desc' === $instance['order'] ) {
+					$query_args['order']   = 'ASC';
+				} elseif ( 'title_desc' === $instance['order'] ) {
 					$query_args['orderby'] = 'title';
-					$query_args['order'] = 'DESC';
-				}
-				elseif ( 'random' === $instance['order'] ) {
+					$query_args['order']   = 'DESC';
+				} elseif ( 'random' === $instance['order'] ) {
 					$query_args['orderby'] = 'rand';
 				}
 			}
@@ -192,15 +200,14 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
     	// Prepare template vars
     	global $firefighter_stats_template_vars;
   		$firefighter_stats_template_vars = array(
-  			'instance' => $instance,
+  			'instance'              => $instance,
   			'show_category_summary' => $show_category_summary,
-  			'show_posts_list' => $show_posts_list,
-  			'show_date' => $show_date,
-  			'show_category' => $show_category,
-  			'category_stats' => $category_stats,
-  			'emergency_posts' => $posts,
+  			'show_posts_list'       => $show_posts_list,
+  			'show_date'             => $show_date,
+  			'show_category'         => $show_category,
+  			'category_stats'        => $category_stats,
+  			'emergency_posts'       => $posts,
 		);
-
 
         // Before widget content
         parent::before_widget_content( $args, $instance );
@@ -210,8 +217,12 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
         if ( file_exists( $template_path ) ) {
             include $template_path;
         } else {
-            // Fallback if template doesn't exist
             $this->render_fallback_template( $firefighter_stats_template_vars );
+        }
+
+        // Admin-only quick-actions panel (visible on frontend, admins only)
+        if ( is_user_logged_in() && current_user_can( 'manage_options' ) ) {
+            $this->render_frontend_admin_panel();
         }
 
         // After widget content
@@ -220,24 +231,70 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
     }
 
     /**
+     * Render the admin quick-actions panel inside the widget on the frontend.
+     * Visible only to logged-in administrators.
+     */
+    private function render_frontend_admin_panel() {
+        $categories   = get_terms( array( 'taxonomy' => 'firefighter_stats_cat', 'hide_empty' => false ) );
+        $new_post_url = admin_url( 'post-new.php?post_type=firefighter_stats' );
+        $nonce        = wp_create_nonce( 'firefighter_stats_add_count_ajax' );
+        $ajax_url     = admin_url( 'admin-ajax.php' );
+
+        $lbl_actions  = firefighter_stats_t( '⚡ Quick Actions', '⚡ Szybkie akcje' );
+        $lbl_addcount = firefighter_stats_t( 'Add count:', 'Dodaj licznik:' );
+        $lbl_add      = firefighter_stats_t( '+ Add', '+ Dodaj' );
+        $lbl_newpost  = firefighter_stats_t( '📝 Add new emergency', '📝 Dodaj nowy wyjazd' );
+        $lbl_select   = firefighter_stats_t( '— Category —', '— Kategoria —' );
+        ?>
+        <div class="fs-widget-actions fs-widget-actions--frontend">
+            <div class="fs-widget-actions__title"><?php echo esc_html( $lbl_actions ); ?></div>
+
+            <?php if ( ! is_wp_error( $categories ) && ! empty( $categories ) ) : ?>
+                <div class="fs-wqa-label"><?php echo esc_html( $lbl_addcount ); ?></div>
+                <div class="fs-wqa-form">
+                    <select class="fs-wqa-cat">
+                        <option value=""><?php echo esc_html( $lbl_select ); ?></option>
+                        <?php foreach ( $categories as $cat ) : ?>
+                            <option value="<?php echo esc_attr( $cat->term_id ); ?>">
+                                <?php echo esc_html( firefighter_stats_get_category_emoji( $cat->term_id ) . ' ' . $cat->name ); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <input type="number" class="fs-wqa-count" value="1" min="1" max="99" aria-label="count">
+                    <input type="hidden" class="fs-wqa-nonce" value="<?php echo esc_attr( $nonce ); ?>">
+                    <input type="hidden" class="fs-wqa-ajax" value="<?php echo esc_url( $ajax_url ); ?>">
+                    <button type="button" class="button fs-wqa-btn" onclick="fsWidgetQuickAdd(this)">
+                        <?php echo esc_html( $lbl_add ); ?>
+                    </button>
+                </div>
+                <span class="fs-wqa-msg"></span>
+            <?php endif; ?>
+
+            <hr class="fs-widget-actions__sep">
+            <a href="<?php echo esc_url( $new_post_url ); ?>" class="button button-secondary fs-widget-actions__link" target="_blank">
+                <?php echo esc_html( $lbl_newpost ); ?>
+            </a>
+        </div>
+        <?php
+    }
+
+    /**
      * Get category statistics based on widget settings
      */
     private function get_category_statistics( $instance ) {
-        $category_stats = array();
-        $time_period = ! empty( $instance['category_time_period'] ) ? $instance['category_time_period'] : 'all';
+        $category_stats      = array();
+        $time_period         = ! empty( $instance['category_time_period'] ) ? $instance['category_time_period'] : 'all';
         $selected_categories = ! empty( $instance['selected_categories'] ) ? $instance['selected_categories'] : array();
-        $category_sort = ! empty( $instance['category_sort'] ) ? $instance['category_sort'] : 'alphabet';
+        $category_sort       = ! empty( $instance['category_sort'] ) ? $instance['category_sort'] : 'alphabet';
         $show_zero_categories = isset( $instance['show_zero_categories'] ) ?
             ( true === $instance['show_zero_categories'] || 'true' === $instance['show_zero_categories'] || '1' === $instance['show_zero_categories'] ) :
-            true; // Default to true
+            true;
 
-        // Get categories to display
         $categories_args = array(
-            'taxonomy' => 'firefighter_stats_cat',
+            'taxonomy'   => 'firefighter_stats_cat',
             'hide_empty' => false,
         );
 
-        // If specific categories are selected, only get those
         if ( ! empty( $selected_categories ) && is_array( $selected_categories ) ) {
             $categories_args['include'] = $selected_categories;
         }
@@ -248,22 +305,20 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
             foreach ( $categories as $category ) {
                 $count = $this->get_category_emergency_count( $category->term_id, $time_period );
 
-                // Skip categories with zero count if setting is disabled
-                if ( ! $show_zero_categories && $count === 0 ) {
+                if ( ! $show_zero_categories && 0 === $count ) {
                     continue;
                 }
 
                 $icon = $this->get_category_icon( $category->term_id );
 
                 $category_stats[] = array(
-                    'term' => $category,
+                    'term'  => $category,
                     'count' => $count,
-                    'icon' => $icon,
-                    'link' => get_term_link( $category ),
+                    'icon'  => $icon,
+                    'link'  => get_term_link( $category ),
                 );
             }
 
-            // Sort the category statistics based on settings
             $category_stats = $this->sort_category_statistics( $category_stats, $category_sort );
         }
 
@@ -313,25 +368,22 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
      */
     private function get_category_emergency_count( $category_id, $time_period = 'all' ) {
         $query_args = array(
-            'post_type' => 'firefighter_stats',
-            'post_status' => 'publish',
+            'post_type'      => 'firefighter_stats',
+            'post_status'    => 'publish',
             'posts_per_page' => -1,
-            'fields' => 'ids',
-            'tax_query' => array(
+            'fields'         => 'ids',
+            'tax_query'      => array(
                 array(
                     'taxonomy' => 'firefighter_stats_cat',
-                    'field' => 'term_id',
-                    'terms' => $category_id,
+                    'field'    => 'term_id',
+                    'terms'    => $category_id,
                 ),
             ),
         );
 
-        // Add date query based on time period
         if ( 'year' === $time_period ) {
             $query_args['date_query'] = array(
-                array(
-                    'year' => (int) wp_date( 'Y' ),
-                ),
+                array( 'year' => (int) wp_date( 'Y' ) ),
             );
         } elseif ( 'month' === $time_period ) {
             $query_args['date_query'] = array(
@@ -342,10 +394,9 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
             );
         }
 
-        $query = new WP_Query( $query_args );
+        $query      = new WP_Query( $query_args );
         $post_count = $query->found_posts;
 
-        // Get manual counts
         $manual_count = $this->get_manual_emergency_count( $category_id, $time_period );
 
         return $post_count + $manual_count;
@@ -370,7 +421,6 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
             $entry_year  = (int) wp_date( 'Y', strtotime( $entry_date ) );
             $entry_month = (int) wp_date( 'n', strtotime( $entry_date ) );
 
-            // Filter by time period
             if ( 'year' === $time_period && $entry_year != $current_year ) {
                 continue;
             } elseif ( 'month' === $time_period && ( $entry_year != $current_year || $entry_month != $current_month ) ) {
@@ -387,10 +437,8 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
      * Get category icon (from term meta or default)
      */
     private function get_category_icon( $category_id ) {
-        // Try to get icon from term meta
         $icon = get_term_meta( $category_id, 'firefighter_stats_category_icon', true );
 
-        // If no custom icon, return default based on category name/slug
         if ( empty( $icon ) ) {
             $term = get_term( $category_id );
             if ( $term && ! is_wp_error( $term ) ) {
@@ -406,24 +454,22 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
      */
     private function get_default_category_icon( $category_slug ) {
         $default_icons = array(
-            'fire' => 'dashicons-admin-site-alt3',
-            'medical' => 'dashicons-heart',
-            'rescue' => 'dashicons-sos',
-            'accident' => 'dashicons-warning',
-            'hazmat' => 'dashicons-shield-alt',
-            'water' => 'dashicons-admin-site-alt2',
+            'fire'      => 'dashicons-admin-site-alt3',
+            'medical'   => 'dashicons-heart',
+            'rescue'    => 'dashicons-sos',
+            'accident'  => 'dashicons-warning',
+            'hazmat'    => 'dashicons-shield-alt',
+            'water'     => 'dashicons-admin-site-alt2',
             'technical' => 'dashicons-admin-tools',
-            'other' => 'dashicons-megaphone',
+            'other'     => 'dashicons-megaphone',
         );
 
-        // Check if category slug matches any default
         foreach ( $default_icons as $key => $icon ) {
             if ( strpos( $category_slug, $key ) !== false ) {
                 return $icon;
             }
         }
 
-        // Default fallback icon
         return 'dashicons-megaphone';
     }
 
@@ -437,7 +483,6 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
 
         extract( $template_vars );
 
-        // Get total count for summary
         $total_count = 0;
         if ( ! empty( $category_stats ) ) {
             foreach ( $category_stats as $stat ) {
@@ -445,8 +490,12 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
             }
         }
 
-        // Get time period text
         $time_period_text = $this->get_time_period_text( $instance );
+        $lbl_total        = firefighter_stats_t( 'Total in %s:', 'Łącznie w %s:' );
+        $lbl_total_fmt    = sprintf( $lbl_total, $time_period_text );
+        $lbl_emergency    = firefighter_stats_t( '%d emergency', '%d wyjazd' );
+        $lbl_emergencies  = firefighter_stats_t( '%d emergencies', '%d wyjazdów' );
+        $lbl_no_data      = firefighter_stats_t( 'No emergency data available.', 'Brak danych o wyjazdach.' );
         ?>
 
         <section class="emergency-widget">
@@ -463,14 +512,14 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
                 </div>
 
                 <div class="summary-footer">
-                    <strong><?php echo sprintf( esc_html__( 'Total in %s:', 'firefighter-stats' ), $time_period_text ); ?></strong>
-                    <?php echo sprintf( _n( '%d emergency', '%d emergencies', $total_count, 'firefighter-stats' ), $total_count ); ?>
+                    <strong><?php echo esc_html( $lbl_total_fmt ); ?></strong>
+                    <?php echo esc_html( sprintf( 1 === $total_count ? $lbl_emergency : $lbl_emergencies, $total_count ) ); ?>
                 </div>
             <?php endif; ?>
 
             <?php if ( ! empty( $show_posts_list ) && ! empty( $emergency_posts ) ) : ?>
                 <div class="emergency-recent">
-                    <h4><?php echo esc_html( ! empty( $instance['recent_emergencies_title'] ) ? $instance['recent_emergencies_title'] : __( '📝 Recent Emergencies', 'firefighter-stats' ) ); ?></h4>
+                    <h4><?php echo esc_html( ! empty( $instance['recent_emergencies_title'] ) ? $instance['recent_emergencies_title'] : firefighter_stats_t( '📝 Recent Emergencies', '📝 Ostatnie interwencje' ) ); ?></h4>
                     <ul>
                         <?php foreach ( $emergency_posts as $emergency_post ) : ?>
                             <li>
@@ -479,11 +528,11 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
                                     <?php
                                     $post_categories = wp_get_post_terms( $emergency_post->ID, 'firefighter_stats_cat' );
                                     if ( ! empty( $post_categories ) && ! is_wp_error( $post_categories ) ) {
-                                        $category = $post_categories[0];
-                                        $category_class = $this->get_category_css_class( $category->slug );
-                                        $category_color = Firefighter_Stats_Category_Meta::get_category_color( $category->term_id );
-                                        $color_style = 'style="background-color: ' . esc_attr( $category_color ) . ';"';
-                                        echo '<span class="tag ' . esc_attr( $category_class ) . '" ' . $color_style . '>' . esc_html( $category->name ) . '</span> – ';
+                                        $cat_item      = $post_categories[0];
+                                        $category_class = $this->get_category_css_class( $cat_item->slug );
+                                        $category_color = Firefighter_Stats_Category_Meta::get_category_color( $cat_item->term_id );
+                                        $color_style    = 'style="background-color: ' . esc_attr( $category_color ) . ';"';
+                                        echo '<span class="tag ' . esc_attr( $category_class ) . '" ' . $color_style . '>' . esc_html( $cat_item->name ) . '</span> – ';
                                     }
                                     ?>
                                     <?php echo esc_html( get_the_title( $emergency_post->ID ) ); ?>
@@ -496,7 +545,7 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
 
             <?php if ( empty( $category_stats ) && empty( $emergency_posts ) ) : ?>
                 <p style="text-align: center; color: #666; font-style: italic; padding: 20px;">
-                    <?php esc_html_e( 'No emergency data available.', 'firefighter-stats' ); ?>
+                    <?php echo esc_html( $lbl_no_data ); ?>
                 </p>
             <?php endif; ?>
         </section>
@@ -513,10 +562,9 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
             case 'year':
                 return wp_date( 'Y' );
             case 'month':
-                // date_i18n formats the date using WordPress locale (timezone-aware).
                 return date_i18n( 'F Y' );
             default:
-                return __( 'all time', 'firefighter-stats' );
+                return firefighter_stats_t( 'all time', 'cały czas' );
         }
     }
 
@@ -524,13 +572,11 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
      * Get display icon for category (custom emoji or mapped icon)
      */
     private function get_category_emoji( $category_id ) {
-        // Custom emoji set by admin takes priority over the predefined map.
         $custom_icon = get_term_meta( $category_id, 'firefighter_stats_category_custom_icon', true );
         if ( ! empty( $custom_icon ) ) {
             return $custom_icon;
         }
 
-        // Fall back to predefined icon map.
         $icon = $this->get_category_icon( $category_id );
         return $this->convert_icon_to_emoji( $icon );
     }
@@ -540,57 +586,52 @@ class Firefighter_Stats_Widget_Emergency_List extends Firefighter_Stats_Widget {
      */
     private function convert_icon_to_emoji( $icon_key ) {
         $icon_map = array(
-            'fire' => '🔥',
-            'medical' => '🚑',
-            'rescue' => '🆘',
-            'accident' => '⚠️',
-            'threat' => '⚠️',
-            'hazmat' => '☢️',
-            'water' => '🌊',
-            'technical' => '🔧',
-            'vehicle' => '🚗',
-            'structure' => '🏢',
+            'fire'        => '🔥',
+            'medical'     => '🚑',
+            'rescue'      => '🆘',
+            'accident'    => '⚠️',
+            'threat'      => '⚠️',
+            'hazmat'      => '☢️',
+            'water'       => '🌊',
+            'technical'   => '🔧',
+            'vehicle'     => '🚗',
+            'structure'   => '🏢',
             'false-alarm' => '🚫',
-            'exercise' => '🏋️',
-            'other' => '📋',
+            'exercise'    => '🏋️',
+            'other'       => '📋',
         );
 
-        return $icon_map[ $icon_key ] ?? '📋';
+        return isset( $icon_map[ $icon_key ] ) ? $icon_map[ $icon_key ] : '📋';
     }
-
-
 
     /**
      * Get CSS class for category based on slug
      */
     private function get_category_css_class( $category_slug ) {
         $classes = array(
-            'fire' => 'fire',
-            'medical' => 'medical',
-            'rescue' => 'rescue',
-            'accident' => 'accident',
-            'hazmat' => 'hazmat',
-            'water' => 'water',
-            'technical' => 'technical',
-            'threat' => 'threat',
+            'fire'        => 'fire',
+            'medical'     => 'medical',
+            'rescue'      => 'rescue',
+            'accident'    => 'accident',
+            'hazmat'      => 'hazmat',
+            'water'       => 'water',
+            'technical'   => 'technical',
+            'threat'      => 'threat',
             'false-alarm' => 'false-alarm',
-            'exercise' => 'exercise',
-            'other' => 'other',
+            'exercise'    => 'exercise',
+            'other'       => 'other',
         );
 
-        // Check for exact match first
         if ( isset( $classes[ $category_slug ] ) ) {
             return $classes[ $category_slug ];
         }
 
-        // Check for partial matches
         foreach ( $classes as $key => $class ) {
             if ( false !== strpos( $category_slug, $key ) ) {
                 return $class;
             }
         }
 
-        // Default class
         return 'other';
     }
 

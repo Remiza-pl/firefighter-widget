@@ -63,6 +63,7 @@ require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-widg
 require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-category-meta.php';
 require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-admin-counts.php';
 require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-category-seeder.php';
+require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-admin-guide.php';
 require_once $firefighter_stats_plugin_dir . 'inc/core-functions.php';
 require_once $firefighter_stats_plugin_dir . 'inc/blocks-config.php';
 unset( $firefighter_stats_plugin_dir );
@@ -109,6 +110,54 @@ if ( class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
 		function firefighter_stats_init_admin_counts(): void {
 			// Load on both admin and frontend for admin bar functionality
 			new Firefighter_Stats_Admin_Counts();
+		}
+	}
+}
+
+// Initialize Getting Started guide page.
+if ( class_exists( 'Firefighter_Stats_Admin_Guide' ) ) {
+	add_action( 'init', static function () {
+		new Firefighter_Stats_Admin_Guide();
+	} );
+}
+
+// Enforce category assignment: revert post to draft if published without a category.
+add_action( 'wp_insert_post', 'firefighter_stats_require_category', 10, 3 );
+if ( ! function_exists( 'firefighter_stats_require_category' ) ) {
+	function firefighter_stats_require_category( $post_id, $post, $update ) {
+		if ( 'firefighter_stats' !== $post->post_type ) {
+			return;
+		}
+		if ( 'publish' !== $post->post_status ) {
+			return;
+		}
+		if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+			return;
+		}
+
+		$terms = wp_get_post_terms( $post_id, 'firefighter_stats_cat', array( 'fields' => 'ids' ) );
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			remove_action( 'wp_insert_post', 'firefighter_stats_require_category', 10 );
+			wp_update_post( array(
+				'ID'          => $post_id,
+				'post_status' => 'draft',
+			) );
+			add_action( 'wp_insert_post', 'firefighter_stats_require_category', 10, 3 );
+			set_transient( 'firefighter_stats_category_notice_' . get_current_user_id(), true, 60 );
+		}
+	}
+}
+
+// Display admin notice when a post was reverted due to missing category.
+add_action( 'admin_notices', 'firefighter_stats_category_notice' );
+if ( ! function_exists( 'firefighter_stats_category_notice' ) ) {
+	function firefighter_stats_category_notice() {
+		$key = 'firefighter_stats_category_notice_' . get_current_user_id();
+		if ( get_transient( $key ) ) {
+			delete_transient( $key );
+			echo '<div class="notice notice-error"><p>' .
+				esc_html__( 'The emergency post was reverted to draft because no category was assigned. Please select a category before publishing.', 'firefighter-stats' ) .
+				'</p></div>';
 		}
 	}
 }

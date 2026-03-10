@@ -176,7 +176,343 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Admin Bar Quick Emergency Styles */
+/* =========================================================
+   Widget form fields
+   ========================================================= */
+
+.fs-wf-field {
+    margin-bottom: 10px;
+}
+
+.fs-wf-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1d2327;
+    margin-bottom: 3px;
+}
+
+.fs-wf-input {
+    font-size: 13px !important;
+}
+
+.fs-wf-desc {
+    display: block;
+    font-size: 11px;
+    color: #646970;
+    line-height: 1.4;
+    margin-top: 3px;
+}
+
+/* Checkbox row */
+.fs-wf-field--check {
+    margin-bottom: 8px;
+}
+
+.fs-wf-check-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1d2327;
+    line-height: 1.5;
+}
+
+.fs-wf-check-label input[type="checkbox"] {
+    margin: 2px 0 0;
+    flex-shrink: 0;
+}
+
+/* Section divider */
+.fs-wf-section {
+    margin: 16px 0 8px;
+    padding-top: 12px;
+    border-top: 2px solid #2271b1;
+}
+
+.fs-wf-section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #2271b1;
+}
+
+/* =========================================================
+   Widget quick-actions panel
+   ========================================================= */
+
+.fs-widget-actions {
+    background: #f0f6fc;
+    border: 1px solid #b8d3f0;
+    border-radius: 5px;
+    padding: 11px 12px 12px;
+    margin-bottom: 4px;
+}
+
+.fs-widget-actions__title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1d2327;
+    margin-bottom: 9px;
+}
+
+.fs-wqa-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #1d2327;
+    margin-bottom: 5px;
+}
+
+.fs-wqa-form {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.fs-wqa-cat {
+    flex: 1;
+    min-width: 0;
+    font-size: 12px !important;
+    height: 28px !important;
+    padding: 2px 5px !important;
+    line-height: 1 !important;
+}
+
+.fs-wqa-count {
+    width: 46px !important;
+    font-size: 12px !important;
+    height: 28px !important;
+    padding: 2px 4px !important;
+    text-align: center;
+}
+
+.fs-wqa-btn {
+    flex-shrink: 0;
+    height: 28px !important;
+    line-height: 26px !important;
+    padding: 0 8px !important;
+    font-size: 12px !important;
+    min-height: 0 !important;
+}
+
+.fs-wqa-msg {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 18px;
+    margin-top: 5px;
+}
+
+.fs-wqa-msg--success { color: #46b450; }
+.fs-wqa-msg--error   { color: #dc3232; }
+
+.fs-widget-actions__link {
+    font-size: 12px !important;
+    height: auto !important;
+    line-height: 1.6 !important;
+    padding: 3px 8px !important;
+    text-decoration: none !important;
+}
+
+.fs-widget-actions__sep {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 12px 0 10px;
+}
+
+/* =========================================================
+   Year filter tabs
+   ========================================================= */
+
+.fs-year-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 15px 0 20px;
+}
+
+.fs-year-tab {
+    display: inline-block;
+    padding: 4px 14px;
+    background: #f0f0f1;
+    border: 1px solid #c3c4c7;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #2271b1;
+    font-size: 13px;
+    line-height: 1.8;
+    transition: background 0.15s;
+}
+
+.fs-year-tab:hover {
+    background: #e5e5e5;
+    color: #135e96;
+    text-decoration: none;
+}
+
+.fs-year-tab.active {
+    background: #2271b1;
+    border-color: #2271b1;
+    color: #fff;
+    font-weight: 600;
+}
+
+/* =========================================================
+   Category cards grid
+   ========================================================= */
+
+.fs-cards-grid {
+    display: grid;
+    grid-template-columns: repeat( auto-fill, minmax( 210px, 1fr ) );
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.fs-card {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 6px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 6px;
+}
+
+.fs-card__emoji {
+    font-size: 2rem;
+    line-height: 1.2;
+}
+
+.fs-card__name {
+    font-weight: 600;
+    font-size: 14px;
+    color: #1d2327;
+}
+
+.fs-card__count {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin: 4px 0;
+}
+
+.fs-card__count-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2271b1;
+    line-height: 1;
+}
+
+.fs-card__count-label {
+    font-size: 12px;
+    color: #646970;
+}
+
+.fs-card__last {
+    font-size: 12px;
+    color: #646970;
+}
+
+.fs-card__add-btn {
+    margin-top: 8px;
+    width: 100%;
+}
+
+/* =========================================================
+   Modal
+   ========================================================= */
+
+.fs-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fs-modal[hidden] {
+    display: none;
+}
+
+.fs-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+}
+
+.fs-modal__box {
+    position: relative;
+    background: #fff;
+    border-radius: 6px;
+    padding: 24px 28px;
+    min-width: 320px;
+    max-width: 440px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0,0,0,.2);
+    z-index: 1;
+}
+
+.fs-modal__box h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: #1d2327;
+}
+
+.fs-modal__box label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #1d2327;
+}
+
+.fs-modal__box input[type="number"],
+.fs-modal__box input[type="date"],
+.fs-modal__box input[type="time"] {
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 4px;
+}
+
+.fs-modal__count-note {
+    color: #2271b1;
+    font-size: 13px;
+    min-height: 1.4em;
+    margin: 0 0 10px;
+}
+
+.fs-modal__actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 18px;
+    justify-content: flex-end;
+}
+
+/* =========================================================
+   URL fix details/summary
+   ========================================================= */
+
+.fs-url-fix summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: #646970;
+    font-size: 13px;
+    user-select: none;
+}
+
+.fs-url-fix summary:hover {
+    color: #2271b1;
+}
+
+/* =========================================================
+   Admin Bar Quick Emergency Styles
+   ========================================================= */
 #wp-admin-bar-firefighter-stats-quick .ab-item {
     font-weight: 600;
 }
@@ -209,6 +545,28 @@
     margin: 5px 0;
     border: none;
     border-top: 1px solid #ddd;
+}
+
+/* =========================================================
+   Frontend admin quick-actions panel (inside widget, admins only)
+   ========================================================= */
+
+.fs-widget-actions--frontend {
+    margin-top: 14px;
+    border-color: rgba(0, 0, 0, 0.12);
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.fs-widget-actions--frontend .fs-widget-actions__title {
+    font-size: 11px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.fs-widget-actions--frontend .fs-wqa-label {
+    color: #444;
 }
 
 /* Loading state for admin bar items */

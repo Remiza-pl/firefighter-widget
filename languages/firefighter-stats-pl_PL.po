@@ -769,3 +769,107 @@ msgstr "Ćwiczenia"
 #: inc/classes/firefighter-stats-category-seeder.php
 msgid "Other"
 msgstr "Inne"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "All"
+msgstr "Wszystkie"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "in %d"
+msgstr "w %d"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Last:"
+msgstr "Ostatni:"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Add Count"
+msgstr "Dodaj Licznik"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Category"
+msgstr "Kategoria"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "No manual count entries found for this period."
+msgstr "Nie znaleziono wpisów ręcznych liczników dla tego okresu."
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Count:"
+msgstr "Liczba:"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Date:"
+msgstr "Data:"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Time (optional):"
+msgstr "Czas (opcjonalnie):"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Add"
+msgstr "Dodaj"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Adding..."
+msgstr "Dodawanie..."
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Error. Please try again."
+msgstr "Błąd. Spróbuj ponownie."
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Added By"
+msgstr "Dodane Przez"
+
+#: inc/classes/firefighter-stats-admin-counts.php
+msgid "Added At"
+msgstr "Dodano O"
+
+#: firefighter-stats.php
+msgid "The emergency post was reverted to draft because no category was assigned. Please select a category before publishing."
+msgstr "Post wyjazdu został cofnięty do szkicu, ponieważ nie przypisano żadnej kategorii. Proszę wybrać kategorię przed opublikowaniem."
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Getting Started"
+msgstr "Jak Zacząć"
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Getting Started — Firefighter Statistics"
+msgstr "Jak Zacząć — Statystyki Wyjazdów"
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Follow the steps below to set up the plugin and start tracking emergency statistics for your fire department."
+msgstr "Wykonaj poniższe kroki, aby skonfigurować wtyczkę i rozpocząć śledzenie statystyk wyjazdów dla swojej straży pożarnej."
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Quick Setup"
+msgstr "Szybka Konfiguracja"
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Emergency Categories"
+msgstr "Kategorie Wyjazdów"
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Logging Emergency Counts"
+msgstr "Logowanie Liczników Wyjazdów"
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Widget & Shortcode"
+msgstr "Widżet i Shortcode"
+
+#: inc/classes/firefighter-stats-admin-guide.php
+msgid "Gutenberg Block"
+msgstr "Blok Gutenberga"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php
+msgid "Category Summary Settings"
+msgstr "Ustawienia Podsumowania Kategorii"
+
+#: inc/classes/widgets/firefighter-stats-widget-emergency-list.php
+msgid "Emergency Posts List Settings"
+msgstr "Ustawienia Listy Postów Wyjazdów"
