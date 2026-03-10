@@ -93,13 +93,14 @@ jobs:
             /^== Changelog ==/ { in_changelog=1; next }
             in_changelog && /^== / && !/^== Changelog/ { exit }
             in_changelog && /^= / {
-              if (match($0, ver)) { capture=1; next }
+              if ($0 == "= " ver " =") { capture=1; next }
               else if (capture) { exit }
             }
             capture { print }
           ' readme.txt)
 
           if [ -z "$CHANGELOG" ]; then
+            echo "::warning::No changelog entry found for version ${TAG_VERSION} in readme.txt — using default message."
             CHANGELOG="Release version ${TAG_VERSION}."
           fi
 
