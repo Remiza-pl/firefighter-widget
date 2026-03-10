@@ -48,6 +48,25 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
         }
 
         /**
+         * Validate a Y-m-d date string.
+         *
+         * Returns the original date when valid, or today's date as fallback.
+         *
+         * @param string $date Raw date value.
+         * @return string Validated Y-m-d date.
+         */
+        private function validate_date_input( $date ) {
+            if ( empty( $date ) ) {
+                return $date;
+            }
+            if ( preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $m )
+                 && checkdate( (int) $m[2], (int) $m[3], (int) $m[1] ) ) {
+                return $date;
+            }
+            return wp_date( 'Y-m-d' );
+        }
+
+        /**
          * Add admin menu page
          */
         public function add_admin_menu() {
@@ -315,15 +334,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                 wp_send_json_error( array( 'message' => 'Invalid parameters' ) );
             }
 
-            if ( ! empty( $date ) ) {
-                $date_valid = false;
-                if ( preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $m ) ) {
-                    $date_valid = checkdate( (int) $m[2], (int) $m[3], (int) $m[1] );
-                }
-                if ( ! $date_valid ) {
-                    $date = wp_date( 'Y-m-d' );
-                }
-            }
+            $date = $this->validate_date_input( $date );
 
             if ( ! empty( $time ) && ! preg_match( '/^\d{2}:\d{2}$/', $time ) ) {
                 $time = '';
@@ -361,15 +372,7 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
             $date        = isset( $_POST['date'] ) ? sanitize_text_field( wp_unslash( $_POST['date'] ) ) : '';
             $time        = isset( $_POST['time'] ) ? sanitize_text_field( wp_unslash( $_POST['time'] ) ) : '';
 
-            if ( ! empty( $date ) ) {
-                $date_valid = false;
-                if ( preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $m ) ) {
-                    $date_valid = checkdate( (int) $m[2], (int) $m[3], (int) $m[1] );
-                }
-                if ( ! $date_valid ) {
-                    $date = wp_date( 'Y-m-d' );
-                }
-            }
+            $date = $this->validate_date_input( $date );
 
             if ( ! empty( $time ) && ! preg_match( '/^\d{2}:\d{2}$/', $time ) ) {
                 $time = '';
