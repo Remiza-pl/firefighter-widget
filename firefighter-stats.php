@@ -67,6 +67,8 @@ require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-admi
 require_once $firefighter_stats_plugin_dir . 'inc/core-functions.php';
 require_once $firefighter_stats_plugin_dir . 'inc/blocks-config.php';
 require_once $firefighter_stats_plugin_dir . 'inc/integrations/load.php';
+require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-reporter.php';
+require_once $firefighter_stats_plugin_dir . 'inc/classes/firefighter-stats-settings.php';
 unset( $firefighter_stats_plugin_dir );
 
 // Register Notice CPT
@@ -79,6 +81,9 @@ if ( class_exists( 'Firefighter_Stats_CPT_Notice' ) ) {
 			$firefighter_stats_cpt->activate_cpt();
 			if ( class_exists( 'Firefighter_Stats_Category_Seeder' ) ) {
 				Firefighter_Stats_Category_Seeder::seed();
+			}
+			if ( class_exists( 'Firefighter_Stats_Reporter' ) ) {
+				Firefighter_Stats_Reporter::generate_token_on_activation();
 			}
 		}
 	}
@@ -120,6 +125,16 @@ if ( class_exists( 'Firefighter_Stats_Admin_Guide' ) ) {
 	add_action( 'init', static function () {
 		new Firefighter_Stats_Admin_Guide();
 	} );
+}
+
+// Initialize Remiza.pl reporter.
+if ( class_exists( 'Firefighter_Stats_Reporter' ) ) {
+	add_action( 'init', static function () { Firefighter_Stats_Reporter::init(); } );
+}
+
+// Initialize Settings page.
+if ( class_exists( 'Firefighter_Stats_Settings' ) ) {
+	add_action( 'init', static function () { new Firefighter_Stats_Settings(); } );
 }
 
 // Enforce category assignment: revert post to draft if published without a category.

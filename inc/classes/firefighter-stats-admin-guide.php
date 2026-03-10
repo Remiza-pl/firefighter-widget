@@ -407,6 +407,20 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Guide' ) ) {
                     <p><code>[firefighter_stats_emergency_list_widget]</code></p>
                 </div>
 
+                <!-- 7. Data Sharing -->
+                <div class="card" style="max-width:760px; margin-bottom:20px; padding:20px 24px; border-left:4px solid #2271b1;">
+                    <h2 style="margin-top:0;">📡 <?php echo esc_html( $this->t( 'Data Sharing with Remiza.pl', 'Udostępnianie Danych z Remiza.pl' ) ); ?></h2>
+                    <p><?php echo esc_html( $this->t(
+                        'This plugin can share anonymised emergency statistics with Remiza.pl so the portal can display national firefighter activity. Reporting is enabled by default and sends: site name &amp; URL, post title, a 30-word excerpt, category, emergency date, and plugin version. No personal data or user IDs are ever sent.',
+                        'Ta wtyczka może udostępniać zanonimizowane statystyki wyjazdów do Remiza.pl, aby portal mógł wyświetlać krajową aktywność strażaków. Raportowanie jest domyślnie włączone i wysyła: nazwę i URL strony, tytuł postu, 30-słowny skrót, kategorię, datę wyjazdu i wersję wtyczki. Żadne dane osobowe ani identyfikatory użytkowników nie są przesyłane.'
+                    ) ); ?></p>
+                    <p>
+                        <a href="<?php echo esc_url( admin_url( 'edit.php?post_type=firefighter_stats&page=firefighter-stats-settings' ) ); ?>" class="button">
+                            <?php echo esc_html( $this->t( 'Open Settings', 'Otwórz Ustawienia' ) ); ?>
+                        </a>
+                    </p>
+                </div>
+
             </div>
             <?php
         }

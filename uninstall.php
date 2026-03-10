@@ -16,6 +16,14 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 delete_option( 'firefighter_stats_locale' );
 delete_option( 'firefighter_stats_permalinks' );
 
+// Remove reporter options and transients.
+delete_option( 'firefighter_stats_reporting_token' );
+delete_option( 'firefighter_stats_reporting_enabled' );
+delete_option( 'firefighter_stats_reporting_registered' );
+delete_option( 'firefighter_stats_reporting_notice_dismissed' );
+delete_option( 'firefighter_stats_reporting_endpoint' );
+delete_transient( 'firefighter_stats_token_invalid' );
+
 // Remove term meta for all firefighter_stats_cat terms.
 $terms = get_terms( array(
 	'taxonomy'   => 'firefighter_stats_cat',
