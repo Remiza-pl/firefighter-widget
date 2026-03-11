@@ -218,6 +218,8 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 					<?php submit_button( $this->t( 'Save Settings', 'Zapisz Ustawienia' ) ); ?>
 				</form>
 
+				<?php $this->render_status_panel(); ?>
+
 				<?php if ( $token_invalid ) : ?>
 					<!-- Re-register panel (only shown when token was rejected) -->
 					<div class="card" style="max-width:760px; margin-top:20px; padding:20px 24px; border-left:4px solid #d63638;">
@@ -241,6 +243,106 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 					</div>
 				<?php endif; ?>
 
+			</div>
+			<?php
+		}
+
+		// ---------------------------------------------------------------
+		// Connection status panel
+		// ---------------------------------------------------------------
+
+		/**
+		 * Render the Connection Status card on the Settings page.
+		 *
+		 * @return void
+		 */
+		private function render_status_panel() {
+			if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
+				return;
+			}
+			$fs_status = Firefighter_Stats_Reporter::get_last_status();
+			$fs_now    = time();
+			?>
+			<div class="card" style="max-width:760px; margin-top:20px; padding:20px 24px;">
+				<h3 style="margin-top:0;">
+					<?php echo esc_html( $this->t( 'Connection Status', 'Status Połączenia' ) ); ?>
+				</h3>
+				<?php if ( empty( $fs_status ) ) : ?>
+					<p style="color:#646970; margin:0;">
+						<?php echo esc_html( $this->t(
+							'No connection attempts yet. Status will appear here after the first emergency post is published.',
+							'Brak prób połączenia. Status pojawi się tutaj po opublikowaniu pierwszego wpisu wyjazdu.'
+						) ); ?>
+					</p>
+				<?php else : ?>
+					<table class="widefat striped" style="border:none;">
+						<thead>
+							<tr>
+								<th style="width:140px;"><?php echo esc_html( $this->t( 'Channel', 'Kanał' ) ); ?></th>
+								<th><?php echo esc_html( $this->t( 'Status', 'Status' ) ); ?></th>
+								<th style="width:160px;"><?php echo esc_html( $this->t( 'Last updated', 'Ostatnia aktualizacja' ) ); ?></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							$fs_channels = array(
+								'register' => $this->t( 'Registration', 'Rejestracja' ),
+								'report'   => $this->t( 'Last report', 'Ostatni raport' ),
+							);
+							foreach ( $fs_channels as $fs_channel_key => $fs_channel_label ) :
+								$fs_entry   = isset( $fs_status[ $fs_channel_key ] ) ? $fs_status[ $fs_channel_key ] : null;
+								$fs_state   = $fs_entry ? $fs_entry['status'] : 'none';
+								$fs_time    = $fs_entry ? (int) $fs_entry['time'] : 0;
+								$fs_error   = $fs_entry && ! empty( $fs_entry['error'] ) ? $fs_entry['error'] : '';
+								$fs_attempt = $fs_entry && isset( $fs_entry['attempt'] ) ? (int) $fs_entry['attempt'] : 0;
+								$fs_next    = $fs_entry && ! empty( $fs_entry['next_retry'] ) ? (int) $fs_entry['next_retry'] : 0;
+								?>
+								<tr>
+									<td><strong><?php echo esc_html( $fs_channel_label ); ?></strong></td>
+									<td>
+										<?php
+										if ( 'success' === $fs_state ) :
+											echo '<span style="color:#00a32a;">✅ ' . esc_html( $this->t( 'OK', 'OK' ) ) . '</span>';
+										elseif ( 'retrying' === $fs_state ) :
+											$fs_next_in = ( $fs_next > $fs_now ) ? human_time_diff( $fs_now, $fs_next ) : $this->t( 'any moment', 'lada chwila' );
+											echo '<span style="color:#2271b1;">⏳ ' . sprintf(
+												esc_html( $this->t( 'Retrying (attempt %d, next in %s)', 'Ponawianie (próba %d, następna za %s)' ) ),
+												$fs_attempt,
+												esc_html( $fs_next_in )
+											) . '</span>';
+										elseif ( 'failed' === $fs_state ) :
+											echo '<span style="color:#d63638;">❌ ' . esc_html( $this->t( 'Failed', 'Błąd' ) );
+											if ( $fs_error ) {
+												echo ': <code>' . esc_html( $fs_error ) . '</code>';
+											}
+											echo '</span>';
+										elseif ( 'abandoned' === $fs_state ) :
+											echo '<span style="color:#d63638;">❌ ' . esc_html( $this->t(
+												'Abandoned after 48 h — re-register to restore reporting.',
+												'Porzucono po 48 h — zarejestruj ponownie, aby przywrócić raportowanie.'
+											) ) . '</span>';
+										else :
+											echo '<span style="color:#646970;">&mdash; ' . esc_html( $this->t( 'No data yet', 'Brak danych' ) ) . '</span>';
+										endif;
+										?>
+									</td>
+									<td style="color:#646970; font-size:12px;">
+										<?php
+										if ( $fs_time > 0 ) {
+											echo esc_html( sprintf(
+												/* translators: %s = human-readable time difference */ $this->t( '%s ago', '%s temu' ),
+												human_time_diff( $fs_time, $fs_now )
+											) );
+										} else {
+											echo '&mdash;';
+										}
+										?>
+									</td>
+								</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+				<?php endif; ?>
 			</div>
 			<?php
 		}

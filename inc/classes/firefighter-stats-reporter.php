@@ -23,9 +23,13 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 	 */
 	class Firefighter_Stats_Reporter {
 
-		const OPTION_ENABLED    = 'firefighter_stats_reporting_enabled';
-		const OPTION_TOKEN      = 'firefighter_stats_reporting_token';
-		const OPTION_REGISTERED = 'firefighter_stats_reporting_registered';
+		const OPTION_ENABLED     = 'firefighter_stats_reporting_enabled';
+		const OPTION_TOKEN       = 'firefighter_stats_reporting_token';
+		const OPTION_REGISTERED  = 'firefighter_stats_reporting_registered';
+		const OPTION_LAST_STATUS = 'firefighter_stats_reporting_last_status';
+
+		/** Maximum time window for retries: 48 hours. */
+		const MAX_RETRY_SECONDS = 172800;
 
 		/** @var bool|null Cached Polish-locale flag. */
 		private $is_pl = null;
@@ -63,6 +67,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		public function __construct() {
 			add_action( 'transition_post_status', array( $this, 'handle_post_status_transition' ), 10, 3 );
 			add_action( 'firefighter_stats_send_report', array( $this, 'send_report_async' ) );
+			add_action( 'firefighter_stats_retry_report', array( $this, 'retry_report_async' ), 10, 3 );
 			add_action( 'admin_notices', array( $this, 'show_consent_notice' ) );
 			add_action( 'admin_notices', array( $this, 'show_token_invalid_notice' ) );
 			add_action( 'admin_init', array( $this, 'handle_notice_actions' ) );
@@ -121,7 +126,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		}
 
 		// ---------------------------------------------------------------
-		// Cron callback
+		// Cron callbacks
 		// ---------------------------------------------------------------
 
 		/**
@@ -139,9 +144,33 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				return;
 			}
 			if ( ! $this->ensure_registered() ) {
+				// Registration failed — start retry chain for this report.
+				$this->schedule_report_retry( $post_id, 0, time() );
 				return;
 			}
-			$this->dispatch( $this->build_payload( $post_id ) );
+			$this->dispatch( $this->build_payload( $post_id ), $post_id, 0, time() );
+		}
+
+		/**
+		 * WP-Cron retry callback.
+		 *
+		 * @param int $post_id       Post ID.
+		 * @param int $attempt       Current retry attempt number (0-based).
+		 * @param int $first_failure Unix timestamp of the first failure.
+		 * @return void
+		 */
+		public function retry_report_async( $post_id, $attempt, $first_failure ) {
+			if ( ! $this->is_enabled() ) {
+				return;
+			}
+			if ( 'publish' !== get_post_status( $post_id ) ) {
+				return;
+			}
+			if ( ! $this->ensure_registered() ) {
+				$this->schedule_report_retry( $post_id, $attempt + 1, $first_failure );
+				return;
+			}
+			$this->dispatch( $this->build_payload( $post_id ), $post_id, $attempt + 1, $first_failure );
 		}
 
 		// ---------------------------------------------------------------
@@ -150,9 +179,6 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 
 		/**
 		 * Return true if already registered and a token is stored; attempt registration otherwise.
-		 *
-		 * Clears the registered flag when the token is missing so the system self-heals
-		 * after manual option deletion or a partial site migration.
 		 *
 		 * @return bool
 		 */
@@ -190,6 +216,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			);
 
 			if ( is_wp_error( $response ) ) {
+				$this->log_status( 'register', 'failed', array( 'error' => $response->get_error_message() ) );
 				return false;
 			}
 
@@ -199,12 +226,15 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				if ( ! empty( $data['token'] ) ) {
 					update_option( self::OPTION_TOKEN, sanitize_text_field( $data['token'] ), false );
 					update_option( self::OPTION_REGISTERED, '1', false );
+					$this->log_status( 'register', 'success', array() );
 					return true;
 				}
+				$this->log_status( 'register', 'failed', array( 'error' => 'No token in response' ) );
 				return false;
 			}
 
 			$this->handle_http_error( $response );
+			$this->log_status( 'register', 'failed', array( 'error' => 'HTTP ' . $code ) );
 			return false;
 		}
 
@@ -215,10 +245,13 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		/**
 		 * POST /report with the given payload.
 		 *
-		 * @param array $payload Report payload.
+		 * @param array $payload      Report payload.
+		 * @param int   $post_id      Post ID (for retry scheduling).
+		 * @param int   $attempt      Current attempt number.
+		 * @param int   $first_failure Unix timestamp of the first failure (0 = first try).
 		 * @return void
 		 */
-		private function dispatch( array $payload ) {
+		private function dispatch( array $payload, $post_id = 0, $attempt = 0, $first_failure = 0 ) {
 			$response = wp_remote_post(
 				$this->get_endpoint( '/report' ),
 				array(
@@ -229,12 +262,32 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			);
 
 			if ( is_wp_error( $response ) ) {
+				$this->log_status( 'report', 'failed', array(
+					'post_id' => $post_id,
+					'attempt' => $attempt,
+					'error'   => $response->get_error_message(),
+				) );
+				if ( $post_id > 0 ) {
+					$this->schedule_report_retry( $post_id, $attempt, $first_failure ?: time() );
+				}
 				return;
 			}
 
 			$code = wp_remote_retrieve_response_code( $response );
-			if ( $code < 200 || $code >= 300 ) {
-				$this->handle_http_error( $response );
+			if ( $code >= 200 && $code < 300 ) {
+				$this->log_status( 'report', 'success', array( 'post_id' => $post_id ) );
+				return;
+			}
+
+			$this->handle_http_error( $response );
+			$this->log_status( 'report', 'failed', array(
+				'post_id' => $post_id,
+				'attempt' => $attempt,
+				'error'   => 'HTTP ' . $code,
+			) );
+			// Do not retry on 401/403 — token is invalid, user must re-register.
+			if ( $post_id > 0 && 401 !== $code && 403 !== $code ) {
+				$this->schedule_report_retry( $post_id, $attempt, $first_failure ?: time() );
 			}
 		}
 
@@ -297,6 +350,103 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				'https://remiza.pl/wp-json/remiza-stats/v1'
 			);
 			return rtrim( $base, '/' ) . $path;
+		}
+
+		// ---------------------------------------------------------------
+		// Retry mechanics
+		// ---------------------------------------------------------------
+
+		/**
+		 * Schedule the next retry for a failed report.
+		 * Abandons after MAX_RETRY_SECONDS (48 h) from the first failure.
+		 *
+		 * @param int $post_id       Post ID.
+		 * @param int $attempt       Number of retries already attempted.
+		 * @param int $first_failure Unix timestamp of first failure.
+		 * @return void
+		 */
+		private function schedule_report_retry( $post_id, $attempt, $first_failure ) {
+			if ( ( time() - $first_failure ) >= self::MAX_RETRY_SECONDS ) {
+				$this->log_status( 'report', 'abandoned', array(
+					'post_id'  => $post_id,
+					'attempts' => $attempt,
+				) );
+				return;
+			}
+
+			$delay      = $this->get_retry_delay( $attempt );
+			$next_retry = time() + $delay;
+
+			wp_schedule_single_event(
+				$next_retry,
+				'firefighter_stats_retry_report',
+				array( $post_id, $attempt, $first_failure )
+			);
+
+			$this->log_status( 'report', 'retrying', array(
+				'post_id'    => $post_id,
+				'attempt'    => $attempt + 1,
+				'next_retry' => $next_retry,
+			) );
+		}
+
+		/**
+		 * Return the delay in seconds before a given retry attempt.
+		 * Incremental backoff: 5 min → 15 → 30 → 1 h → 2 h → 4 h → 8 h → 16 h.
+		 *
+		 * @param int $attempt Zero-based retry count.
+		 * @return int Seconds to wait.
+		 */
+		private function get_retry_delay( $attempt ) {
+			$delays = array(
+				0 => 5  * MINUTE_IN_SECONDS,
+				1 => 15 * MINUTE_IN_SECONDS,
+				2 => 30 * MINUTE_IN_SECONDS,
+				3 => HOUR_IN_SECONDS,
+				4 => 2  * HOUR_IN_SECONDS,
+				5 => 4  * HOUR_IN_SECONDS,
+				6 => 8  * HOUR_IN_SECONDS,
+				7 => 16 * HOUR_IN_SECONDS,
+			);
+			return isset( $delays[ $attempt ] ) ? $delays[ $attempt ] : 16 * HOUR_IN_SECONDS;
+		}
+
+		// ---------------------------------------------------------------
+		// Status logging
+		// ---------------------------------------------------------------
+
+		/**
+		 * Persist the latest status for a channel (register/report) into an option
+		 * so the Settings page can display it.
+		 *
+		 * @param string $channel  'register' or 'report'.
+		 * @param string $status   'success', 'failed', 'retrying', or 'abandoned'.
+		 * @param array  $context  Extra data (post_id, attempt, next_retry, error …).
+		 * @return void
+		 */
+		private function log_status( $channel, $status, array $context ) {
+			$log = get_option( self::OPTION_LAST_STATUS, array() );
+			if ( ! is_array( $log ) ) {
+				$log = array();
+			}
+			$log[ $channel ] = array_merge(
+				$context,
+				array(
+					'status' => $status,
+					'time'   => time(),
+				)
+			);
+			update_option( self::OPTION_LAST_STATUS, $log, false );
+		}
+
+		/**
+		 * Return the persisted status log array.
+		 *
+		 * @return array
+		 */
+		public static function get_last_status() {
+			$log = get_option( 'firefighter_stats_reporting_last_status', array() );
+			return is_array( $log ) ? $log : array();
 		}
 
 		// ---------------------------------------------------------------

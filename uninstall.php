@@ -23,6 +23,7 @@ delete_option( 'firefighter_stats_reporting_enabled' );
 delete_option( 'firefighter_stats_reporting_registered' );
 delete_option( 'firefighter_stats_reporting_notice_dismissed' );
 delete_option( 'firefighter_stats_reporting_endpoint' );
+delete_option( 'firefighter_stats_reporting_last_status' );
 delete_transient( 'firefighter_stats_token_invalid' );
 
 // Remove term meta for all firefighter_stats_cat terms.
