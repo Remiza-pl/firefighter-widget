@@ -72,22 +72,23 @@ jobs:
           fi
           echo "Bump type: $BUMP"
 
-          # If the developer already bumped the files manually, honour that version.
-          # Otherwise auto-increment the requested part.
-          NEW_VERSION=$(python3 - <<PYEOF
-def v(s): return tuple(int(x) for x in s.split('.'))
-cur, lat = v('$CURRENT'), v('$LATEST')
-if cur > lat:
-    print('$CURRENT')
-else:
-    major, minor, patch = lat
-    b = '$BUMP'
-    if b == 'major':   major += 1; minor = 0; patch = 0
-    elif b == 'minor': minor += 1; patch = 0
-    else:              patch += 1
-    print(f'{major}.{minor}.{patch}')
-PYEOF
-          )
+          # Parse version triplets
+          IFS='.' read -r C_MAJ C_MIN C_PAT <<< "$CURRENT"
+          IFS='.' read -r L_MAJ L_MIN L_PAT <<< "$LATEST"
+
+          # If the developer already bumped the files past the latest tag, honour it.
+          if [ "$C_MAJ" -gt "$L_MAJ" ] || \
+             { [ "$C_MAJ" -eq "$L_MAJ" ] && [ "$C_MIN" -gt "$L_MIN" ]; } || \
+             { [ "$C_MAJ" -eq "$L_MAJ" ] && [ "$C_MIN" -eq "$L_MIN" ] && [ "$C_PAT" -gt "$L_PAT" ]; }; then
+            NEW_VERSION="$CURRENT"
+          else
+            case "$BUMP" in
+              major) NEW_VERSION="$((L_MAJ+1)).0.0" ;;
+              minor) NEW_VERSION="${L_MAJ}.$((L_MIN+1)).0" ;;
+              *)     NEW_VERSION="${L_MAJ}.${L_MIN}.$((L_PAT+1))" ;;
+            esac
+          fi
+
           echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
           echo "Resolved new version: $NEW_VERSION"
 
