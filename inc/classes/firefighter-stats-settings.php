@@ -359,7 +359,7 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 											$fs_next_in = ( $fs_next > $fs_now ) ? human_time_diff( $fs_now, $fs_next ) : $this->t( 'any moment', 'lada chwila' );
 											echo '<span style="color:#2271b1;">⏳ ' . sprintf(
 												esc_html( $this->t( 'Retrying (attempt %d, next in %s)', 'Ponawianie (próba %d, następna za %s)' ) ),
-												$fs_attempt,
+												absint( $fs_attempt ),
 												esc_html( $fs_next_in )
 											) . '</span>';
 										elseif ( 'failed' === $fs_state ) :

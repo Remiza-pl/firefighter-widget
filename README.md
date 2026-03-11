@@ -279,21 +279,87 @@ Please keep PHP compatibility at **7.4+** and avoid introducing build tools — 
 
 ---
 
+## Remiza.pl API — Direct Integration
+
+Any website — WordPress or not — can submit emergency reports directly to the [Remiza.pl](https://remiza.pl) statistics receiver without installing this plugin.
+
+**Base URL:** `https://remiza.pl/wp-json/remiza-stats/v1`
+No WordPress authentication required. Authorization is handled via a site token issued at registration.
+
+### 1. Register your site
+
+```bash
+curl -X POST https://remiza.pl/wp-json/remiza-stats/v1/register \
+  -H "Content-Type: application/json" \
+  -d '{"site_url":"https://your-osp.pl","site_name":"OSP Your Unit"}'
+```
+
+Response `201 Created`:
+```json
+{
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "domain_label": "your-osp.pl"
+}
+```
+
+Store the token securely — it authorises all future `/report` calls. If the domain was already registered, a suffix is appended to `domain_label` (e.g. `your-osp.pl-2`) and historical data is preserved.
+
+**Rate limit:** 5 registrations per IP per hour.
+
+### 2. Submit a report
+
+```bash
+curl -X POST https://remiza.pl/wp-json/remiza-stats/v1/report \
+  -H "Content-Type: application/json" \
+  -d '{
+    "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "event": "new_emergency",
+    "post_title": "Fire at residential building in Łagisz",
+    "post_url": "https://your-osp.pl/news/fire-2026-03-11",
+    "post_excerpt": "Unit was dispatched to a residential fire...",
+    "category_slug": "fire",
+    "category_name": "Fire",
+    "category_icon": "🔥",
+    "emergency_date": "2026-03-11",
+    "reported_at": "2026-03-11T17:45:00+01:00"
+  }'
+```
+
+Response `200 OK`:
+```json
+{ "status": "ok" }
+```
+
+### Report fields
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `token` | **Yes** | Token from `/register` |
+| `post_title` | **Yes** | Title of the emergency post |
+| `post_url` | **Yes** | Full URL — shown as a clickable link in the receiver admin |
+| `emergency_date` | **Yes** | Date in `YYYY-MM-DD` or ISO 8601 |
+| `event` | No | Event type slug (default: `new_emergency`) |
+| `post_excerpt` | No | Short excerpt from the post body |
+| `category_slug` | No | Category slug (e.g. `fire`) |
+| `category_name` | No | Human-readable category name |
+| `category_icon` | No | Emoji icon (e.g. `🔥`) |
+| `reported_at` | No | ISO 8601 timestamp of the event |
+
+### Error codes
+
+| Status | Code | Meaning |
+|--------|------|---------|
+| `400` | `missing_site_url` | `/register`: `site_url` missing |
+| `400` | `missing_token` | `/report`: `token` missing |
+| `401` | `invalid_token` | Token not recognised or site inactive |
+| `429` | `rate_limit_exceeded` | Too many registrations (5 / IP / hour) |
+| `500` | `registration_failed` / `storage_failed` | Server-side error |
+
+---
+
 ## Changelog
 
-### 1.0.0
-- Initial release
-- Custom Post Type, taxonomies, 13 default categories
-- Emergency List and Emergency Categories widgets
-- Quick Counts admin page with modal, year filter, time field
-- Admin bar quick-add button
-- Gutenberg block (no build step)
-- Shortcode with full attribute support
-- Admin quick-actions panel on the frontend widget (admins only)
-- Getting Started guide page
-- Category enforcement on publish (reverts to draft if no category)
-- Polish translation included
-- Bilingual admin UI (EN/PL) without requiring compiled MO
+See [CHANGELOG.md](CHANGELOG.md) for the full version history.
 
 ---
 

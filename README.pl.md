@@ -279,21 +279,87 @@ Prosimy o zachowanie kompatybilności z **PHP 7.4+** i nieprowadzenie procesu bu
 
 ---
 
+## API Remiza.pl — Bezpośrednia integracja
+
+Każda strona internetowa — WordPress lub inna — może wysyłać raporty o wyjazdach bezpośrednio do odbiornika statystyk [Remiza.pl](https://remiza.pl) bez instalowania tej wtyczki.
+
+**Adres bazowy:** `https://remiza.pl/wp-json/remiza-stats/v1`
+Nie wymaga uwierzytelniania WordPress. Autoryzacja odbywa się przez token strony wydawany przy rejestracji.
+
+### 1. Zarejestruj stronę
+
+```bash
+curl -X POST https://remiza.pl/wp-json/remiza-stats/v1/register \
+  -H "Content-Type: application/json" \
+  -d '{"site_url":"https://twoja-osp.pl","site_name":"OSP Twoja Jednostka"}'
+```
+
+Odpowiedź `201 Created`:
+```json
+{
+  "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "domain_label": "twoja-osp.pl"
+}
+```
+
+Przechowuj token bezpiecznie — autoryzuje wszystkie przyszłe wywołania `/report`. Jeśli domena była już zarejestrowana, do `domain_label` dodawany jest sufiks (np. `twoja-osp.pl-2`), a historyczne dane są zachowane.
+
+**Limit żądań:** 5 rejestracji na IP na godzinę.
+
+### 2. Wyślij raport
+
+```bash
+curl -X POST https://remiza.pl/wp-json/remiza-stats/v1/report \
+  -H "Content-Type: application/json" \
+  -d '{
+    "token": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "event": "new_emergency",
+    "post_title": "Pożar budynku mieszkalnego w Łagiszu",
+    "post_url": "https://twoja-osp.pl/aktualnosci/pozar-2026-03-11",
+    "post_excerpt": "Jednostka została zadysponowana do pożaru...",
+    "category_slug": "pozar",
+    "category_name": "Pożar",
+    "category_icon": "🔥",
+    "emergency_date": "2026-03-11",
+    "reported_at": "2026-03-11T17:45:00+01:00"
+  }'
+```
+
+Odpowiedź `200 OK`:
+```json
+{ "status": "ok" }
+```
+
+### Pola raportu
+
+| Pole | Wymagane | Opis |
+|------|----------|------|
+| `token` | **Tak** | Token z `/register` |
+| `post_title` | **Tak** | Tytuł wpisu o wyjeździe |
+| `post_url` | **Tak** | Pełny URL — wyświetlany jako link w panelu admina odbiornika |
+| `emergency_date` | **Tak** | Data w formacie `RRRR-MM-DD` lub ISO 8601 |
+| `event` | Nie | Typ zdarzenia (domyślnie: `new_emergency`) |
+| `post_excerpt` | Nie | Krótki fragment treści wpisu |
+| `category_slug` | Nie | Slug kategorii (np. `pozar`) |
+| `category_name` | Nie | Czytelna nazwa kategorii |
+| `category_icon` | Nie | Emoji (np. `🔥`) |
+| `reported_at` | Nie | Znacznik czasu ISO 8601 zdarzenia |
+
+### Kody błędów
+
+| Status | Kod | Znaczenie |
+|--------|-----|-----------|
+| `400` | `missing_site_url` | `/register`: brak `site_url` |
+| `400` | `missing_token` | `/report`: brak `token` |
+| `401` | `invalid_token` | Token nierozpoznany lub strona nieaktywna |
+| `429` | `rate_limit_exceeded` | Za dużo rejestracji (5 / IP / godzinę) |
+| `500` | `registration_failed` / `storage_failed` | Błąd po stronie serwera |
+
+---
+
 ## Historia zmian
 
-### 1.0.0
-- Pierwsze wydanie
-- Własny typ wpisu, taksonomie, 13 domyślnych kategorii
-- Widżety: Lista wyjazdów i Kategorie wyjazdów
-- Strona Szybkie Liczniki z oknem modalnym, filtrem rocznym i polem godziny
-- Przycisk szybkiego dodawania na pasku admina
-- Blok Gutenberga (bez procesu budowania)
-- Shortcode z pełną obsługą atrybutów
-- Panel szybkich akcji admina w widżecie na froncie (tylko administratorzy)
-- Strona Jak zacząć
-- Wymuszanie kategorii przy publikacji (cofa do szkicu, jeśli brak kategorii)
-- Dołączone tłumaczenie polskie
-- Dwujęzyczny interfejs admina (EN/PL) bez potrzeby skompilowanego MO
+Pełna historia zmian dostępna w pliku [CHANGELOG.md](CHANGELOG.md).
 
 ---
 

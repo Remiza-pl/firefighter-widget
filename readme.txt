@@ -96,6 +96,38 @@ Go to **Emergencies > Quick Counts** and click **Fix Emergency URLs**. This flus
 
 See [CHANGELOG.md](https://github.com/OSP-Lagisza/firefighter-stats/blob/main/CHANGELOG.md) for the full version history.
 
+== Remiza.pl API — Direct Integration ==
+
+Any website — WordPress or not — can submit emergency reports directly to the Remiza.pl statistics receiver without installing this plugin. No WordPress authentication is required.
+
+**Base URL:** `https://remiza.pl/wp-json/remiza-stats/v1`
+
+= Step 1: Register your site =
+
+Send a POST request with your site URL and name to receive a unique token:
+
+    POST /register
+    {"site_url":"https://your-osp.pl","site_name":"OSP Your Unit"}
+
+    Response: {"token":"a1b2c3d4-...","domain_label":"your-osp.pl"}
+
+Store the token securely — it authorises all future report submissions. Rate limit: 5 registrations per IP per hour.
+
+= Step 2: Submit reports =
+
+    POST /report
+    {
+        "token": "a1b2c3d4-...",
+        "post_title": "Fire at residential building",
+        "post_url": "https://your-osp.pl/news/fire-2026-03-11",
+        "category_slug": "fire",
+        "category_name": "Fire",
+        "category_icon": "🔥",
+        "emergency_date": "2026-03-11"
+    }
+
+Required fields: `token`, `post_title`, `post_url`, `emergency_date`. All other fields are optional.
+
 == External Services ==
 
 This plugin can optionally send anonymised emergency statistics to **Remiza.pl** (https://remiza.pl), Poland's largest firefighter portal, so the portal can display aggregated national emergency activity.

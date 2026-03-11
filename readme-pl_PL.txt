@@ -95,6 +95,38 @@ Przejdź do **Interwencje > Szybkie liczniki** i kliknij przycisk **Napraw adres
 
 Pełna historia zmian dostępna w pliku [CHANGELOG.md](https://github.com/OSP-Lagisza/firefighter-stats/blob/main/CHANGELOG.md).
 
+== API Remiza.pl — Bezpośrednia integracja ==
+
+Każda strona — WordPress lub inna — może wysyłać raporty o wyjazdach bezpośrednio do odbiornika statystyk Remiza.pl bez instalowania tej wtyczki. Nie jest wymagane uwierzytelnianie WordPress.
+
+**Adres bazowy:** `https://remiza.pl/wp-json/remiza-stats/v1`
+
+= Krok 1: Zarejestruj stronę =
+
+Wyślij żądanie POST z adresem URL i nazwą strony, aby otrzymać unikalny token:
+
+    POST /register
+    {"site_url":"https://twoja-osp.pl","site_name":"OSP Twoja Jednostka"}
+
+    Odpowiedź: {"token":"a1b2c3d4-...","domain_label":"twoja-osp.pl"}
+
+Przechowuj token bezpiecznie — autoryzuje wszystkie przyszłe raporty. Limit: 5 rejestracji na IP na godzinę.
+
+= Krok 2: Wysyłaj raporty =
+
+    POST /report
+    {
+        "token": "a1b2c3d4-...",
+        "post_title": "Pożar budynku mieszkalnego",
+        "post_url": "https://twoja-osp.pl/aktualnosci/pozar-2026-03-11",
+        "category_slug": "pozar",
+        "category_name": "Pożar",
+        "category_icon": "🔥",
+        "emergency_date": "2026-03-11"
+    }
+
+Wymagane pola: `token`, `post_title`, `post_url`, `emergency_date`. Pozostałe pola są opcjonalne.
+
 == Informacja o aktualizacji ==
 
 = 1.0.0 =
