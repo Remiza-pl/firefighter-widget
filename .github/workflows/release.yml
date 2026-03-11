@@ -126,31 +126,36 @@ jobs:
           echo "Zip contents:"
           unzip -l "${GITHUB_WORKSPACE}/${PLUGIN_SLUG}.zip"
 
-      - name: Extract changelog for current version
+      - name: Generate changelog from commits
         id: changelog
         run: |
-          TAG_VERSION="${{ steps.version.outputs.VERSION }}"
+          TAG="${{ steps.version.outputs.TAG }}"
+          VERSION="${{ steps.version.outputs.VERSION }}"
 
-          CHANGELOG=$(awk -v ver="$TAG_VERSION" '
-            /^== Changelog ==/ { in_changelog=1; next }
-            in_changelog && /^== / && !/^== Changelog/ { exit }
-            in_changelog && /^= / {
-              if ($0 == "= " ver " =") { capture=1; next }
-              else if (capture) { exit }
-            }
-            capture { print }
-          ' readme.txt)
+          # Previous release tag (exclude the current one).
+          PREV_TAG=$(git tag --list 'v*.*.*' --sort=-version:refname | grep -v "^${TAG}$" | head -1)
 
-          if [ -z "$CHANGELOG" ]; then
-            echo "::warning::No changelog entry found for version ${TAG_VERSION} in readme.txt — using default message."
-            CHANGELOG="Release version ${TAG_VERSION}."
+          # Build changelog from git log between the two tags.
+          if [ -n "$PREV_TAG" ]; then
+            LOG=$(git log "${PREV_TAG}..${TAG}" --pretty=format:"* %s" --no-merges \
+                  | grep -v "^\* chore: bump version")
+            SINCE="since ${PREV_TAG}"
+          else
+            LOG=$(git log "${TAG}" --pretty=format:"* %s" --no-merges \
+                  | grep -v "^\* chore: bump version")
+            SINCE="initial release"
           fi
+
+          [ -z "$LOG" ] && LOG="* Release ${VERSION}."
+
+          echo "Changelog (${SINCE}):"
+          echo "$LOG"
 
           {
             echo "BODY<<CHANGELOG_EOF"
             echo "## What's Changed"
             echo ""
-            echo "$CHANGELOG"
+            echo "$LOG"
             echo ""
             echo "---"
             echo ""

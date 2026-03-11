@@ -122,6 +122,39 @@ jobs:
           # 5. blocks/emergency-list-widget/block.json — version field
           sed -i 's/^\([[:space:]]*"version":[[:space:]]*"\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' blocks/emergency-list-widget/block.json
 
+      - name: Generate changelog
+        if: steps.check_tag.outputs.SKIP != 'true'
+        run: |
+          NEW_VERSION="${{ steps.version.outputs.NEW_VERSION }}"
+
+          # Previous release tag (the new tag has not been pushed yet).
+          PREV_TAG=$(git tag --list 'v*.*.*' --sort=-version:refname | head -1)
+
+          # Collect commit subjects since the previous tag, excluding automated bumps.
+          if [ -n "$PREV_TAG" ]; then
+            LOG=$(git log "${PREV_TAG}..HEAD" --pretty=format:"* %s" --no-merges \
+                  | grep -v "^\* chore: bump version")
+          else
+            LOG=$(git log HEAD --pretty=format:"* %s" --no-merges \
+                  | grep -v "^\* chore: bump version")
+          fi
+
+          [ -z "$LOG" ] && LOG="* Release ${NEW_VERSION}."
+
+          echo "Changelog entry for ${NEW_VERSION}:"
+          printf '= %s =\n%s\n' "$NEW_VERSION" "$LOG"
+
+          # Write to temp file to avoid multi-line quoting issues in awk.
+          printf '= %s =\n%s\n' "$NEW_VERSION" "$LOG" > /tmp/changelog_entry.txt
+
+          # Inject into readme.txt after "== Changelog ==" heading.
+          awk 'FNR==NR{e=e $0 "\n";next} /^== Changelog ==/{print;getline;printf "\n%s\n",e;next} 1' \
+            /tmp/changelog_entry.txt readme.txt > /tmp/r.tmp && mv /tmp/r.tmp readme.txt
+
+          # Inject into readme-pl_PL.txt after "== Dziennik zmian ==" heading.
+          awk 'FNR==NR{e=e $0 "\n";next} /^== Dziennik zmian ==/{print;getline;printf "\n%s\n",e;next} 1' \
+            /tmp/changelog_entry.txt readme-pl_PL.txt > /tmp/r.tmp && mv /tmp/r.tmp readme-pl_PL.txt
+
       - name: Verify updated versions
         if: steps.check_tag.outputs.SKIP != 'true'
         run: |

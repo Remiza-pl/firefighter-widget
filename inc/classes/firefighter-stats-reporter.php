@@ -1,6 +1,6 @@
 <?php
 /**
- * Firefighter Stats — Remiza.pl Reporter.
+ * Firefighter Stats -- Remiza.pl Reporter.
  *
  * Sends a JSON payload to Remiza.pl's REST API each time a new
  * firefighter_stats post is published, so the portal can aggregate
@@ -58,14 +58,14 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		}
 
 		// ---------------------------------------------------------------
-		// Constructor — hooks only, no side effects
+		// Constructor -- hooks only, no side effects
 		// ---------------------------------------------------------------
 
 		/**
 		 * Register all hooks.
 		 */
 		public function __construct() {
-			add_action( 'transition_post_status', array( $this, 'handle_post_status_transition' ), 10, 3 );
+			add_action( 'wp_after_insert_post', array( $this, 'handle_post_after_insert' ), 10, 4 );
 			add_action( 'firefighter_stats_send_report', array( $this, 'send_report_async' ) );
 			add_action( 'firefighter_stats_retry_report', array( $this, 'retry_report_async' ), 10, 3 );
 			add_action( 'admin_notices', array( $this, 'show_consent_notice' ) );
@@ -101,28 +101,35 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 		// ---------------------------------------------------------------
 
 		/**
-		 * Schedule an async report when a firefighter_stats post is first published.
+		 * Send a report when a firefighter_stats post is first published.
 		 *
-		 * @param string  $new  New post status.
-		 * @param string  $old  Previous post status.
-		 * @param WP_Post $post Post object.
+		 * Hooked into wp_after_insert_post so category-enforcement (which runs
+		 * on the wp_insert_post action and may revert the post to draft) has
+		 * already completed before we check the final post status.
+		 *
+		 * @param int          $post_id     Post ID.
+		 * @param WP_Post      $post        Post object after save.
+		 * @param bool         $update      Whether this is an update.
+		 * @param WP_Post|null $post_before Post object before save, or null on insert.
 		 * @return void
 		 */
-		public function handle_post_status_transition( $new, $old, $post ) {
-			if ( 'publish' !== $new ) {
-				return;
-			}
-			// Only fire on first publish, not on subsequent saves.
-			if ( 'publish' === $old ) {
-				return;
-			}
+		public function handle_post_after_insert( $post_id, $post, $update, $post_before ) {
 			if ( 'firefighter_stats' !== $post->post_type ) {
+				return;
+			}
+			// Final published status only (enforcement may have reverted to draft).
+			if ( 'publish' !== $post->post_status ) {
+				return;
+			}
+			// First publish only -- skip re-saves of already-published posts.
+			if ( $post_before instanceof WP_Post && 'publish' === $post_before->post_status ) {
 				return;
 			}
 			if ( ! $this->is_enabled() ) {
 				return;
 			}
-			wp_schedule_single_event( time(), 'firefighter_stats_send_report', array( $post->ID ) );
+			// Call directly -- no cron needed for initial send; retries are cron-based.
+			$this->send_report_async( $post_id );
 		}
 
 		// ---------------------------------------------------------------
@@ -144,7 +151,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				return;
 			}
 			if ( ! $this->ensure_registered() ) {
-				// Registration failed — start retry chain for this report.
+				// Registration failed -- start retry chain for this report.
 				$this->schedule_report_retry( $post_id, 0, time() );
 				return;
 			}
@@ -187,7 +194,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				if ( '' !== $this->get_token() ) {
 					return true;
 				}
-				// Token was deleted independently — reset so register_site() runs again.
+				// Token was deleted independently -- reset so register_site() runs again.
 				delete_option( self::OPTION_REGISTERED );
 			}
 			return $this->register_site();
@@ -285,7 +292,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				'attempt' => $attempt,
 				'error'   => 'HTTP ' . $code,
 			) );
-			// Do not retry on 401/403 — token is invalid, user must re-register.
+			// Do not retry on 401/403 -- token is invalid, user must re-register.
 			if ( $post_id > 0 && 401 !== $code && 403 !== $code ) {
 				$this->schedule_report_retry( $post_id, $attempt, $first_failure ?: time() );
 			}
@@ -492,7 +499,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				<div>
 					<p style="margin:0 0 6px;">
 						<strong>
-							<?php echo esc_html( $this->t( 'Firefighter Statistics — Data Sharing with Remiza.pl', 'Statystyki Wyjazdów — Udostępnianie Danych Remiza.pl' ) ); ?>
+							<?php echo esc_html( $this->t( 'Firefighter Statistics -- Data Sharing with Remiza.pl', 'Statystyki Wyjazdów -- Udostępnianie Danych Remiza.pl' ) ); ?>
 						</strong>
 					</p>
 					<p style="margin:0 0 8px; color:#3c434a;">
@@ -550,7 +557,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			<div class="notice notice-error is-dismissible">
 				<p>
 					<strong>
-						<?php echo esc_html( $this->t( 'Firefighter Statistics — Remiza.pl token rejected.', 'Statystyki Wyjazdów — token Remiza.pl odrzucony.' ) ); ?>
+						<?php echo esc_html( $this->t( 'Firefighter Statistics -- Remiza.pl token rejected.', 'Statystyki Wyjazdów -- token Remiza.pl odrzucony.' ) ); ?>
 					</strong>
 					<?php echo esc_html( $this->t(
 						'Reporting was paused because the site token was not recognised. Click Re-register to obtain a new token.',
@@ -661,7 +668,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			$existing_token = $this->get_token();
 
 			if ( '' === $existing_token ) {
-				// No token stored yet — attempt fresh registration.
+				// No token stored yet -- attempt fresh registration.
 				return $this->register_site() ? 'valid' : 'failed';
 			}
 
@@ -693,7 +700,7 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 				return 'valid';
 			}
 
-			// Token rejected — obtain a fresh one automatically.
+			// Token rejected -- obtain a fresh one automatically.
 			if ( 401 === $code || 403 === $code ) {
 				$this->handle_http_error( $response );
 				if ( $this->register_site() ) {
