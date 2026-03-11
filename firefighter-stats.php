@@ -24,19 +24,32 @@ define( 'FIREFIGHTER_STATS_VERSION', '1.0.1' );
 define( 'FIREFIGHTER_STATS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FIREFIGHTER_STATS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-// Flush rewrite rules if language changed
+// Flush rewrite rules if plugin version or language changed.
 if ( ! function_exists( 'firefighter_stats_maybe_flush_rewrites' ) ) {
 	function firefighter_stats_maybe_flush_rewrites(): void {
+		$needs_flush = false;
+
+		$current_version = FIREFIGHTER_STATS_VERSION;
+		$saved_version   = get_option( 'firefighter_stats_version', '' );
+		if ( $saved_version !== $current_version ) {
+			update_option( 'firefighter_stats_version', $current_version );
+			$needs_flush = true;
+		}
+
 		$current_locale = get_locale();
 		$saved_locale   = get_option( 'firefighter_stats_locale', '' );
-
 		if ( $saved_locale !== $current_locale ) {
 			update_option( 'firefighter_stats_locale', $current_locale );
+			$needs_flush = true;
+		}
 
+		if ( $needs_flush ) {
 			if ( is_admin() ) {
 				add_action( 'admin_init', static function () {
 					flush_rewrite_rules();
 				}, 20 );
+			} else {
+				flush_rewrite_rules();
 			}
 		}
 	}

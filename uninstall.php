@@ -13,6 +13,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 // Remove plugin options.
+delete_option( 'firefighter_stats_version' );
 delete_option( 'firefighter_stats_locale' );
 delete_option( 'firefighter_stats_permalinks' );
 
