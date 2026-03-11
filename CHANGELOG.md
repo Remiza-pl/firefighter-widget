@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.4] — 2026-03-11
+
+* feat: update changelog generation and improve token validation process
+
+
 ## [1.0.3] — 2026-03-11
 
 * feat: add changelog generation from git commits and update version bump workflow
