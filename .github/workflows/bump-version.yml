@@ -122,10 +122,11 @@ jobs:
           # 5. blocks/emergency-list-widget/block.json — version field
           sed -i 's/^\([[:space:]]*"version":[[:space:]]*"\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' blocks/emergency-list-widget/block.json
 
-      - name: Generate changelog
+      - name: Update CHANGELOG.md
         if: steps.check_tag.outputs.SKIP != 'true'
         run: |
           NEW_VERSION="${{ steps.version.outputs.NEW_VERSION }}"
+          DATE=$(date -u '+%Y-%m-%d')
 
           # Previous release tag (the new tag has not been pushed yet).
           PREV_TAG=$(git tag --list 'v*.*.*' --sort=-version:refname | head -1)
@@ -141,19 +142,21 @@ jobs:
 
           [ -z "$LOG" ] && LOG="* Release ${NEW_VERSION}."
 
-          echo "Changelog entry for ${NEW_VERSION}:"
-          printf '= %s =\n%s\n' "$NEW_VERSION" "$LOG"
+          echo "New changelog entry:"
+          echo "## [${NEW_VERSION}] — ${DATE}"
+          echo "$LOG"
 
-          # Write to temp file to avoid multi-line quoting issues in awk.
-          printf '= %s =\n%s\n' "$NEW_VERSION" "$LOG" > /tmp/changelog_entry.txt
+          # Create CHANGELOG.md with header if it does not exist yet.
+          if [ ! -f CHANGELOG.md ]; then
+            printf '# Changelog\n' > CHANGELOG.md
+          fi
 
-          # Inject into readme.txt after "== Changelog ==" heading.
-          awk 'FNR==NR{e=e $0 "\n";next} /^== Changelog ==/{print;getline;printf "\n%s\n",e;next} 1' \
-            /tmp/changelog_entry.txt readme.txt > /tmp/r.tmp && mv /tmp/r.tmp readme.txt
+          # Write entry to temp file (avoids multi-line variable quoting issues in awk).
+          printf '## [%s] \xe2\x80\x94 %s\n\n%s\n' "$NEW_VERSION" "$DATE" "$LOG" > /tmp/cl_entry.txt
 
-          # Inject into readme-pl_PL.txt after "== Dziennik zmian ==" heading.
-          awk 'FNR==NR{e=e $0 "\n";next} /^== Dziennik zmian ==/{print;getline;printf "\n%s\n",e;next} 1' \
-            /tmp/changelog_entry.txt readme-pl_PL.txt > /tmp/r.tmp && mv /tmp/r.tmp readme-pl_PL.txt
+          # Prepend the new entry after the "# Changelog" header line.
+          awk 'FNR==NR{e=e $0 "\n";next} /^# Changelog$/{print;print "";printf "%s\n",e;next} 1' \
+            /tmp/cl_entry.txt CHANGELOG.md > /tmp/cl.tmp && mv /tmp/cl.tmp CHANGELOG.md
 
       - name: Verify updated versions
         if: steps.check_tag.outputs.SKIP != 'true'
@@ -194,7 +197,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add firefighter-stats.php readme.txt readme-pl_PL.txt blocks/emergency-list-widget/block.json
+          git add firefighter-stats.php readme.txt readme-pl_PL.txt blocks/emergency-list-widget/block.json CHANGELOG.md
           git commit -m "chore: bump version to ${NEW_VERSION}"
           git tag "v${NEW_VERSION}"
 

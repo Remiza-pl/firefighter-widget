@@ -94,11 +94,7 @@ Go to **Emergencies > Quick Counts** and click **Fix Emergency URLs**. This flus
 
 == Changelog ==
 
-= 1.0.3 =
-* feat: add changelog generation from git commits and update version bump workflow
-
-= 1.0.0 =
-* Initial release.
+See [CHANGELOG.md](https://github.com/OSP-Lagisza/firefighter-stats/blob/main/CHANGELOG.md) for the full version history.
 
 == External Services ==
 

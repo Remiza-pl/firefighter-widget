@@ -144,11 +144,7 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 				</p>
 
 				<?php if ( '1' === $updated ) : ?>
-					<?php if ( 'valid' === $fs_vresult ) : ?>
-						<div class="notice notice-success is-dismissible">
-							<p><?php echo esc_html( $this->t( 'Token is valid — registration confirmed.', 'Token jest ważny — rejestracja potwierdzona.' ) ); ?></p>
-						</div>
-					<?php elseif ( 'reregistered' === $fs_vresult ) : ?>
+					<?php if ( 'reregistered' === $fs_vresult ) : ?>
 						<div class="notice notice-info is-dismissible">
 							<p><?php echo esc_html( $this->t( 'Token was rejected — a new token has been obtained and the site is now re-registered.', 'Token został odrzucony — uzyskano nowy token i strona jest teraz ponownie zarejestrowana.' ) ); ?></p>
 						</div>
@@ -258,8 +254,8 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 					</h3>
 					<p style="margin-top:0; color:#3c434a;">
 						<?php echo esc_html( $this->t(
-							"Check whether the stored token is still recognised by Remiza.pl. If it has been invalidated (e.g. after a server reset or site migration) the plugin will automatically obtain a fresh token.",
-							'Sprawdza, czy przechowywany token jest nadal rozpoznawany przez Remiza.pl. Jeśli został unieważniony (np. po resecie serwera lub migracji strony), wtyczka automatycznie uzyska nowy token.'
+							"Request a new registration token from Remiza.pl. Use this if reporting has stopped working or after a site migration. Previous reports on the server are preserved.",
+							'Wysyła prośbę o nowy token rejestracyjny do Remiza.pl. Użyj jeśli raportowanie przestało działać lub po migracji strony. Poprzednie raporty na serwerze są zachowane.'
 						) ); ?>
 					</p>
 					<form method="post">

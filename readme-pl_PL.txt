@@ -93,11 +93,7 @@ Przejdź do **Interwencje > Szybkie liczniki** i kliknij przycisk **Napraw adres
 
 == Dziennik zmian ==
 
-= 1.0.3 =
-* feat: add changelog generation from git commits and update version bump workflow
-
-= 1.0.0 =
-* Pierwsze wydanie.
+Pełna historia zmian dostępna w pliku [CHANGELOG.md](https://github.com/OSP-Lagisza/firefighter-stats/blob/main/CHANGELOG.md).
 
 == Informacja o aktualizacji ==
 
