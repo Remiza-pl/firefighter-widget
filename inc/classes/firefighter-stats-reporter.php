@@ -646,6 +646,67 @@ if ( ! class_exists( 'Firefighter_Stats_Reporter' ) ) {
 			update_option( self::OPTION_ENABLED, '0', false );
 		}
 
+		/**
+		 * Validate the stored token with the Remiza.pl server and re-register if rejected.
+		 *
+		 * Sends the existing token (if any) to /register. A 200/201 response confirms
+		 * the token is still valid. A 401/403 triggers automatic re-registration to
+		 * obtain a fresh token. Network errors are reported without changing state.
+		 *
+		 * @return string 'valid' | 'reregistered' | 'network_error' | 'failed'
+		 */
+		public function validate_registration() {
+			delete_option( self::OPTION_REGISTERED );
+
+			$existing_token = $this->get_token();
+
+			if ( '' === $existing_token ) {
+				// No token stored yet — attempt fresh registration.
+				return $this->register_site() ? 'valid' : 'failed';
+			}
+
+			// Confirm the existing token with the server.
+			$body = wp_json_encode( array(
+				'token'     => $existing_token,
+				'site_url'  => home_url(),
+				'site_name' => get_bloginfo( 'name' ),
+			) );
+
+			$response = wp_remote_post(
+				$this->get_endpoint( '/register' ),
+				array(
+					'body'    => $body,
+					'headers' => array( 'Content-Type' => 'application/json' ),
+					'timeout' => 10,
+				)
+			);
+
+			if ( is_wp_error( $response ) ) {
+				$this->log_status( 'register', 'failed', array( 'error' => $response->get_error_message() ) );
+				return 'network_error';
+			}
+
+			$code = wp_remote_retrieve_response_code( $response );
+			if ( 200 === $code || 201 === $code ) {
+				update_option( self::OPTION_REGISTERED, '1', false );
+				$this->log_status( 'register', 'success', array() );
+				return 'valid';
+			}
+
+			// Token rejected — obtain a fresh one automatically.
+			if ( 401 === $code || 403 === $code ) {
+				$this->handle_http_error( $response );
+				if ( $this->register_site() ) {
+					delete_transient( 'firefighter_stats_token_invalid' );
+					return 'reregistered';
+				}
+				return 'failed';
+			}
+
+			$this->log_status( 'register', 'failed', array( 'error' => 'HTTP ' . $code ) );
+			return 'failed';
+		}
+
 		// ---------------------------------------------------------------
 		// Locale helper (same pattern as Admin Guide)
 		// ---------------------------------------------------------------

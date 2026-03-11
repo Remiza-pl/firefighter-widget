@@ -90,6 +90,20 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 					}
 					delete_transient( 'firefighter_stats_token_invalid' );
 					break;
+
+				case 'validate_token':
+					$fs_validate_result = 'failed';
+					if ( class_exists( 'Firefighter_Stats_Reporter' ) ) {
+						$fs_validate_result = ( new Firefighter_Stats_Reporter() )->validate_registration();
+					}
+					wp_safe_redirect( add_query_arg(
+						array(
+							'updated'     => '1',
+							'fs_validate' => $fs_validate_result,
+						),
+						wp_get_referer()
+					) );
+					exit;
 			}
 
 			wp_safe_redirect( add_query_arg( 'updated', '1', wp_get_referer() ) );
@@ -110,7 +124,8 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 			$is_enabled    = class_exists( 'Firefighter_Stats_Reporter' ) && ( new Firefighter_Stats_Reporter() )->is_enabled();
 			$token_invalid = (bool) get_transient( 'firefighter_stats_token_invalid' );
 
-			$updated = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$updated    = isset( $_GET['updated'] ) ? sanitize_key( wp_unslash( $_GET['updated'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$fs_vresult = isset( $_GET['fs_validate'] ) ? sanitize_key( wp_unslash( $_GET['fs_validate'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 			// Masked token: show first 8 chars only.
 			if ( '' !== $token ) {
@@ -129,9 +144,27 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 				</p>
 
 				<?php if ( '1' === $updated ) : ?>
-					<div class="notice notice-success is-dismissible">
-						<p><?php echo esc_html( $this->t( 'Settings saved.', 'Ustawienia zapisane.' ) ); ?></p>
-					</div>
+					<?php if ( 'valid' === $fs_vresult ) : ?>
+						<div class="notice notice-success is-dismissible">
+							<p><?php echo esc_html( $this->t( 'Token is valid — registration confirmed.', 'Token jest ważny — rejestracja potwierdzona.' ) ); ?></p>
+						</div>
+					<?php elseif ( 'reregistered' === $fs_vresult ) : ?>
+						<div class="notice notice-info is-dismissible">
+							<p><?php echo esc_html( $this->t( 'Token was rejected — a new token has been obtained and the site is now re-registered.', 'Token został odrzucony — uzyskano nowy token i strona jest teraz ponownie zarejestrowana.' ) ); ?></p>
+						</div>
+					<?php elseif ( 'network_error' === $fs_vresult ) : ?>
+						<div class="notice notice-error is-dismissible">
+							<p><?php echo esc_html( $this->t( "Could not reach Remiza.pl — check your server's internet connection and try again.", 'Nie można połączyć się z Remiza.pl — sprawdź połączenie internetowe serwera i spróbuj ponownie.' ) ); ?></p>
+						</div>
+					<?php elseif ( 'failed' === $fs_vresult ) : ?>
+						<div class="notice notice-error is-dismissible">
+							<p><?php echo esc_html( $this->t( 'Validation failed. Check the Connection Status panel below for details.', 'Walidacja nie powiodła się. Sprawdź panel Status Połączenia poniżej.' ) ); ?></p>
+						</div>
+					<?php else : ?>
+						<div class="notice notice-success is-dismissible">
+							<p><?php echo esc_html( $this->t( 'Settings saved.', 'Ustawienia zapisane.' ) ); ?></p>
+						</div>
+					<?php endif; ?>
 				<?php endif; ?>
 
 				<!-- Remiza.pl feature card -->
@@ -217,6 +250,29 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 
 					<?php submit_button( $this->t( 'Save Settings', 'Zapisz Ustawienia' ) ); ?>
 				</form>
+
+				<!-- Validate connection card -->
+				<div class="card" style="max-width:760px; margin-top:20px; padding:20px 24px; border-left:4px solid #2271b1;">
+					<h3 style="margin-top:0;">
+						<?php echo esc_html( $this->t( 'Validate Token', 'Sprawdzenie Tokenu' ) ); ?>
+					</h3>
+					<p style="margin-top:0; color:#3c434a;">
+						<?php echo esc_html( $this->t(
+							"Check whether the stored token is still recognised by Remiza.pl. If it has been invalidated (e.g. after a server reset or site migration) the plugin will automatically obtain a fresh token.",
+							'Sprawdza, czy przechowywany token jest nadal rozpoznawany przez Remiza.pl. Jeśli został unieważniony (np. po resecie serwera lub migracji strony), wtyczka automatycznie uzyska nowy token.'
+						) ); ?>
+					</p>
+					<form method="post">
+						<?php wp_nonce_field( 'firefighter_stats_settings_action' ); ?>
+						<input type="hidden" name="fs_settings_action" value="validate_token">
+						<?php submit_button(
+							$this->t( 'Validate & Refresh Registration', 'Sprawdź i Odśwież Rejestrację' ),
+							'secondary',
+							'submit',
+							false
+						); ?>
+					</form>
+				</div>
 
 				<?php $this->render_status_panel(); ?>
 
@@ -330,7 +386,8 @@ if ( ! class_exists( 'Firefighter_Stats_Settings' ) ) {
 										<?php
 										if ( $fs_time > 0 ) {
 											echo esc_html( sprintf(
-												/* translators: %s = human-readable time difference */ $this->t( '%s ago', '%s temu' ),
+												/* translators: %s = human-readable time difference */
+												$this->t( '%s ago', '%s temu' ),
 												human_time_diff( $fs_time, $fs_now )
 											) );
 										} else {
