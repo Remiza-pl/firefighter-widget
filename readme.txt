@@ -4,7 +4,7 @@ Tags: firefighter, emergency, statistics, widget, fire department
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,9 @@ Go to **Emergencies > Quick Counts** and click **Fix Emergency URLs**. This flus
 5. Gutenberg block with live server-side preview.
 
 == Changelog ==
+
+= 1.0.3 =
+* feat: add changelog generation from git commits and update version bump workflow
 
 = 1.0.0 =
 * Initial release.

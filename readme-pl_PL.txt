@@ -4,7 +4,7 @@ Tags: straż pożarna, ratownictwo, statystyki, widget, interwencje
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,9 @@ Przejdź do **Interwencje > Szybkie liczniki** i kliknij przycisk **Napraw adres
 5. Blok Gutenberga z podglądem renderowania po stronie serwera.
 
 == Dziennik zmian ==
+
+= 1.0.3 =
+* feat: add changelog generation from git commits and update version bump workflow
 
 = 1.0.0 =
 * Pierwsze wydanie.
