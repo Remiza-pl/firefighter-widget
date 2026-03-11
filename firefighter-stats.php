@@ -3,7 +3,7 @@
  * Plugin Name:       Firefighter Statistics
  * Plugin URI:        https://github.com/sync667/firefighter-widget
  * Description:       Track and display emergency statistics for fire departments. Includes widgets, a Gutenberg block, and a shortcode.
- * Version:           1.0.4
+ * Version:           1.0.5
  * Author:            sync667
  * Author URI:        https://github.com/sync667
  * License:           GPL-2.0-or-later
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'FIREFIGHTER_STATS_VERSION', '1.0.4' );
+define( 'FIREFIGHTER_STATS_VERSION', '1.0.5' );
 define( 'FIREFIGHTER_STATS_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FIREFIGHTER_STATS_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.5] — 2026-03-11
+
+* feat: add Remiza.pl API integration documentation and improve token handling
+
+
 ## [1.0.4] — 2026-03-11
 
 * feat: update changelog generation and improve token validation process
