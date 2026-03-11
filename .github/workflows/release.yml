@@ -31,7 +31,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || '' }}
+          # workflow_run: check out the tip of main so the bump commit is included.
+          # workflow_dispatch: check out the specific tag being released.
+          # push (tag): no ref needed — actions/checkout uses the pushed tag.
+          ref: >-
+            ${{
+              github.event_name == 'workflow_run' && 'main' ||
+              github.event_name == 'workflow_dispatch' && inputs.tag ||
+              ''
+            }}
           fetch-depth: 0
 
       - name: Resolve tag and version
@@ -42,6 +50,7 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             TAG="${{ inputs.tag }}"
           elif [ "${{ github.event_name }}" = "workflow_run" ]; then
+            # HEAD is now the bump commit on main; find the tag pointing at it.
             TAG=$(git tag --points-at HEAD | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -1)
             if [ -z "$TAG" ]; then
               echo "::error::No v*.*.* tag found on HEAD after Bump Plugin Version workflow."

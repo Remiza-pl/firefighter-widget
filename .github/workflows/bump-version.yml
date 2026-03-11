@@ -1,12 +1,20 @@
 name: Bump Plugin Version
 
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       version:
-        description: 'New version number (e.g. 1.2.0)'
-        required: true
+        description: 'Explicit version (e.g. 1.2.0) — leave blank to auto-bump'
+        required: false
         type: string
+      bump:
+        description: 'Part to bump when no explicit version is given'
+        required: false
+        default: patch
+        type: choice
+        options: [patch, minor, major]
 
 permissions:
   contents: write
@@ -15,31 +23,88 @@ jobs:
   bump:
     name: Update Version and Tag
     runs-on: ubuntu-latest
+    # Skip the version-bump commit itself to prevent an infinite loop.
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      !startsWith(github.event.head_commit.message, 'chore: bump version')
 
     steps:
-      - name: Validate version format
-        run: |
-          VERSION="${{ inputs.version }}"
-          if ! echo "$VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
-            echo "::error::Invalid version format '$VERSION'. Expected semver (e.g. 1.2.0)."
-            exit 1
-          fi
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Resolve new version
+        id: version
+        run: |
+          git fetch --tags
+
+          # --- Explicit version supplied via workflow_dispatch ---
+          if [ -n "${{ inputs.version }}" ]; then
+            NEW_VERSION="${{ inputs.version }}"
+            if ! echo "$NEW_VERSION" | grep -qE '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+              echo "::error::Invalid version format '$NEW_VERSION'. Expected X.Y.Z."
+              exit 1
+            fi
+            echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+            echo "Using explicit version: $NEW_VERSION"
+            exit 0
+          fi
+
+          # --- Auto-compute next version ---
+          CURRENT=$(grep -Po '^\s*\*\s*Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+' firefighter-stats.php)
+          LATEST_TAG=$(git tag --list 'v*.*.*' --sort=-version:refname | head -1)
+          LATEST="${LATEST_TAG#v}"
+          [ -z "$LATEST" ] && LATEST="0.0.0"
+          echo "Files: $CURRENT  |  Latest tag: v$LATEST"
+
+          # Bump type: from input (workflow_dispatch) or commit-message keywords
+          # Include [minor] or [major] in the commit message to bump those parts.
+          # Default is patch.
+          BUMP="${{ inputs.bump }}"
+          if [ -z "$BUMP" ]; then
+            MSG="${{ github.event.head_commit.message }}"
+            if echo "$MSG" | grep -qi '\[major\]'; then BUMP=major
+            elif echo "$MSG" | grep -qi '\[minor\]'; then BUMP=minor
+            else BUMP=patch
+            fi
+          fi
+          echo "Bump type: $BUMP"
+
+          # If the developer already bumped the files manually, honour that version.
+          # Otherwise auto-increment the requested part.
+          NEW_VERSION=$(python3 - <<PYEOF
+def v(s): return tuple(int(x) for x in s.split('.'))
+cur, lat = v('$CURRENT'), v('$LATEST')
+if cur > lat:
+    print('$CURRENT')
+else:
+    major, minor, patch = lat
+    b = '$BUMP'
+    if b == 'major':   major += 1; minor = 0; patch = 0
+    elif b == 'minor': minor += 1; patch = 0
+    else:              patch += 1
+    print(f'{major}.{minor}.{patch}')
+PYEOF
+          )
+          echo "NEW_VERSION=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          echo "Resolved new version: $NEW_VERSION"
 
       - name: Check tag does not already exist
+        id: check_tag
         run: |
-          if git ls-remote --tags origin | grep -q "refs/tags/v${{ inputs.version }}$"; then
-            echo "::error::Tag v${{ inputs.version }} already exists."
-            exit 1
+          if git ls-remote --tags origin "refs/tags/v${{ steps.version.outputs.NEW_VERSION }}" | grep -q .; then
+            echo "SKIP=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Tag v${{ steps.version.outputs.NEW_VERSION }} already exists — nothing to do."
+          else
+            echo "SKIP=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Update version in all files
+        if: steps.check_tag.outputs.SKIP != 'true'
         run: |
-          NEW_VERSION="${{ inputs.version }}"
+          NEW_VERSION="${{ steps.version.outputs.NEW_VERSION }}"
 
           # 1. firefighter-stats.php — plugin header
           sed -i 's/^\([[:space:]]*\*[[:space:]]*Version:[[:space:]]*\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' firefighter-stats.php
@@ -57,8 +122,9 @@ jobs:
           sed -i 's/^\([[:space:]]*"version":[[:space:]]*"\)[0-9]\+\.[0-9]\+\.[0-9]\+/\1'"$NEW_VERSION"'/' blocks/emergency-list-widget/block.json
 
       - name: Verify updated versions
+        if: steps.check_tag.outputs.SKIP != 'true'
         run: |
-          NEW_VERSION="${{ inputs.version }}"
+          NEW_VERSION="${{ steps.version.outputs.NEW_VERSION }}"
 
           HEADER_VERSION=$(grep -Po '^\s*\*\s*Version:\s*\K[0-9]+\.[0-9]+\.[0-9]+' firefighter-stats.php)
           CONST_VERSION=$(grep -Po "define\(\s*'FIREFIGHTER_STATS_VERSION'\s*,\s*'\K[0-9]+\.[0-9]+\.[0-9]+" firefighter-stats.php)
@@ -83,15 +149,13 @@ jobs:
             fi
           done
 
-          if [ "$ERRORS" -eq 1 ]; then
-            exit 1
-          fi
-
+          if [ "$ERRORS" -eq 1 ]; then exit 1; fi
           echo "All versions updated to $NEW_VERSION"
 
       - name: Commit and tag
+        if: steps.check_tag.outputs.SKIP != 'true'
         run: |
-          NEW_VERSION="${{ inputs.version }}"
+          NEW_VERSION="${{ steps.version.outputs.NEW_VERSION }}"
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
