@@ -1,5 +1,6 @@
 # Firefighter Statistics — WordPress Plugin
 
+[![Latest Release](https://img.shields.io/github/v/release/Remiza-pl/firefighter-widget?label=Download&color=brightgreen)](https://github.com/Remiza-pl/firefighter-widget/releases/latest)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![WordPress](https://img.shields.io/badge/WordPress-5.9%2B-21759b)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4)](https://www.php.net/)
