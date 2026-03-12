@@ -1,5 +1,6 @@
 # Firefighter Statistics — WordPress Plugin
 
+[![Latest Release](https://img.shields.io/github/v/release/Remiza-pl/firefighter-widget?label=Download&color=brightgreen)](https://github.com/Remiza-pl/firefighter-widget/releases/latest)
 [![License: GPL v2+](https://img.shields.io/badge/License-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![WordPress](https://img.shields.io/badge/WordPress-5.9%2B-21759b)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4)](https://www.php.net/)
@@ -51,14 +52,12 @@ A WordPress plugin for fire departments to track and display emergency response 
 
 ## Installation
 
-1. Download or clone this repository into your `/wp-content/plugins/` directory:
-   ```bash
-   git clone https://github.com/sync667/firefighter-widget.git firefighter-widget
-   ```
-2. Activate the plugin through **Plugins → Installed Plugins** in the WordPress admin.
-3. On first activation, 13 default categories are seeded in the language of your site.
-4. Go to **Settings → Permalinks** and click **Save Changes** to flush rewrite rules.
-5. Add the **Firefighter Stats Emergencies** widget to a sidebar, insert the Gutenberg block, or use the shortcode.
+1. Download the latest release `.zip` file from the [Releases page](https://github.com/Remiza-pl/firefighter-widget/releases/latest).
+2. In the WordPress admin, go to **Plugins → Add New Plugin → Upload Plugin**, choose the downloaded `.zip` file, and click **Install Now**.
+3. Activate the plugin through **Plugins → Installed Plugins** in the WordPress admin.
+4. On first activation, 13 default categories are seeded in the language of your site.
+5. Go to **Settings → Permalinks** and click **Save Changes** to flush rewrite rules.
+6. Add the **Firefighter Stats Emergencies** widget to a sidebar, insert the Gutenberg block, or use the shortcode.
 
 ---
 

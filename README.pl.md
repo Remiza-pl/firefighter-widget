@@ -1,5 +1,6 @@
 # Firefighter Statistics — Wtyczka WordPress
 
+[![Najnowsze wydanie](https://img.shields.io/github/v/release/Remiza-pl/firefighter-widget?label=Pobierz&color=brightgreen)](https://github.com/Remiza-pl/firefighter-widget/releases/latest)
 [![Licencja: GPL v2+](https://img.shields.io/badge/Licencja-GPL%20v2%2B-blue.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 [![WordPress](https://img.shields.io/badge/WordPress-5.9%2B-21759b)](https://wordpress.org/)
 [![PHP](https://img.shields.io/badge/PHP-7.4%2B-777bb4)](https://www.php.net/)
@@ -51,14 +52,12 @@ Wtyczka WordPress dla jednostek straży pożarnej do rejestrowania i wyświetlan
 
 ## Instalacja
 
-1. Pobierz lub sklonuj to repozytorium do katalogu `/wp-content/plugins/`:
-   ```bash
-   git clone https://github.com/sync667/firefighter-widget.git firefighter-widget
-   ```
-2. Aktywuj wtyczkę przez **Wtyczki → Zainstalowane wtyczki** w panelu WordPress.
-3. Przy pierwszej aktywacji zostanie zasiana 13 domyślnych kategorii w języku Twojej strony.
-4. Przejdź do **Ustawienia → Bezpośrednie odnośniki** i kliknij **Zapisz zmiany**, aby odświeżyć reguły przepisywania.
-5. Dodaj widżet **Statystyki Wyjazdów**, wstaw blok Gutenberga lub użyj shortcode.
+1. Pobierz najnowsze wydanie w postaci pliku `.zip` ze [strony Releases](https://github.com/Remiza-pl/firefighter-widget/releases/latest).
+2. W panelu WordPress przejdź do **Wtyczki → Dodaj nową wtyczkę → Wyślij wtyczkę**, wybierz pobrany plik `.zip` i kliknij **Zainstaluj teraz**.
+3. Aktywuj wtyczkę przez **Wtyczki → Zainstalowane wtyczki** w panelu WordPress.
+4. Przy pierwszej aktywacji zostanie zasiana 13 domyślnych kategorii w języku Twojej strony.
+5. Przejdź do **Ustawienia → Bezpośrednie odnośniki** i kliknij **Zapisz zmiany**, aby odświeżyć reguły przepisywania.
+6. Dodaj widżet **Statystyki Wyjazdów**, wstaw blok Gutenberga lub użyj shortcode.
 
 ---
 
