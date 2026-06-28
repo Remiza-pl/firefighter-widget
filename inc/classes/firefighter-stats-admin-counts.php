@@ -390,18 +390,18 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                 return;
             }
 
-            if ( empty( $category_id ) || $count <= 0 ) {
-                $msg = $this->t(
-                    'Please select a category and enter a valid count.',
-                    'Proszę wybrać kategorię i wprowadzić prawidłową liczbę.'
-                );
-                add_action( 'admin_notices', static function () use ( $msg ) {
-                    echo '<div class="notice notice-error is-dismissible"><p>' . esc_html( $msg ) . '</p></div>';
-                } );
-                return;
-            }
-
             if ( 'add_count' === $action ) {
+                if ( empty( $category_id ) || $count <= 0 ) {
+                    $msg = $this->t(
+                        'Please select a category and enter a valid count.',
+                        'Proszę wybrać kategorię i wprowadzić prawidłową liczbę.'
+                    );
+                    add_action( 'admin_notices', static function () use ( $msg ) {
+                        echo '<div class="notice notice-error is-dismissible"><p>' . esc_html( $msg ) . '</p></div>';
+                    } );
+                    return;
+                }
+
                 $this->add_manual_emergency_count( $category_id, $count, $date, $time );
                 $display_date = empty( $date ) ? wp_date( 'Y-m-d' ) : $date;
                 $tpl = $this->t(
@@ -413,6 +413,9 @@ if ( ! class_exists( 'Firefighter_Stats_Admin_Counts' ) ) {
                 } );
             } elseif ( 'delete_entry' === $action ) {
                 $entry_id = isset( $_POST['entry_id'] ) ? sanitize_text_field( wp_unslash( $_POST['entry_id'] ) ) : '';
+                if ( empty( $category_id ) || empty( $entry_id ) ) {
+                    return;
+                }
                 $this->delete_manual_emergency_entry( $category_id, $entry_id );
                 $msg = $this->t(
                     'Emergency count entry deleted successfully.',
