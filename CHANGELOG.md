@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.6] — 2026-03-12
+
+* Add latest release badge to README.md and README.pl.md
+* Fix installation instructions in READMEs: replace git clone with release zip download
+* Initial plan
+
+
 ## [1.0.5] — 2026-03-11
 
 * feat: add Remiza.pl API integration documentation and improve token handling
