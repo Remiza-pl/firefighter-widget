@@ -97,22 +97,8 @@
 			try {
 				var response = JSON.parse( xhr.responseText );
 				if ( response.success ) {
-					// Update the card count.
-					var cardCount = document.getElementById( 'fs-card-count-' + _categoryId );
-					if ( cardCount && response.data && response.data.year_count !== undefined ) {
-						cardCount.textContent = response.data.year_count;
-					}
-
-					// Update last entry on card.
-					var cardLast = document.getElementById( 'fs-card-last-' + _categoryId );
-					if ( cardLast && response.data && response.data.last_entry ) {
-						var le    = response.data.last_entry;
-						var label = le.date;
-						if ( le.time ) { label += ' ' + le.time; }
-						cardLast.textContent = label;
-					}
-
 					closeModal();
+					window.location.reload();
 				} else {
 					countNote.textContent = data.i18n.errorMsg;
 				}
