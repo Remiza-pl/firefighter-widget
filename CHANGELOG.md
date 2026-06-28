@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.8] — 2026-06-28
+
+* feat: reload page after successful response to update counts
+
+
 ## [1.0.7] — 2026-06-28
 
 * feat: refine validation for adding emergency counts and deleting entries
