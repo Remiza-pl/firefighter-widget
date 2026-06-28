@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.7] — 2026-06-28
+
+* feat: refine validation for adding emergency counts and deleting entries
+
+
 ## [1.0.6] — 2026-03-12
 
 * Add latest release badge to README.md and README.pl.md
